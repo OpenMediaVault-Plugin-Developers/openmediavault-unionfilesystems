@@ -1,0 +1,9 @@
+Format: http://dep.debian.net/deps/dep5
+Upstream-Contact: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
+Copyright: 2013-2014 OpenMediaVault Plugin Developers <plugins@omv-extras.org>
+License: GPL-3
+
+Files: /var/www/openmediavault/images/unionfilesystems.png
+       /var/www/openmediavault/images/unionfilesystems.svg
+Copyright: IcoMoon <http://www.icomoon.io>
+IcoMoon <http://www.icomoon.io>

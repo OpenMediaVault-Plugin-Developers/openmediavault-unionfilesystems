@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+# Copyright (C) 2014 OpenMediaVault Plugin Developers
+#
+# This file is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this file. If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+OMV_UNION_FILESYSTEMS_XPATH=/config/services/unionfilesystems
+OMV_UNION_FILESYSTEMS_POOLS_XPATH=${OMV_UNION_FILESYSTEMS_XPATH}/pools/pool
+
+OMV_FSTAB_MNTOPS_AUFS=${OMV_FSTAB_MNTOPS_AUFS:-"sum,create=mfs"}
+OMV_FSTAB_MNTOPS_MHDDFS=${OMV_FSTAB_MNTOPS_MHDDFS:-"defaults,allow_other"}
+
+count=$(omv_config_get_count "${OMV_UNION_FILESYSTEMS_POOLS_XPATH}")
+index=1
+
+while [ $index -lt $count -o $index -eq $count ]; do
+
+    current_pool_xpath="${OMV_UNION_FILESYSTEMS_POOLS_XPATH}[position()=${index}]"
+
+    branches=$(omv_config_get "${current_pool_xpath}/branches")
+    fstype=$(omv_config_get "${current_pool_xpath}/type")
+    mntentref=$(omv_config_get "${current_pool_xpath}/mntentref")
+    mount_point=$(omv_config_get "//system/fstab/mntent[uuid='${mntentref}']/dir")
+
+    if [ "${fstype}" = "aufs" ]; then
+        branch_separator=":"
+    elif [ "${fstype}" = "mhddfs" ]; then
+        branch_separator=","
+    fi
+
+    branch_mount_points=""
+    first_branch=1
+    IFS=,
+
+    for branch in $branches; do
+        dir=$(omv_config_get "//system/fstab/mntent[uuid='${branch}']/dir")
+
+        if [ ${first_branch} -eq 1 ]; then
+            first_branch=0
+            branch_mount_points="${dir}"
+        else
+            branch_mount_points="${branch_mount_points}${branch_separator}${dir}"
+        fi
+    done;
+
+    IFS=
+
+    if [ "${fstype}" = "aufs" ]; then
+        fstab_line="none ${mount_point} aufs br=${branch_mount_points},${OMV_FSTAB_MNTOPS_AUFS} 0 0"
+    elif [ "${fstype}" = "mhddfs" ]; then
+        fstab_line="mhddfs#${branch_mount_points} $mount_point fuse ${OMV_FSTAB_MNTOPS_MHDDFS} 0 0"
+    fi
+
+    echo $fstab_line
+
+    index=$(( ${index} + 1 ))
+
+done

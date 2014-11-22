@@ -1,0 +1,5 @@
+openmediavault-unionfilesystems (1.1.0) stable; urgency=low
+
+  * Initial release for OMV 1.1.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 19 Nov 2014 23:50:35 +0100
