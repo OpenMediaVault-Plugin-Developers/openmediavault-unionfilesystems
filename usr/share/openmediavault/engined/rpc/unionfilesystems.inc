@@ -394,6 +394,8 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
     private function isUsed($mntentref)
     {
+        global $xmlConfig;
+
         $xpath = sprintf("//mntentref[contains(.,'%s')]", $mntentref);
 
         if ($xmlConfig->exists($xpath)) {
