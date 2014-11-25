@@ -68,7 +68,7 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Expand", {
                     appendSortParams: false,
                     rpcData: {
                         service: "UnionFilesystems",
-                        method: "getCandidates"
+                        method: "enumerateCandidates"
                     }
                 },
                 sorters: [{

@@ -51,8 +51,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         $this->registerMethod("get");
         $this->registerMethod("set");
         $this->registerMethod("delete");
-
-        $this->registerMethod("getCandidates");
+        $this->registerMethod("enumerateCandidates");
         $this->registerMethod("setExpand");
     }
 
@@ -263,7 +262,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         ), $context);
     }
 
-    public function getCandidates($params, $context)
+    public function enumerateCandidates($params, $context)
     {
         global $xmlConfig;
 
@@ -272,35 +271,37 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             "role" => OMV_ROLE_ADMINISTRATOR
         ));
 
-        // Get the configuration object.
-        $xPath = "//system/fstab/mntent";
-        $devs = $xmlConfig->getList($xPath);
-        if (is_null($devs)) {
-            throw new OMVException(
-                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-                $xPath
-            );
-        }
+        $entries = OMVRpc::exec("FsTab", "enumerateEntries", array(), $context);
 
         // Prepare the result list.
         $result = array();
-        foreach ($devs as $devk => $devv) {
-            // Check if device is referenced/used by a branch.
-            $xPath = sprintf("//branches[contains(.,'%s')]",
-                $devv['uuid']);
-            if (TRUE === $xmlConfig->exists($xPath))
-                continue;
 
-            if ($devv['type'] == "aufs" || $devv['type'] == "mhddfs")
+        foreach ($entries as $entry) {
+            // Check if device is referenced/used by a branch.
+            $xpath = sprintf("//branches[contains(.,'%s')]", $entry["uuid"]);
+
+            if ($xmlConfig->exists($xpath)) {
                 continue;
+            }
+
+            if ($entry["type"] == "aufs" ||
+                $entry["type"] == "mhddfs" ||
+                $entry["type"] == "none"
+            ) {
+                continue;
+            }
 
             // The device is a potential candidate to be a member of a
             // union filesystem pool.
+            $filesystem = OMVFilesystemFactory::get($entry["fsname"]);
+
             $result[] = array(
-                "uuid"   => $devv['uuid'],
-                "fsname" => $devv['fsname'],
-                "dir"    => $devv['dir'],
-                "type"   => $devv['type']
+                "uuid" => $entry["uuid"],
+                "devicefile" => $filesystem->getCanonicalDeviceFile(),
+                "dir" => $entry["dir"],
+                "fsname" => $entry["fsname"],
+                "label" => $filesystem->getLabel(),
+                "type" => $entry["type"],
             );
         }
 
@@ -350,6 +351,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
         // Save configuration
         $success = false;
+
         $success = $xmlConfig->replace(
             $xpath = $this->getPoolXpathByUuid($params["uuid"]),
             $pool

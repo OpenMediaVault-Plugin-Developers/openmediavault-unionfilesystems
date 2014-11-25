@@ -80,10 +80,16 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
                         name: "uuid",
                         type: "string"
                     }, {
-                        name: "fsname",
+                        name: "devicefile",
                         type: "string"
                     }, {
                         name: "dir",
+                        type: "string"
+                    }, {
+                        name: "fsname",
+                        type: "string"
+                    }, {
+                        name: "label",
                         type: "string"
                     }, {
                         name: "type",
@@ -95,7 +101,7 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
                     appendSortParams: false,
                     rpcData: {
                         service: "UnionFilesystems",
-                        method: "getCandidates"
+                        method: "enumerateCandidates"
                     }
                 },
                 sorters: [{
