@@ -32,7 +32,6 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Expand", {
     }],
 
     rpcService: "UnionFilesystems",
-    rpcGetMethod: "get",
     rpcSetMethod: "setExpand",
 
     hideResetButton: true,

@@ -86,27 +86,15 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
             text     : _("Expand"),
             icon     : "images/expand.png",
             iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onExpandButton, me, [ me ]),
+            handler  : Ext.Function.bind(this.onExpandButton, this),
             disabled : true,
-            scope    : me
+            scope    : this,
+            selectionConfig : {
+                minSelections : 1,
+                maxSelections : 1
+            }
         }]);
         return items;
-    },
-
-    onSelectionChange: function(model, records) {
-        var me = this;
-        me.callParent(arguments);
-        // Process additional buttons.
-        var tbarBtnDisabled = {
-            "expand" : true
-        };
-        if(records.length == 1) {
-            tbarBtnDisabled["expand"] = false;
-        }
-        // Update the button controls.
-        Ext.Object.each(tbarBtnDisabled, function(key, value) {
-            this.setToolbarButtonDisabled(key, value);
-        }, me);
     },
 
     onAddButton: function() {
@@ -138,6 +126,7 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
 
     onExpandButton: function() {
         var record = this.getSelected();
+
         Ext.create("OMV.module.admin.storage.unionfilesystems.Expand", {
             title: _("Expand pool"),
             uuid: record.get("uuid"),
