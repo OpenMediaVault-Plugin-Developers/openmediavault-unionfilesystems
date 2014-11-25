@@ -346,7 +346,8 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                 "%s,%s",
                 $oldPool["branches"],
                 $params["branches"]
-            )
+            ),
+            "mntentref" => $oldPool["mntentref"],
         );
 
         // Save configuration
