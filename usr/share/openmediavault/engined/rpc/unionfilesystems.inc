@@ -53,6 +53,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         $this->registerMethod("delete");
         $this->registerMethod("enumerateCandidates");
         $this->registerMethod("setExpand");
+        $this->registerMethod("removeMissingFilesystems");
     }
 
     public function getList($params, $context)
@@ -90,8 +91,11 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
         foreach ($uuids as $uuid) {
             try {
-                $pool = $this->get(array("uuid" => $uuid), $context);
+                $pool = $this->callMethod("get", array(
+                    "uuid" => $uuid
+                ), $context);
 
+                // Add additional information.
                 $branchesInfo = array();
 
                 foreach ($pool["branches"] as $branch) {
@@ -101,14 +105,21 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
                     $filesystem = OMVFilesystemFactory::get($mntent["fsname"]);
 
-                    $branchesInfo[] = sprintf(
-                        "%s (%s)",
-                        $filesystem->getDeviceFile(),
-                        $filesystem->getLabel()
-                    );
+                    $branchInfo = "n/a";
+
+                    if (!is_null($filesystem) && $filesystem->exists()) {
+                        $branchInfo = sprintf(
+                            "%s (%s)",
+                            $filesystem->getDeviceFile(),
+                            $filesystem->getLabel()
+                        );
+                    }
+
+                    $branchesInfo[] = $branchInfo;
                 }
 
                 $pool["branches_info"] = $branchesInfo;
+
                 $pools[] = $pool;
 
             } catch (Exception $e) {
@@ -181,7 +192,8 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                         "items": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
                         "minItems": 2,
                         "uniqueItems": true
-                    }
+                    },
+                    "mntentref": { "type": "string", "optional" : true }
                 }
             }'
         );
@@ -193,6 +205,10 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             "type" => $params["type"],
         );
 
+        if (isset($params["mntentref"])) {
+            $pool["mntentref"] = $params["mntentref"];
+        }
+
         $branches = array("mntentref" => array());
 
         foreach ($params["branches"] as $branch) {
@@ -201,14 +217,15 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
         $pool["branches"] = $branches;
 
-        $mntent = $this->createMntentEntry($pool);
-        $pool["mntentref"] = $mntent["uuid"];
-
-        // Save configuration
+        // Save configuration.
         $success = false;
         $xpath = null;
 
         if ($params["uuid"] == $GLOBALS["OMV_UUID_UNDEFINED"]) {
+            // Create the Mntent entry.
+            $mntent = $this->createMntentEntry($pool);
+            $pool["mntentref"] = $mntent["uuid"];
+
             $xpath = sprintf(
                 "%s/pool[name='%s']",
                 $this->getPoolsXpath(),
@@ -228,6 +245,8 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                 $pool
             );
         } else {
+            $this->createMntentEntry($pool, $pool["mntentref"]);
+
             $success = $xmlConfig->replace(
                 $xpath = $this->getPoolXpathByUuid($params["uuid"]),
                 $pool
@@ -246,6 +265,46 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         }
 
         return $pool;
+    }
+
+    public function setExpand($params, $context)
+    {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, array(
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ));
+
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams(
+            $params,
+            '{
+                "type": "object",
+                "properties": {
+                    "uuid": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
+                    "branches": {
+                        "type": "array",
+                        "items": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
+                        "minItems": 1,
+                        "uniqueItems": true
+                    }
+                }
+            }'
+        );
+
+        $pool = $this->callMethod("get", array(
+            "uuid" => $params["uuid"]
+        ), $context);
+
+        $branches = array_merge(
+            $pool["branches"],
+            $params["branches"]
+        );
+
+        $pool["branches"] = $branches;
+
+        return $this->callMethod("set", $pool, $context);
     }
 
     public function delete($params, $context)
@@ -268,14 +327,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             }'
         );
 
-        $pool = $xmlConfig->get($this->getPoolXpathByUuid($params["uuid"]));
-
-        if (is_null($pool)) {
-            throw new OMVException(
-                OMVErrorMsg::E_CONFIG_OBJECT_NOT_FOUND,
-                $this->getPoolXpathByUuid($params["uuid"])
-            );
-        }
+        $pool = $this->callMethod("get", $params, $context);
 
         if ($this->isUsed($pool)) {
             throw new OMVException(OMVErrorMsg::E_CONFIG_OBJECT_INUSE);
@@ -317,24 +369,26 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                 continue;
             }
 
-            // The device is a potential candidate to be a member of a
-            // union filesystem pool.
             $filesystem = OMVFilesystemFactory::get($entry["fsname"]);
 
-            $result[] = array(
-                "uuid" => $entry["uuid"],
-                "devicefile" => $filesystem->getDeviceFile(),
-                "dir" => $entry["dir"],
-                "fsname" => $entry["fsname"],
-                "label" => $filesystem->getLabel(),
-                "type" => $entry["type"],
-            );
+            if (!is_null($filesystem) && $filesystem->exists()) {
+                // The device is a potential candidate to be a member of a
+                // union filesystem pool.
+                $result[] = array(
+                    "uuid" => $entry["uuid"],
+                    "devicefile" => $filesystem->getDeviceFile(),
+                    "dir" => $entry["dir"],
+                    "fsname" => $entry["fsname"],
+                    "label" => $filesystem->getLabel(),
+                    "type" => $entry["type"],
+                );
+            }
         }
 
         return $result;
     }
 
-    public function setExpand($params, $context)
+    public function removeMissingFilesystems($params, $context)
     {
         global $xmlConfig;
 
@@ -349,64 +403,40 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             '{
                 "type": "object",
                 "properties": {
-                    "uuid": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
-                    "branches": {
-                        "type": "array",
-                        "items": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
-                        "minItems": 1,
-                        "uniqueItems": true
-                    }
+                    "uuid": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '}
                 }
             }'
         );
 
-        $oldPool = $xmlConfig->get($this->getPoolXpathByUuid($params["uuid"]));
+        $pool = $this->callMethod("get", $params, $context);
+        $branches = array();
 
-        if (is_null($oldPool)) {
-            throw new OMVException(
-                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-                $this->getPoolXpathByUuid($params["uuid"])
-            );
+        foreach ($pool["branches"] as $branch) {
+            $mntent = OMVRpc::exec("FsTab", "get", array(
+                "uuid" => $branch
+            ), $context);
+
+            $filesystem = OMVFilesystemFactory::get($mntent["fsname"]);
+
+            if (!is_null($filesystem) && $filesystem->exists()) {
+                $branches[] = $branch;
+            }
         }
 
-        $pool = array(
-            "uuid" => $params["uuid"],
-            "name" => $oldPool["name"],
-            "type" => $oldPool["type"],
-            "mntentref" => $oldPool["mntentref"],
-        );
+        // If the branches are the same, don't do anything.
+        if ($branches == $pool["branches"]) {
+            return $pool;
+        }
 
-        $branchesUuidList = array_merge(
-            $oldPool["branches"],
-            $params["branches"]
-        );
-
-        $branches = array("mntentref" => array());
-
-        foreach ($branchesUuidList as $branch) {
-            $branches["mntentref"][] = $branch;
+        // If the remaining branches isn't enough to create a pool
+        // try to delete the pool.
+        if (count($branches) < 2) {
+            return $this->callMethod("delete", $params, $context);
         }
 
         $pool["branches"] = $branches;
 
-        // Save configuration
-        $success = false;
-
-        $success = $xmlConfig->replace(
-            $xpath = $this->getPoolXpathByUuid($params["uuid"]),
-            $pool
-        );
-
-        if (!$success) {
-            throw new OMVException(
-                OMVErrorMsg::E_CONFIG_OBJECT_NOT_FOUND,
-                $xpath
-            );
-        }
-
-        $this->createMntentEntry($pool, $pool["mntentref"]);
-
-        return $pool;
+        return $this->callMethod("set", $pool, $context);
     }
 
     private function createMntentEntry($pool, $mntentref = null)
