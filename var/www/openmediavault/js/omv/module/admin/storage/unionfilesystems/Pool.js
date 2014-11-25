@@ -94,8 +94,8 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
                     type: "rpc",
                     appendSortParams: false,
                     rpcData: {
-                        service: "FsTab",
-                        method: "enumerateEntries"
+                        service: "UnionFilesystems",
+                        method: "getCandidates"
                     }
                 },
                 sorters: [{

@@ -51,6 +51,8 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         $this->registerMethod("get");
         $this->registerMethod("set");
         $this->registerMethod("delete");
+
+        $this->registerMethod("getCandidates");
     }
 
     public function getList($params, $context)
@@ -254,6 +256,47 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         $mntent = OMVRpc::exec("FsTab", "delete", array(
             "uuid" => $pool["mntentref"]
         ), $context);
+    }
+
+    public function getCandidates($params, $context)
+    {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, array(
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ));
+
+        // Get the configuration object.
+        $xPath = "//system/fstab/mntent";
+        $devs = $xmlConfig->getList($xPath);
+        if (is_null($devs)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $xPath
+            );
+        }
+
+        // Prepare the result list.
+        $result = array();
+        foreach ($devs as $devk => $devv) {
+            // Check if device is referenced/used by a branch.
+            $xPath = sprintf("//branches[contains(.,'%s')]",
+                $devv['uuid']);
+            if (TRUE === $xmlConfig->exists($xPath))
+                continue;
+
+            // The device is a potential candidate to be a member of a
+            // union filesystem pool.
+            $result[] = array(
+                "uuid"   => $devv['uuid'],
+                "fsname" => $devv['fsname'],
+                "dir"    => $devv['dir'],
+                "type"   => $devv['type']
+            );
+        }
+
+        return $result;
     }
 }
 
