@@ -53,10 +53,16 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Expand", {
                         name: "uuid",
                         type: "string"
                     }, {
-                        name: "fsname",
+                        name: "devicefile",
                         type: "string"
                     }, {
                         name: "dir",
+                        type: "string"
+                    }, {
+                        name: "fsname",
+                        type: "string"
+                    }, {
+                        name: "label",
                         type: "string"
                     }, {
                         name: "type",

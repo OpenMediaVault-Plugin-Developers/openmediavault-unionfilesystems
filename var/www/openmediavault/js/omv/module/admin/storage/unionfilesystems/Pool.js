@@ -107,20 +107,7 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
                 sorters: [{
                     direction: "ASC",
                     property: "devicefile"
-                }],
-                listeners: {
-                    load: function() {
-                        this.filter(function(record) {
-                            var type = record.get("type");
-
-                            if (type === "aufs" || type === "mhddfs" || type === "none") {
-                                return false;
-                            }
-
-                            return true;
-                        });
-                    }
-                }
+                }]
             }),
             gridConfig: {
                 columns: [{
