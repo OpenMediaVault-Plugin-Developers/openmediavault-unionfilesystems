@@ -189,9 +189,13 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         $xpath = null;
 
         if ($params["uuid"] == $GLOBALS["OMV_UUID_UNDEFINED"]) {
-            $xPath = sprintf("%s/pool[name='%s']", $this->getPoolsXpath(),
-                $params['name']);
-            if (TRUE === $xmlConfig->exists($xPath)) {
+            $xpath = sprintf(
+                "%s/pool[name='%s']",
+                $this->getPoolsXpath(),
+                $params["name"]
+            );
+
+            if ($xmlConfig->exists($xpath)) {
                 throw new OMVException(
                     OMVErrorMsg::E_CONFIG_OBJECT_UNIQUENESS,
                     gettext("This name is already in use by another pool.")
