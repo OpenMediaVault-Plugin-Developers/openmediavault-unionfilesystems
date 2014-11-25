@@ -168,20 +168,8 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             "branches" => $params["branches"],
         );
 
-        $mointPoint = OMVFilesystemUnion::buildMountPath($pool["uuid"]);
 
-        // Create mntent entry
-        $mntentEntry = array(
-            "uuid" => $GLOBALS["OMV_UUID_UNDEFINED"],
-            "fsname" => $mointPoint,
-            "dir" => $mointPoint,
-            "type" => $pool["type"],
-            "opts" => "",
-            "freq" => 0,
-            "passno" => 0,
-        );
-
-        $mntent = OMVRpc::exec("FsTab", "set", $mntentEntry, $context);
+        $mntent = $this->createMntentEntry($pool);
         $pool["mntentref"] = $mntent["uuid"];
 
         // Save configuration
@@ -359,25 +347,43 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         );
 
         if (!$success) {
-            OMVRpc::exec("FsTab", "delete", array(
-                "uuid" => $pool["mntentref"]
-            ), $context);
-
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_OBJECT_NOT_FOUND,
                 $xpath
             );
         }
 
-        // Notify configuration changes.
-        $dispatcher = &OMVNotifyDispatcher::getInstance();
-        $dispatcher->notify(
-            OMV_NOTIFY_MODIFY,
-            "org.openmediavault.system.fstab.mntent",
-            $pool
-        );
+        $this->createMntentEntry($pool, $pool["mntentref"]);
 
         return $pool;
+    }
+
+    private function createMntentEntry($pool, $mntentref = null)
+    {
+        if (!$mntentref) {
+            $mntentref = $GLOBALS["OMV_UUID_UNDEFINED"];
+        }
+
+        $mountPoint = OMVFilesystemUnion::buildMountPath($pool["uuid"]);
+
+        $mntentEntry = array(
+            "uuid" => $mntentref,
+            "fsname" => $mountPoint,
+            "dir" => $mountPoint,
+            "type" => $pool["type"],
+            "opts" => "",
+            "freq" => 0,
+            "passno" => 0,
+        );
+
+        $mntent = OMVRpc::exec(
+            "FsTab",
+            "set",
+            $mntentEntry,
+            $this->getAdminContext()
+        );
+
+        return $mntent;
     }
 }
 
