@@ -236,7 +236,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             }'
         );
 
-        $pool = $xmlConfig->delete($this->getPoolXpathByUuid($params["uuid"]));
+        $pool = $xmlConfig->get($this->getPoolXpathByUuid($params["uuid"]));
 
         if (is_null($pool)) {
             throw new OMVException(
@@ -244,6 +244,12 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                 $this->getPoolXpathByUuid($params["uuid"])
             );
         }
+
+        if ($this->isUsed($pool["mntentref"])) {
+            throw new OMVException(OMVErrorMsg::E_CONFIG_OBJECT_INUSE);
+        }
+
+        $xmlConfig->delete($this->getPoolXpathByUuid($params["uuid"]));
 
         $mntent = OMVRpc::exec("FsTab", "delete", array(
             "uuid" => $pool["mntentref"]
@@ -384,6 +390,17 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         );
 
         return $mntent;
+    }
+
+    private function isUsed($mntentref)
+    {
+        $xpath = sprintf("//mntentref[contains(.,'%s')]", $mntentref);
+
+        if ($xmlConfig->exists($xpath)) {
+            return true;
+        }
+
+        return false;
     }
 }
 
