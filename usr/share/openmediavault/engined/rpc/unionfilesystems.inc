@@ -108,7 +108,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                     );
                 }
 
-                $pool["branches_info"] = implode(", ", $branchesInfo);
+                $pool["branches_info"] = $branchesInfo;
                 $pools[] = $pool;
 
             } catch (Exception $e) {

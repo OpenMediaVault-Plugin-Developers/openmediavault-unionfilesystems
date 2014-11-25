@@ -48,7 +48,12 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
         header: _("Branches"),
         flex: 1,
         sortable: true,
-        dataIndex: "branches_info"
+        dataIndex: "branches_info",
+        renderer: function(value) {
+            var template = Ext.create("Ext.XTemplate", '<tpl for=".">{.}<br/></tpl>');
+
+            return template.apply(value);
+        }
     }, {
         header: _("Type"),
         flex: 1,
@@ -61,13 +66,17 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
         model: OMV.data.Model.createImplicit({
             idProperty: "uuid",
             fields: [{
-                name: "uuid"
+                name: "uuid",
+                type: "string"
             }, {
-                name: "name"
+                name: "name",
+                type: "string"
             }, {
-                name: "type"
+                name: "type",
+                type: "string"
             }, {
-                name: "branches_info"
+                name: "branches_info",
+                type: "array"
             }]
         }),
         proxy: {
