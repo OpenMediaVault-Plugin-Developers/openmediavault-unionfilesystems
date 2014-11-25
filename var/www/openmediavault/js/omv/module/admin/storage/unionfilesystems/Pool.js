@@ -70,7 +70,6 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
             fieldLabel: _("Branches"),
             valueField: "uuid",
             minSelections: 2,
-            useStringValue: true,
             flex: 1,
             store: Ext.create("OMV.data.Store", {
                 autoLoad: true,

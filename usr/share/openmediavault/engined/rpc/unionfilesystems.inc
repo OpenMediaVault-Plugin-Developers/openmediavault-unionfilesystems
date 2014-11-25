@@ -94,7 +94,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
                 $branchesInfo = array();
 
-                foreach (explode(",", $pool["branches"]) as $branch) {
+                foreach ($pool["branches"] as $branch) {
                     $mntent = OMVRpc::exec("FsTab", "get", array(
                         "uuid" => $branch
                     ), $context);
@@ -146,7 +146,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         );
 
         $pool = $xmlConfig->get($this->getPoolXpathByUuid($params["uuid"]));
-        $pool["branches"] = implode(",", $pool["branches"]["mntentref"]);
+        $pool["branches"] = $pool["branches"]["mntentref"];
 
         if (is_null($pool)) {
             throw new OMVException(
@@ -176,7 +176,12 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                     "uuid": {' . $GLOBALS["OMV_JSONSCHEMA_UUID_UNDEFINED"] . '},
                     "name": { "type": "string" },
                     "type": { "type": "string", "enum": ["aufs", "mhddfs"] },
-                    "branches": { "type": "string" }
+                    "branches": {
+                        "type": "array",
+                        "items": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
+                        "minItems": 2,
+                        "uniqueItems": true
+                    }
                 }
             }'
         );
@@ -190,7 +195,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
         $branches = array("mntentref" => array());
 
-        foreach (explode(",", $params["branches"]) as $branch) {
+        foreach ($params["branches"] as $branch) {
             $branches["mntentref"][] = $branch;
         }
 
@@ -345,7 +350,12 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                 "type": "object",
                 "properties": {
                     "uuid": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
-                    "branches": { "type": "string" }
+                    "branches": {
+                        "type": "array",
+                        "items": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
+                        "minItems": 1,
+                        "uniqueItems": true
+                    }
                 }
             }'
         );
@@ -368,7 +378,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
         $branchesUuidList = array_merge(
             $oldPool["branches"],
-            explode(",", $params["branches"])
+            $params["branches"]
         );
 
         $branches = array("mntentref" => array());
