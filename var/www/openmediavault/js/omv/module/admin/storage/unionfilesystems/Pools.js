@@ -77,6 +77,38 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
         }]
     }),
 
+    getTopToolbarItems: function() {
+        var me = this;
+        var items = me.callParent(arguments);
+        Ext.Array.insert(items, 3, [{
+            id       : me.getId() + "-expand",
+            xtype    : "button",
+            text     : _("Expand"),
+            icon     : "images/expand.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onExpandButton, me, [ me ]),
+            disabled : true,
+            scope    : me
+        }]);
+        return items;
+    },
+
+    onSelectionChange: function(model, records) {
+        var me = this;
+        me.callParent(arguments);
+        // Process additional buttons.
+        var tbarBtnDisabled = {
+            "expand" : true
+        };
+        if(records.length == 1) {
+            tbarBtnDisabled["expand"] = false;
+        }
+        // Update the button controls.
+        Ext.Object.each(tbarBtnDisabled, function(key, value) {
+            this.setToolbarButtonDisabled(key, value);
+        }, me);
+    },
+
     onAddButton: function() {
         Ext.create("OMV.module.admin.storage.unionfilesystems.Pool", {
             title: _("Add pool"),
@@ -102,8 +134,21 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
                 }
             }
         });
-    }
+    },
 
+    onExpandButton: function() {
+        var record = this.getSelected();
+        Ext.create("OMV.module.admin.storage.unionfilesystems.Expand", {
+            title: _("Expand pool"),
+            uuid: record.get("uuid"),
+            listeners: {
+                scope: this,
+                submit: function() {
+                    this.doReload();
+                }
+            }
+        }).show();
+    }
 });
 
 OMV.WorkspaceManager.registerPanel({

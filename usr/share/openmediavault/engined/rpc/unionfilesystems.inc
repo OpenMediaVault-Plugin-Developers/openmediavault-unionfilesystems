@@ -53,6 +53,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         $this->registerMethod("delete");
 
         $this->registerMethod("getCandidates");
+        $this->registerMethod("setExpand");
     }
 
     public function getList($params, $context)
@@ -290,6 +291,9 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             if (TRUE === $xmlConfig->exists($xPath))
                 continue;
 
+            if ($devv['type'] == "aufs" || $devv['type'] == "mhddfs")
+                continue;
+
             // The device is a potential candidate to be a member of a
             // union filesystem pool.
             $result[] = array(
@@ -301,6 +305,76 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         }
 
         return $result;
+    }
+
+    public function setExpand($params, $context)
+    {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, array(
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ));
+
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams(
+            $params,
+            '{
+                "type": "object",
+                "properties": {
+                    "uuid": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
+                    "branches": { "type": "string" }
+                }
+            }'
+        );
+
+        $oldPool = $xmlConfig->get($this->getPoolXpathByUuid($params["uuid"]));
+
+        if (is_null($oldPool)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getPoolXpathByUuid($params["uuid"])
+            );
+        }
+
+        $pool = array(
+            "uuid" => $params["uuid"],
+            "name" => $oldPool["name"],
+            "type" => $oldPool["type"],
+            "branches" => sprintf(
+                "%s,%s",
+                $oldPool["branches"],
+                $params["branches"]
+            )
+        );
+
+        // Save configuration
+        $success = false;
+        $success = $xmlConfig->replace(
+            $xpath = $this->getPoolXpathByUuid($params["uuid"]),
+            $pool
+        );
+
+        if (!$success) {
+            OMVRpc::exec("FsTab", "delete", array(
+                "uuid" => $pool["mntentref"]
+            ), $context);
+
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_OBJECT_NOT_FOUND,
+                $xpath
+            );
+        }
+
+        // Notify configuration changes.
+        $dispatcher = &OMVNotifyDispatcher::getInstance();
+        $dispatcher->notify(
+            OMV_NOTIFY_MODIFY,
+            "org.openmediavault.system.fstab.mntent",
+            $pool
+        );
+
+        return $pool;
     }
 }
 
