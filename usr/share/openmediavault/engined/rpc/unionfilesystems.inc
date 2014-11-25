@@ -291,7 +291,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
             $result[] = array(
                 "uuid" => $entry["uuid"],
-                "devicefile" => $filesystem->getCanonicalDeviceFile(),
+                "devicefile" => $filesystem->getDeviceFile(),
                 "dir" => $entry["dir"],
                 "fsname" => $entry["fsname"],
                 "label" => $filesystem->getLabel(),
