@@ -245,7 +245,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             );
         }
 
-        if ($this->isUsed($pool["mntentref"])) {
+        if ($this->isUsed($pool)) {
             throw new OMVException(OMVErrorMsg::E_CONFIG_OBJECT_INUSE);
         }
 
@@ -392,11 +392,15 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         return $mntent;
     }
 
-    private function isUsed($mntentref)
+    private function isUsed($pool)
     {
         global $xmlConfig;
 
-        $xpath = sprintf("//mntentref[contains(.,'%s')]", $mntentref);
+        $xpath = sprintf(
+            "//mntentref[contains(.,'%s') and not(../uuid/text()='%s')]",
+            $pool["mntentref"],
+            $pool["uuid"]
+        );
 
         if ($xmlConfig->exists($xpath)) {
             return true;
