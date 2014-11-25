@@ -146,6 +146,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         );
 
         $pool = $xmlConfig->get($this->getPoolXpathByUuid($params["uuid"]));
+        $pool["branches"] = implode(",", $pool["branches"]["mntentref"]);
 
         if (is_null($pool)) {
             throw new OMVException(
@@ -185,9 +186,15 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                 OMVUtil::uuid() : $params["uuid"],
             "name" => $params["name"],
             "type" => $params["type"],
-            "branches" => $params["branches"],
         );
 
+        $branches = array("mntentref" => array());
+
+        foreach (explode(",", $params["branches"]) as $branch) {
+            $branches["mntentref"][] = $branch;
+        }
+
+        $pool["branches"] = $branches;
 
         $mntent = $this->createMntentEntry($pool);
         $pool["mntentref"] = $mntent["uuid"];
@@ -356,13 +363,21 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             "uuid" => $params["uuid"],
             "name" => $oldPool["name"],
             "type" => $oldPool["type"],
-            "branches" => sprintf(
-                "%s,%s",
-                $oldPool["branches"],
-                $params["branches"]
-            ),
             "mntentref" => $oldPool["mntentref"],
         );
+
+        $branchesUuidList = array_merge(
+            $oldPool["branches"],
+            explode(",", $params["branches"])
+        );
+
+        $branches = array("mntentref" => array());
+
+        foreach ($branchesUuidList as $branch) {
+            $branches["mntentref"][] = $branch;
+        }
+
+        $pool["branches"] = $branches;
 
         // Save configuration
         $success = false;

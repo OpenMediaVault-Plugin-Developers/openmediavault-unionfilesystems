@@ -33,7 +33,7 @@ while [ $index -lt $count -o $index -eq $count ]; do
 
     current_pool_xpath="${OMV_UNION_FILESYSTEMS_POOLS_XPATH}[position()=${index}]"
 
-    branches=$(omv_config_get "${current_pool_xpath}/branches")
+    branches=$(omv_config_get "${current_pool_xpath}/branches/mntentref")
     fstype=$(omv_config_get "${current_pool_xpath}/type")
     mntentref=$(omv_config_get "${current_pool_xpath}/mntentref")
     mount_point=$(omv_config_get "//system/fstab/mntent[uuid='${mntentref}']/dir")
@@ -46,7 +46,6 @@ while [ $index -lt $count -o $index -eq $count ]; do
 
     branch_mount_points=""
     first_branch=1
-    IFS=,
 
     for branch in $branches; do
         dir=$(omv_config_get "//system/fstab/mntent[uuid='${branch}']/dir")
@@ -58,8 +57,6 @@ while [ $index -lt $count -o $index -eq $count ]; do
             branch_mount_points="${branch_mount_points}${branch_separator}${dir}"
         fi
     done;
-
-    IFS=
 
     if [ "${fstype}" = "aufs" ]; then
         fstab_line="none ${mount_point} aufs br=${branch_mount_points},${OMV_FSTAB_MNTOPS_AUFS} 0 0"
