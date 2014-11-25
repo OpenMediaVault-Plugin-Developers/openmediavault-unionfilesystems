@@ -90,7 +90,27 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
         foreach ($uuids as $uuid) {
             try {
-                $pools[] = $this->get(array("uuid" => $uuid), $context);
+                $pool = $this->get(array("uuid" => $uuid), $context);
+
+                $branchesInfo = array();
+
+                foreach (explode(",", $pool["branches"]) as $branch) {
+                    $mntent = OMVRpc::exec("FsTab", "get", array(
+                        "uuid" => $branch
+                    ), $context);
+
+                    $filesystem = OMVFilesystemFactory::get($mntent["fsname"]);
+
+                    $branchesInfo[] = sprintf(
+                        "%s (%s)",
+                        $filesystem->getDeviceFile(),
+                        $filesystem->getLabel()
+                    );
+                }
+
+                $pool["branches_info"] = implode(", ", $branchesInfo);
+                $pools[] = $pool;
+
             } catch (Exception $e) {
                 throw $e;
             }

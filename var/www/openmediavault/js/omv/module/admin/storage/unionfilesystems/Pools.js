@@ -45,6 +45,11 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
         sortable: true,
         dataIndex: "name"
     }, {
+        header: _("Branches"),
+        flex: 1,
+        sortable: true,
+        dataIndex: "branches_info"
+    }, {
         header: _("Type"),
         flex: 1,
         sortable: true,
@@ -61,6 +66,8 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
                 name: "name"
             }, {
                 name: "type"
+            }, {
+                name: "branches_info"
             }]
         }),
         proxy: {
