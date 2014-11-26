@@ -169,9 +169,8 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
     },
 
     onRemoveMissingButton: function() {
-        var msg = _("Do you really want to remove missing filesystems from this pool?") + " " +
-                  _("By clicking yes the system will try to find and remove the missing filesystems from the pool.") + " " +
-                  _("Note that if the there is less than two filesystems left in the pool - after removing missing filesystems - the pool will be deleted.");
+        var msg = _("Are you sure that you really want to remove missing filesystems from this pool?") + " " +
+                  _("By clicking yes the system will try to find and remove the missing filesystems from the pool.");
 
         OMV.MessageBox.show({
             title: _("Confirmation"),

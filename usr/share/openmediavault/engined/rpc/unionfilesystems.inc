@@ -157,7 +157,24 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         );
 
         $pool = $xmlConfig->get($this->getPoolXpathByUuid($params["uuid"]));
-        $pool["branches"] = $pool["branches"]["mntentref"];
+
+        $branches = $pool["branches"]["mntentref"];
+
+        // If we have no branches left, which could happen when removing all
+        // missing filesystems, just set branches to an empty array.
+        if (empty($branches)) {
+            $branches = array();
+        }
+
+        // If there's only one branch in the pool, changes are that it's being
+        // treated as a string, add it to an array.
+        if (is_string($branches)) {
+            $branches = array(
+                $branches
+            );
+        }
+
+        $pool["branches"] = $branches;
 
         if (is_null($pool)) {
             throw new OMVException(
@@ -191,7 +208,8 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                         "type": "array",
                         "items": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
                         "minItems": 1,
-                        "uniqueItems": true
+                        "uniqueItems": true,
+                        "optional": true
                     },
                     "mntentref": { "type": "string", "optional" : true }
                 }
@@ -209,10 +227,16 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             $pool["mntentref"] = $params["mntentref"];
         }
 
-        $branches = array("mntentref" => array());
+        // Add an empty branches list if the branches option is not set.
+        $branches = array();
 
-        foreach ($params["branches"] as $branch) {
-            $branches["mntentref"][] = $branch;
+        // In case the branches option is set, add the branches as mntentrefs.
+        if (!empty($params["branches"])) {
+            $branches["mntentref"] = array();
+
+            foreach ($params["branches"] as $branch) {
+                $branches["mntentref"][] = $branch;
+            }
         }
 
         $pool["branches"] = $branches;
@@ -297,12 +321,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             "uuid" => $params["uuid"]
         ), $context);
 
-        $branches = array_merge(
-            $pool["branches"],
-            $params["branches"]
-        );
-
-        $pool["branches"] = $branches;
+        $pool["branches"] = array_merge($pool["branches"], $params["branches"]);
 
         return $this->callMethod("set", $pool, $context);
     }
@@ -428,13 +447,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             return $pool;
         }
 
-        // If the remaining branches isn't enough to create a pool
-        // try to delete the pool.
-        if (count($branches) < 2) {
-            return $this->callMethod("delete", $params, $context);
-        }
-
-        $pool["branches"] = $branches;
+        $pool["branches"] = empty($branches) ? null : $branches;
 
         return $this->callMethod("set", $pool, $context);
     }
