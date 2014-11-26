@@ -33,38 +33,42 @@ while [ $index -lt $count -o $index -eq $count ]; do
 
     current_pool_xpath="${OMV_UNION_FILESYSTEMS_POOLS_XPATH}[position()=${index}]"
 
-    branches=$(omv_config_get "${current_pool_xpath}/branches/mntentref")
-    fstype=$(omv_config_get "${current_pool_xpath}/type")
-    mntentref=$(omv_config_get "${current_pool_xpath}/mntentref")
-    mount_point=$(omv_config_get "//system/fstab/mntent[uuid='${mntentref}']/dir")
+    if [ $(omv_config_get_count "${OMV_UNION_FILESYSTEMS_POOLS_XPATH}/branches/mntentref") -gt 0 ]; then
 
-    if [ "${fstype}" = "aufs" ]; then
-        branch_separator=":"
-    elif [ "${fstype}" = "mhddfs" ]; then
-        branch_separator=","
-    fi
+        branches=$(omv_config_get "${current_pool_xpath}/branches/mntentref")
+        fstype=$(omv_config_get "${current_pool_xpath}/type")
+        mntentref=$(omv_config_get "${current_pool_xpath}/mntentref")
+        mount_point=$(omv_config_get "//system/fstab/mntent[uuid='${mntentref}']/dir")
 
-    branch_mount_points=""
-    first_branch=1
-
-    for branch in $branches; do
-        dir=$(omv_config_get "//system/fstab/mntent[uuid='${branch}']/dir")
-
-        if [ ${first_branch} -eq 1 ]; then
-            first_branch=0
-            branch_mount_points="${dir}"
-        else
-            branch_mount_points="${branch_mount_points}${branch_separator}${dir}"
+        if [ "${fstype}" = "aufs" ]; then
+            branch_separator=":"
+        elif [ "${fstype}" = "mhddfs" ]; then
+            branch_separator=","
         fi
-    done;
 
-    if [ "${fstype}" = "aufs" ]; then
-        fstab_line="none ${mount_point} aufs br=${branch_mount_points},${OMV_FSTAB_MNTOPS_AUFS} 0 0"
-    elif [ "${fstype}" = "mhddfs" ]; then
-        fstab_line="mhddfs#${branch_mount_points} $mount_point fuse ${OMV_FSTAB_MNTOPS_MHDDFS} 0 0"
+        branch_mount_points=""
+        first_branch=1
+
+        for branch in $branches; do
+            dir=$(omv_config_get "//system/fstab/mntent[uuid='${branch}']/dir")
+
+            if [ ${first_branch} -eq 1 ]; then
+                first_branch=0
+                branch_mount_points="${dir}"
+            else
+                branch_mount_points="${branch_mount_points}${branch_separator}${dir}"
+            fi
+        done;
+
+        if [ "${fstype}" = "aufs" ]; then
+            fstab_line="none ${mount_point} aufs br=${branch_mount_points},${OMV_FSTAB_MNTOPS_AUFS} 0 0"
+        elif [ "${fstype}" = "mhddfs" ]; then
+            fstab_line="mhddfs#${branch_mount_points} $mount_point fuse ${OMV_FSTAB_MNTOPS_MHDDFS} 0 0"
+        fi
+
+        echo $fstab_line
+
     fi
-
-    echo $fstab_line
 
     index=$(( ${index} + 1 ))
 
