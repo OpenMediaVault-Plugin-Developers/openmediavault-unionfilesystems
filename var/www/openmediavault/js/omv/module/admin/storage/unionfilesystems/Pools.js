@@ -109,6 +109,19 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
                 minSelections : 1,
                 maxSelections : 1
             }
+        }, {
+            id       : me.getId() + "-remove-missing",
+            xtype    : "button",
+            text     : _("Remove missing"),
+            icon     : "images/expand.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(this.onRemoveMissingButton, this),
+            disabled : true,
+            scope    : this,
+            selectionConfig : {
+                minSelections : 1,
+                maxSelections : 1
+            }
         }]);
         return items;
     },
@@ -153,6 +166,41 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
                 }
             }
         }).show();
+    },
+
+    onRemoveMissingButton: function() {
+        var msg = _("Do you really want to remove missing filesystems from this pool?") + " " +
+                  _("By clicking yes the system will try to find and remove the missing filesystems from the pool.") + " " +
+                  _("Note that if the there is less than two filesystems left in the pool - after removing missing filesystems - the pool will be deleted.");
+
+        OMV.MessageBox.show({
+            title: _("Confirmation"),
+            msg: msg,
+            buttons: Ext.Msg.YESNO,
+            fn: function(answer) {
+                if (answer !== "yes") {
+                    return;
+                }
+
+                var record = this.getSelected();
+
+                OMV.Rpc.request({
+                    scope: this,
+                    callback: function() {
+                        this.doReload();
+                    },
+                    rpcData: {
+                        service: "UnionFilesystems",
+                        method: "removeMissingFilesystems",
+                        params: {
+                            uuid: record.get("uuid")
+                        }
+                    }
+                });
+            },
+            scope: this,
+            icon: Ext.Msg.QUESTION
+        });
     }
 });
 
