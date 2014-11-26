@@ -190,7 +190,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                     "branches": {
                         "type": "array",
                         "items": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
-                        "minItems": 2,
+                        "minItems": 1,
                         "uniqueItems": true
                     },
                     "mntentref": { "type": "string", "optional" : true }
