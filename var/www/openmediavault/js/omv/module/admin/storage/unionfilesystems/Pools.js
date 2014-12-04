@@ -113,7 +113,7 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
             id       : me.getId() + "-remove-missing",
             xtype    : "button",
             text     : _("Remove missing"),
-            icon     : "images/expand.png",
+            icon     : "images/minus.png",
             iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
             handler  : Ext.Function.bind(this.onRemoveMissingButton, this),
             disabled : true,
