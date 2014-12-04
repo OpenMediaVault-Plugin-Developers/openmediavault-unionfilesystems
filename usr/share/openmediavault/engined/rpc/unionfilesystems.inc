@@ -19,6 +19,7 @@
 
 require_once "openmediavault/config.inc";
 require_once "openmediavault/error.inc";
+require_once "openmediavault/module.inc";
 require_once "openmediavault/object.inc";
 require_once "openmediavault/rpc.inc";
 require_once "openmediavault/rpcservice.inc";
@@ -269,12 +270,13 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                 $pool
             );
         } else {
-            $this->createMntentEntry($pool, $pool["mntentref"]);
-
             $success = $xmlConfig->replace(
                 $xpath = $this->getPoolXpathByUuid($params["uuid"]),
                 $pool
             );
+
+            $moduleManager = OMVModuleMgr::getInstance();
+            $moduleManager->setModuleDirty("fstab");
         }
 
         if (!$success) {
