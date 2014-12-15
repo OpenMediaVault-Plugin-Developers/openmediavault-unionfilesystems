@@ -23,7 +23,7 @@ set -e
 OMV_UNION_FILESYSTEMS_XPATH=/config/services/unionfilesystems
 OMV_UNION_FILESYSTEMS_POOLS_XPATH=${OMV_UNION_FILESYSTEMS_XPATH}/pools/pool
 
-OMV_FSTAB_MNTOPS_AUFS=${OMV_FSTAB_MNTOPS_AUFS:-"sum,create=mfs"}
+OMV_FSTAB_MNTOPS_AUFS=${OMV_FSTAB_MNTOPS_AUFS:-"create=mfs"}
 OMV_FSTAB_MNTOPS_MHDDFS=${OMV_FSTAB_MNTOPS_MHDDFS:-"defaults,allow_other"}
 
 function join
@@ -74,7 +74,7 @@ while [ $index -lt $count -o $index -eq $count ]; do
 
         # Create the fstab line.
         if [ "${fstype}" = "aufs" ]; then
-            fstab_line="none ${mount_point} aufs br:${branch_mount_points},${OMV_FSTAB_MNTOPS_AUFS} 0 0"
+            fstab_line="none ${mount_point} aufs br:${branch_mount_points},sum,${OMV_FSTAB_MNTOPS_AUFS} 0 0"
         elif [ "${fstype}" = "mhddfs" ]; then
             fstab_line="mhddfs#${branch_mount_points} $mount_point fuse ${OMV_FSTAB_MNTOPS_MHDDFS} 0 0"
         fi
