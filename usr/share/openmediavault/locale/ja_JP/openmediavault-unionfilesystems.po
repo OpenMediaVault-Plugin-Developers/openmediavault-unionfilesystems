@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Toshihiro Kan <kansuke4649@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-12-04 08:15-0600\n"
-"PO-Revision-Date: 2014-12-04 14:17+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-12-08 02:36+0000\n"
+"Last-Translator: Toshihiro Kan <kansuke4649@gmail.com>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/projects/p/openmediavault-unionfilesystems/language/ja_JP/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,62 +19,62 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Add pool"
-msgstr ""
+msgstr "プールの追加"
 
 msgid ""
 "Are you sure that you really want to remove missing filesystems from this "
 "pool?"
-msgstr ""
+msgstr "本当にこのプールから行方不明のファイルシステムを削除ししてもよろしいですか？"
 
 msgid "Aufs/Mhddfs"
-msgstr ""
+msgstr "Aufs/Mhddfs"
 
 msgid "Branches"
-msgstr ""
+msgstr "ブランチ"
 
 msgid ""
 "By clicking yes the system will try to find and remove the missing "
 "filesystems from the pool."
-msgstr ""
+msgstr "はい をクリックした場合、システムはプールから行方不明のファイルシステムを削除しようと試みます。"
 
 msgid "Confirmation"
-msgstr ""
+msgstr "確認"
 
 msgid "Device"
-msgstr ""
+msgstr "デバイス"
 
 msgid "Expand"
-msgstr ""
+msgstr "拡張"
 
 msgid "Expand pool"
-msgstr ""
+msgstr "プールの拡張"
 
 msgid "Label"
-msgstr ""
+msgstr "ラベル"
 
 msgid "Mountpoint"
-msgstr ""
+msgstr "マウントポイント"
 
 msgid "Name"
-msgstr ""
+msgstr "名前"
 
 msgid "Pools"
-msgstr ""
+msgstr "プール"
 
 msgid "Remove missing"
-msgstr ""
+msgstr "行方不明を削除"
 
 msgid "This name is already in use by another pool."
-msgstr ""
+msgstr "この名前は他のプールで既に使用されています。"
 
 msgid "Type"
-msgstr ""
+msgstr "タイプ"
 
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 msgid "aufs"
-msgstr ""
+msgstr "aufs"
 
 msgid "mhddfs"
-msgstr ""
+msgstr "mhddfs"

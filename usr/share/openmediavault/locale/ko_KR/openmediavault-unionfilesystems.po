@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Hyeonkyu Chu <hyeonkyu@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-12-04 08:15-0600\n"
-"PO-Revision-Date: 2014-12-04 14:17+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-12-05 03:09+0000\n"
+"Last-Translator: Hyeonkyu Chu <hyeonkyu@gmail.com>\n"
 "Language-Team: Korean (Korea) (http://www.transifex.com/projects/p/openmediavault-unionfilesystems/language/ko_KR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,62 +19,62 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Add pool"
-msgstr ""
+msgstr "Pool 추가"
 
 msgid ""
 "Are you sure that you really want to remove missing filesystems from this "
 "pool?"
-msgstr ""
+msgstr "정말로 이 Pool에서 누락된 파일 시스템을 제거 하시겠습니까?"
 
 msgid "Aufs/Mhddfs"
-msgstr ""
+msgstr "AUFS/MHDDFS"
 
 msgid "Branches"
-msgstr ""
+msgstr "Branches"
 
 msgid ""
 "By clicking yes the system will try to find and remove the missing "
 "filesystems from the pool."
-msgstr ""
+msgstr "예를 클릭하면, Pool에서 누락된 파일 시스템을 제거합니다."
 
 msgid "Confirmation"
-msgstr ""
+msgstr "확인"
 
 msgid "Device"
-msgstr ""
+msgstr "장치"
 
 msgid "Expand"
-msgstr ""
+msgstr "확장"
 
 msgid "Expand pool"
-msgstr ""
+msgstr "Pool 확장"
 
 msgid "Label"
-msgstr ""
+msgstr "레이블"
 
 msgid "Mountpoint"
-msgstr ""
+msgstr "적재지점"
 
 msgid "Name"
-msgstr ""
+msgstr "이름"
 
 msgid "Pools"
-msgstr ""
+msgstr "Pools"
 
 msgid "Remove missing"
-msgstr ""
+msgstr "누락 제거"
 
 msgid "This name is already in use by another pool."
-msgstr ""
+msgstr "이 이름은 이미 다른 Pool에서 사용 중입니다."
 
 msgid "Type"
-msgstr ""
+msgstr "유형"
 
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 msgid "aufs"
-msgstr ""
+msgstr "AUFS"
 
 msgid "mhddfs"
-msgstr ""
+msgstr "MHDDFS"

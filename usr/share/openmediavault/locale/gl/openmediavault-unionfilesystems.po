@@ -3,72 +3,72 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Stefan Thrane Overby <stoverby@gmail.com>, 2014
+# Miguel Anxo Bouzada <mbouzada@gmail.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-12-04 08:15-0600\n"
-"PO-Revision-Date: 2014-12-04 14:57+0000\n"
-"Last-Translator: Stefan Thrane Overby <stoverby@gmail.com>\n"
-"Language-Team: Danish (http://www.transifex.com/projects/p/openmediavault-unionfilesystems/language/da/)\n"
+"PO-Revision-Date: 2014-12-08 12:39+0000\n"
+"Last-Translator: Miguel Anxo Bouzada <mbouzada@gmail.com>\n"
+"Language-Team: Galician (http://www.transifex.com/projects/p/openmediavault-unionfilesystems/language/gl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: da\n"
+"Language: gl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Add pool"
-msgstr "Tilføj pool"
+msgstr "Engadir agrupación"
 
 msgid ""
 "Are you sure that you really want to remove missing filesystems from this "
 "pool?"
-msgstr "Er du sikker på, at vil fjerne manglede filsystemer fra denne pool?"
+msgstr "Confirma que quere retirar os sistemas ficheiros non atopados nesta agrupación?"
 
 msgid "Aufs/Mhddfs"
 msgstr "Aufs/Mhddfs"
 
 msgid "Branches"
-msgstr "Grene"
+msgstr "Ramas"
 
 msgid ""
 "By clicking yes the system will try to find and remove the missing "
 "filesystems from the pool."
-msgstr "Ved at klikke ja vil systemet prøve at finde og fjerne de manglede filsystemer fra denne pool."
+msgstr "Ao premer en «Si», o sistema tentará atopar e retirar os sistemas de ficheiros non atopados na agrupación."
 
 msgid "Confirmation"
-msgstr "Bekræftelse"
+msgstr "Confirmación"
 
 msgid "Device"
-msgstr "Enhed"
+msgstr "Dispositivo"
 
 msgid "Expand"
-msgstr "Udvid"
+msgstr "Expandir"
 
 msgid "Expand pool"
-msgstr "Udvid pool"
+msgstr "Expandir agrupación"
 
 msgid "Label"
-msgstr "Label"
+msgstr "Etiqueta"
 
 msgid "Mountpoint"
-msgstr "Monteringspunkt"
+msgstr "Punto de montaxe"
 
 msgid "Name"
-msgstr "Navn"
+msgstr "Nome"
 
 msgid "Pools"
-msgstr "Pools"
+msgstr "Agrupacións"
 
 msgid "Remove missing"
-msgstr "Fjern manglede"
+msgstr "Retirar os non atopados"
 
 msgid "This name is already in use by another pool."
-msgstr "Dette navn bliver allerede brugt af en anden pool."
+msgstr "Este nome xa está a ser usado por outra agrupación."
 
 msgid "Type"
-msgstr "Type"
+msgstr "Tipo"
 
 msgid "UUID"
 msgstr "UUID"

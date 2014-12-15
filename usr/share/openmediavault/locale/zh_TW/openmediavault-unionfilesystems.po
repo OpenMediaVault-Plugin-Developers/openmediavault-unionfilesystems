@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# kochin <kochinc@outlook.com>, 2014
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-12-04 08:15-0600\n"
-"PO-Revision-Date: 2014-12-04 14:17+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2014-12-04 15:25+0000\n"
+"Last-Translator: kochin <kochinc@outlook.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/openmediavault-unionfilesystems/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,62 +19,62 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Add pool"
-msgstr ""
+msgstr "新增集用場"
 
 msgid ""
 "Are you sure that you really want to remove missing filesystems from this "
 "pool?"
-msgstr ""
+msgstr "您確定真的要從這個集用場移除丟失的檔案系統嗎？"
 
 msgid "Aufs/Mhddfs"
-msgstr ""
+msgstr "Aufs/Mhddfs"
 
 msgid "Branches"
-msgstr ""
+msgstr "分支"
 
 msgid ""
 "By clicking yes the system will try to find and remove the missing "
 "filesystems from the pool."
-msgstr ""
+msgstr "一旦點按 '是'，系統將試著在集用場中尋找並移除丟失的檔案系統。"
 
 msgid "Confirmation"
-msgstr ""
+msgstr "確認"
 
 msgid "Device"
-msgstr ""
+msgstr "裝置"
 
 msgid "Expand"
-msgstr ""
+msgstr "擴展"
 
 msgid "Expand pool"
-msgstr ""
+msgstr "擴展集用場"
 
 msgid "Label"
-msgstr ""
+msgstr "標籤"
 
 msgid "Mountpoint"
-msgstr ""
+msgstr "掛載點"
 
 msgid "Name"
-msgstr ""
+msgstr "名稱"
 
 msgid "Pools"
-msgstr ""
+msgstr "集用場"
 
 msgid "Remove missing"
-msgstr ""
+msgstr "移除丟失"
 
 msgid "This name is already in use by another pool."
-msgstr ""
+msgstr "此名稱已經被另一個集用場使用。"
 
 msgid "Type"
-msgstr ""
+msgstr "型式"
 
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 msgid "aufs"
-msgstr ""
+msgstr "aufs"
 
 msgid "mhddfs"
-msgstr ""
+msgstr "mhddfs"
