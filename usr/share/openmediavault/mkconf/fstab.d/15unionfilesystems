@@ -26,6 +26,14 @@ OMV_UNION_FILESYSTEMS_POOLS_XPATH=${OMV_UNION_FILESYSTEMS_XPATH}/pools/pool
 OMV_FSTAB_MNTOPS_AUFS=${OMV_FSTAB_MNTOPS_AUFS:-"sum,create=mfs"}
 OMV_FSTAB_MNTOPS_MHDDFS=${OMV_FSTAB_MNTOPS_MHDDFS:-"defaults,allow_other"}
 
+function join
+{
+    local IFS="$1"
+
+    shift
+    echo "$*"
+}
+
 count=$(omv_config_get_count "${OMV_UNION_FILESYSTEMS_POOLS_XPATH}")
 index=1
 
@@ -40,22 +48,33 @@ while [ $index -lt $count -o $index -eq $count ]; do
         mntentref=$(omv_config_get "${current_pool_xpath}/mntentref")
         mount_point=$(omv_config_get "//system/fstab/mntent[uuid='${mntentref}']/dir")
 
+        branches_with_options=""
+
+        # Get all branch mount points and append specific options depending
+        # on which type.
+        for branch in $branches; do
+            branch_entry=$(omv_config_get "//system/fstab/mntent[uuid='${branch}']/dir")
+
+            if [ "${fstype}" = "aufs" ]; then
+                branch_entry="${branch_entry}=rw"
+            fi
+
+            branches_with_options="${branches_with_options} ${branch_entry}"
+        done;
+
+        # Select branch separator.
         if [ "${fstype}" = "aufs" ]; then
-            branch_separator="=rw"
+            branch_separator=":"
         elif [ "${fstype}" = "mhddfs" ]; then
             branch_separator=","
         fi
 
-        branch_mount_points=""
+        # Join mount points separated by the branch separator according to type.
+        branch_mount_points=$(join $branch_separator $branches_with_options)
 
-        for branch in $branches; do
-            dir=$(omv_config_get "//system/fstab/mntent[uuid='${branch}']/dir")
-
-            branch_mount_points="${branch_mount_points}:${dir}${branch_separator}"
-        done;
-
+        # Create the fstab line.
         if [ "${fstype}" = "aufs" ]; then
-            fstab_line="none ${mount_point} aufs br${branch_mount_points},${OMV_FSTAB_MNTOPS_AUFS} 0 0"
+            fstab_line="none ${mount_point} aufs br:${branch_mount_points},${OMV_FSTAB_MNTOPS_AUFS} 0 0"
         elif [ "${fstype}" = "mhddfs" ]; then
             fstab_line="mhddfs#${branch_mount_points} $mount_point fuse ${OMV_FSTAB_MNTOPS_MHDDFS} 0 0"
         fi
