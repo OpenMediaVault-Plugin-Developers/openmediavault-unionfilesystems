@@ -41,27 +41,21 @@ while [ $index -lt $count -o $index -eq $count ]; do
         mount_point=$(omv_config_get "//system/fstab/mntent[uuid='${mntentref}']/dir")
 
         if [ "${fstype}" = "aufs" ]; then
-            branch_separator="=rw:"
+            branch_separator="=rw"
         elif [ "${fstype}" = "mhddfs" ]; then
             branch_separator=","
         fi
 
         branch_mount_points=""
-        first_branch=1
 
         for branch in $branches; do
             dir=$(omv_config_get "//system/fstab/mntent[uuid='${branch}']/dir")
 
-            if [ ${first_branch} -eq 1 ]; then
-                first_branch=0
-                branch_mount_points="${dir}"
-            else
-                branch_mount_points="${branch_mount_points}${branch_separator}${dir}"
-            fi
+            branch_mount_points="${branch_mount_points}:${dir}${branch_separator}"
         done;
 
         if [ "${fstype}" = "aufs" ]; then
-            fstab_line="none ${mount_point} aufs br:${branch_mount_points},${OMV_FSTAB_MNTOPS_AUFS} 0 0"
+            fstab_line="none ${mount_point} aufs br${branch_mount_points},${OMV_FSTAB_MNTOPS_AUFS} 0 0"
         elif [ "${fstype}" = "mhddfs" ]; then
             fstab_line="mhddfs#${branch_mount_points} $mount_point fuse ${OMV_FSTAB_MNTOPS_MHDDFS} 0 0"
         fi
