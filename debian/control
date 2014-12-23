@@ -9,5 +9,5 @@ Homepage: https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-uni
 
 Package: openmediavault-unionfilesystems
 Architecture: all
-Depends: openmediavault (>= 1.1), aufs-tools, mhddfs
+Depends: openmediavault (>= 1.7), aufs-tools, mhddfs
 Description: Union filesystems plugin for OpenMediaVault.

@@ -39,7 +39,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         $this->usage = "filesystem";
     }
 
-    private function getData()
+    protected function getData()
     {
         if ($this->dataCached) {
             return true;
@@ -162,6 +162,11 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         return false;
     }
 
+    public function remove()
+    {
+        return false;
+    }
+
     public function getMountPoint()
     {
         return $this->deviceFile;
@@ -209,21 +214,6 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         }
 
         return $result;
-    }
-
-    public function hasPosixAclSupport()
-    {
-        if (!$this->getData()) {
-            return false;
-        }
-
-        $backend = OMVFilesystems::getBackendByType($this->getType());
-
-        if (null == $backend) {
-            return false;
-        }
-
-        return $backend->hasPosixAclSupport();
     }
 
     public function isMounted()
