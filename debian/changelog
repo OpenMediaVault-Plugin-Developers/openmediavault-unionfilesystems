@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (1.1.2) stable; urgency=low
+
+  * Fix mhddfs fstab
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 15 Dec 2014 13:39:37 -0600
+
 openmediavault-unionfilesystems (1.1.1) stable; urgency=low
 
   * Fix aufs fstab line
