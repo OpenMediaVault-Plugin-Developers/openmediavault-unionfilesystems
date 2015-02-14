@@ -1,13 +1,14 @@
 Source: openmediavault-unionfilesystems
 Section: net
-XB-Plugin-Section: filesystems
 Priority: optional
 Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
-Build-Depends: debhelper (>= 9.0.0)
-Standards-Version: 3.9.3
-Homepage: https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-unionfilesystems
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.6
+XB-Plugin-Section: filesystems
 
 Package: openmediavault-unionfilesystems
 Architecture: all
-Depends: openmediavault (>= 1.7), aufs-tools, mhddfs
+Depends: openmediavault (>= 1.7), aufs-tools, mhddfs, ${misc:Depends}
 Description: Union filesystems plugin for OpenMediaVault.
+ Make it possible to mount drives under a single mountpoint with an union
+ filesystem such as aufs or mhddfs.
