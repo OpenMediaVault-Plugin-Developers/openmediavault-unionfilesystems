@@ -205,7 +205,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                     "uuid": {' . $GLOBALS["OMV_JSONSCHEMA_UUID_UNDEFINED"] . '},
                     "name": { "type": "string" },
                     "type": { "type": "string", "enum": ["aufs", "mhddfs"] },
-                    "mlimit": { "type": "integer", "optional": true },
+                    "mlimit": { "type": "string", "optional": true },
                     "branches": {
                         "type": "array",
                         "items": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
@@ -218,12 +218,38 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             }'
         );
 
+        // Check if percentage is greater than 100% or
+        // if megabytes are less than 100mb (mhddfs minimum)
+        $mlimit = intval($params["mlimit"]);
+
+        switch (substr($params["mlimit"], -1)) {
+            case "%":
+                if ($mlimit > 100) {
+                    $params["mlimit"] = "100%";
+                } elseif ($mlimit < 1) {
+                    $params["mlimit"] = "1%";
+                }
+                break;
+            case "m":
+                if ($mlimit < 100) {
+                    $params["mlimit"] = "100m";
+                }
+                break;
+            case "g":
+                if ($mlimit < 1) {
+                    $params["mlimit"] = "1g";
+                }
+                break;
+            default:
+                $params["mlimit"] = "4g";
+        }
+
         $pool = array(
             "uuid" => ($params["uuid"] == $GLOBALS["OMV_UUID_UNDEFINED"]) ?
                 OMVUtil::uuid() : $params["uuid"],
             "name" => $params["name"],
             "type" => $params["type"],
-            "mlimit" => intval($params["mlimit"])
+            "mlimit" => $params["mlimit"]
         );
 
         if (isset($params["mntentref"])) {

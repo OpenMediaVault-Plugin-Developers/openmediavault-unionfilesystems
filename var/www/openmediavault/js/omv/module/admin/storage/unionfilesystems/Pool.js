@@ -79,18 +79,18 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
             triggerAction: "all",
             value: "aufs"
         }, {
-            xtype: "numberfield",
+            xtype: "textfield",
             name: "mlimit",
             fieldLabel: _("Threshold"),
-            minValue: 1,
-            maxValue: 1000,
-            allowDecimals: false,
             allowBlank: false,
-            value: 4,
-            hidden: true,
+            maskRe: /[\dmg%]/,
+            regex: /^\d+(m|g|%)$/,
+            regexText: _("This field must have the format 4g, 100m, or 100%"),
+            maxLength: 5,
+            value: "4g",
             plugins: [{
                 ptype: "fieldinfo",
-                text: _("Value in gigabytes.")
+                text: _("Units can be g, m, or %. If a drive has the free space less than the threshold specifed then another drive will be chosen while creating a new file.  If all the drives have free space less than the threshold specified then a drive containing most free space will be choosen.")
             }]
         }, {
             xtype: "checkboxgridfield",
