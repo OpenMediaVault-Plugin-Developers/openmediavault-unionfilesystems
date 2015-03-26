@@ -29,6 +29,20 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
 
     plugins: [{
         ptype: "configobject"
+    },{
+        ptype        : "linkedfields",
+        correlations : [{
+            conditions : [{
+                name  : "type",
+                value : "mhddfs"
+            }],
+            name       : [
+                "mlimit"
+            ],
+            properties : [
+                "show"
+            ]
+        }]
     }],
 
     rpcService: "UnionFilesystems",
@@ -64,6 +78,20 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
             editable: false,
             triggerAction: "all",
             value: "aufs"
+        }, {
+            xtype: "numberfield",
+            name: "mlimit",
+            fieldLabel: _("Threshold"),
+            minValue: 1,
+            maxValue: 1000,
+            allowDecimals: false,
+            allowBlank: false,
+            value: 4,
+            hidden: true,
+            plugins: [{
+                ptype: "fieldinfo",
+                text: _("Value in gigabytes.")
+            }]
         }, {
             xtype: "checkboxgridfield",
             name: "branches",

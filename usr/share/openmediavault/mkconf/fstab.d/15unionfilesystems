@@ -76,7 +76,12 @@ while [ $index -lt $count -o $index -eq $count ]; do
         if [ "${fstype}" = "aufs" ]; then
             fstab_line="none ${mount_point} aufs br:${branch_mount_points},sum,${OMV_FSTAB_MNTOPS_AUFS} 0 0"
         elif [ "${fstype}" = "mhddfs" ]; then
-            fstab_line="mhddfs#${branch_mount_points} $mount_point fuse ${OMV_FSTAB_MNTOPS_MHDDFS} 0 0"
+            if omv_config_exists "${current_pool_xpath}/mlimit"; then
+                mlimit=",mlimit=$(omv_config_get "${current_pool_xpath}/mlimit")g"
+            else
+                mlimit=""
+            fi
+            fstab_line="mhddfs#${branch_mount_points} $mount_point fuse ${OMV_FSTAB_MNTOPS_MHDDFS}${mlimit} 0 0"
         fi
 
         echo $fstab_line

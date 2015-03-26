@@ -205,6 +205,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                     "uuid": {' . $GLOBALS["OMV_JSONSCHEMA_UUID_UNDEFINED"] . '},
                     "name": { "type": "string" },
                     "type": { "type": "string", "enum": ["aufs", "mhddfs"] },
+                    "mlimit": { "type": "integer", "optional": true },
                     "branches": {
                         "type": "array",
                         "items": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
@@ -222,6 +223,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                 OMVUtil::uuid() : $params["uuid"],
             "name" => $params["name"],
             "type" => $params["type"],
+            "mlimit" => intval($params["mlimit"])
         );
 
         if (isset($params["mntentref"])) {
