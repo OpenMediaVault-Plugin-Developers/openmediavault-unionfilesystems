@@ -1,6 +1,7 @@
 openmediavault-unionfilesystems (1.4) stable; urgency=low
 
   * Add mlimit option for mhddfs
+  * Update locales
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Mar 2015 11:43:59 -0500
 
