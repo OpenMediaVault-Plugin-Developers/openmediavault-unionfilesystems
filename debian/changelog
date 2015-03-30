@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (1.7) stable; urgency=low
+
+  * Change expand dialog to show device and label
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 30 Mar 2015 08:51:35 -0500
+
 openmediavault-unionfilesystems (1.6) stable; urgency=low
 
   * Fix mlimit error when expanding

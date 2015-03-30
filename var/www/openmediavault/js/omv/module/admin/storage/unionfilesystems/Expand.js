@@ -83,9 +83,14 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Expand", {
             }),
             gridConfig: {
                 columns: [{
-                    text: _("Mountpoint"),
+                    text: _("Device"),
                     sortable: true,
-                    dataIndex: "dir",
+                    dataIndex: "devicefile",
+                    flex: 1
+                }, {
+                    text: _("Label"),
+                    sortable: true,
+                    dataIndex: "label",
                     flex: 1
                 }, {
                     text: _("Type"),
