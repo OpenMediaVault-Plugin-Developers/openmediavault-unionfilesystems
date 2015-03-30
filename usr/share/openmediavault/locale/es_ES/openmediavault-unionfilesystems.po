@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Raul Fernandez Garcia <raulfg3@gmail.com>, 2014
+# Raul Fernandez Garcia <raulfg3@gmail.com>, 2014-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-03-26 14:55-0500\n"
-"PO-Revision-Date: 2015-03-26 19:59+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
+"PO-Revision-Date: 2015-03-26 20:28+0000\n"
+"Last-Translator: Raul Fernandez Garcia <raulfg3@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/projects/p/openmediavault-unionfilesystems/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,13 +65,13 @@ msgid "Remove missing"
 msgstr "Borrar perdidos"
 
 msgid "This field must have the format 4g, 100m, or 100%"
-msgstr ""
+msgstr "Este campo debe estar en el formato: 4g, 100m, o 100%"
 
 msgid "This name is already in use by another pool."
 msgstr "Este nombre está en uso en otro pool."
 
 msgid "Threshold"
-msgstr ""
+msgstr "Ajuste"
 
 msgid "Type"
 msgstr "Tipo"
@@ -84,7 +84,7 @@ msgid ""
 "threshold specifed then another drive will be chosen while creating a new "
 "file.  If all the drives have free space less than the threshold specified "
 "then a drive containing most free space will be choosen."
-msgstr ""
+msgstr "Las unidades deben ser g, m, o % . Si un disco tiene menos espacio que el ajuste, entonces se usará otro disco para crear el nuevo archivo. Si todos los discos tienen menos espacio libre que el ajuste, entonces se usará el que tenga mayor espacio libre."
 
 msgid "aufs"
 msgstr "aufs"

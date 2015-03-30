@@ -1,6 +1,7 @@
 openmediavault-unionfilesystems (1.6) stable; urgency=low
 
   * Fix mlimit error when expanding
+  * Update locales
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 30 Mar 2015 06:24:35 -0500
 
