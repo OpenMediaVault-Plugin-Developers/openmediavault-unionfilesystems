@@ -24,6 +24,13 @@ require_once "unionfilesystems/OMVFilesystemUnion.php";
 
 abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbstract
 {
+    /**
+     * Get the XPath of a filesystem by it's type.
+     *
+     * @param string $type The filesystem type (e.g. aufs, mhddfs).
+     *
+     * @return string A constructed XPath.
+     */
     private function getPoolListXpathByType($type)
     {
         return sprintf(
@@ -32,6 +39,11 @@ abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbs
         );
     }
 
+    /**
+     * Get a list of filesystems of the given filesystem backend.
+     *
+     * @return array|bool A list of filesystems, otherwise false.
+     */
     public function enumerate()
     {
         global $xmlConfig;
@@ -55,11 +67,26 @@ abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbs
         return $result;
     }
 
+    /**
+     * Check whether the filesystem implemented by this backend is identified by
+     * the block device identification library. If this is not the case, then
+     * the backend must override the enumerate method.
+     *
+     * @return bool
+     */
     public function isBlkidEnumerated()
     {
         return false;
     }
 
+    /**
+     * Check whether the given filesystem identifier is represented by this
+     * filesystem backend.
+     *
+     * @param string $id The filesystem identifier (e.g. UUID or device path).
+     *
+     * @return bool True if represented, otherwise false.
+     */
     public function isTypeOf($id)
     {
         $mounts = $this->enumerate();
@@ -73,6 +100,25 @@ abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbs
         return false;
     }
 
+    /**
+     * Does the filesystem have a device file? E.g. union mount or overlay
+     * filesystems like overlayfs and mhddfs don't have a device file.
+     *
+     * @return bool
+     */
+    public function hasDeviceFile()
+    {
+        return false;
+    }
+
+    /**
+     * Get the object of the class that represents and implements a filesystem
+     * of this filesystem backend.
+     *
+     * @param array $args The arguments to the class constructor.
+     *
+     * @return OMVFilesystemAbstract|null
+     */
     public function getImpl($args)
     {
         return new OMVFilesystemUnion($args);
