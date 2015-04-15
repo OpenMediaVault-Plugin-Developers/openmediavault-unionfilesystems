@@ -26,18 +26,20 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
     private $dataCached = false;
 
     /**
-     * Get the XPath of a filesystem by its type.
+     * Get the pool configuration by its UUID.
      *
-     * @param string $type The filesystem type (e.g. aufs, mhddfs).
+     * @param string $uuid The UUID.
      *
-     * @return string A constructed XPath.
+     * @return array|false A pool configuration.
      */
-    private function getPoolXpathByUuid($uuid)
+    private function getPoolConfiguration($uuid)
     {
-        return sprintf(
-            "/config/services/unionfilesystems/pools/pool[uuid='%s']",
-            $uuid
-        );
+        global $xmlConfig;
+
+        $xpath = "/config/services/unionfilesystems/pools/pool[uuid='$uuid']";
+        $pool = $xmlConfig->get($xpath);
+
+        return !is_null($pool) ?  $pool : false;
     }
 
     /**
@@ -62,16 +64,17 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
             return true;
         }
 
-        global $xmlConfig;
-
         $uuid = str_replace(
             $GLOBALS["OMV_MOUNT_DIR"] . "/",
             "",
             $this->deviceFile
         );
 
-        $pool = $xmlConfig->get($this->getPoolXpathByUuid($uuid));
+        if (!($pool = $this->getPoolConfiguration($uuid))) {
+            return false;
+        }
 
+        $this->uuid = $uuid;
         $this->label = $pool["name"];
         $this->type = $pool["type"];
 
@@ -89,7 +92,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
     {
         $this->dataCached = false;
 
-        return $this->getData() !== false;
+        return $this->getData();
     }
 
     /**
@@ -99,7 +102,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
      */
     public function exists()
     {
-        return $this->getData() !== false;
+        return $this->getData();
     }
 
     /**
@@ -109,7 +112,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
      */
     public function hasUuid()
     {
-        return false;
+        return $this->getUuid() !== false;
     }
 
     /**
@@ -119,7 +122,11 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
      */
     public function getUuid()
     {
-        return false;
+        if (!$this->getData()) {
+            return false;
+        }
+
+        return !empty($this->uuid) ? $this->uuid : false;
     }
 
     /**
@@ -129,9 +136,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
      */
     public function hasLabel()
     {
-        $label = $this->getLabel();
-
-        return !empty($label);
+        return $this->getLabel() !== false;
     }
 
     /**
@@ -145,7 +150,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
             return false;
         }
 
-        return $this->label;
+        return !empty($this->label) ? $this->label : false;
     }
 
     /**
@@ -159,7 +164,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
             return false;
         }
 
-        return $this->type;
+        return !empty($this->type) ? $this->type : false;
     }
 
     /**
@@ -183,7 +188,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
             return false;
         }
 
-        return $this->usage;
+        return !empty($this->usage) ? $this->usage : false;
     }
 
     /**
@@ -208,7 +213,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
             return false;
         }
 
-        return $this->deviceFile;
+        return $this->getMountPoint();
     }
 
     /**
@@ -219,11 +224,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
      */
     public function getCanonicalDeviceFile()
     {
-        if (!$this->getData()) {
-            return false;
-        }
-
-        return $this->deviceFile;
+        return false;
     }
 
     /**
@@ -297,7 +298,11 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
      */
     public function getMountPoint()
     {
-        return $this->deviceFile;
+        if ($this->hasUuid()) {
+            return self::buildMountPath($this->getUuid());
+        }
+
+        return false;
     }
 
     /**
@@ -338,7 +343,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
             }
 
             $result = array(
-                "devicefile" => $this->deviceFile,
+                "devicefile" => $this->getDeviceFile(),
                 "type" => $matches[1],
                 "blocks" => $matches[2],
                 "size" => bcmul($matches[2], "1024", 0),
