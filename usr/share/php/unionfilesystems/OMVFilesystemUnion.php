@@ -25,6 +25,13 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
 {
     private $dataCached = false;
 
+    /**
+     * Get the XPath of a filesystem by its type.
+     *
+     * @param string $type The filesystem type (e.g. aufs, mhddfs).
+     *
+     * @return string A constructed XPath.
+     */
     private function getPoolXpathByUuid($uuid)
     {
         return sprintf(
@@ -33,12 +40,22 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         );
     }
 
+    /**
+     * Constructor.
+     *
+     * @param string $id The UUID or device path of the filesystem.
+     */
     public function __construct($id)
     {
         $this->deviceFile = $id;
         $this->usage = "filesystem";
     }
 
+    /**
+     * Get the filesystem detailed information.
+     *
+     * @return bool True if successful, otherwise false.
+     */
     protected function getData()
     {
         if ($this->dataCached) {
@@ -63,6 +80,11 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         return true;
     }
 
+    /**
+     * Refresh the cached information.
+     *
+     * @return bool
+     */
     public function refresh()
     {
         $this->dataCached = false;
@@ -70,21 +92,41 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         return $this->getData() !== false;
     }
 
+    /**
+     * Check if the filesystem exists.
+     *
+     * @return bool
+     */
     public function exists()
     {
         return $this->getData() !== false;
     }
 
+    /**
+     * Check if the filesystem has an UUID.
+     *
+     * @return bool
+     */
     public function hasUuid()
     {
         return false;
     }
 
+    /**
+     * Get the UUID of the filesystem.
+     *
+     * @return string|bool The UUID or false.
+     */
     public function getUuid()
     {
         return false;
     }
 
+    /**
+     * Check if the filesystem has a label.
+     *
+     * @return bool
+     */
     public function hasLabel()
     {
         $label = $this->getLabel();
@@ -92,6 +134,11 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         return !empty($label);
     }
 
+    /**
+     * Get the filesystem label.
+     *
+     * @return string|bool The label or false.
+     */
     public function getLabel()
     {
         if (!$this->getData()) {
@@ -101,6 +148,11 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         return $this->label;
     }
 
+    /**
+     * Get the filesystem type, e.g. aufs, btrfs, mhddfs.
+     *
+     * @return string|bool The fileystem type or false.
+     */
     public function getType()
     {
         if (!$this->getData()) {
@@ -110,11 +162,21 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         return $this->type;
     }
 
+    /**
+     * Get the partition scheme, e.g. gpt, mbr.
+     *
+     * @return string|bool The filesystem scheme or false.
+     */
     public function getPartitionScheme()
     {
          return false;
     }
 
+    /**
+     * Get the usage, e.g. other or filesystem.
+     *
+     * @return string|bool The usage or false.
+     */
     public function getUsage()
     {
         if (!$this->getData()) {
@@ -124,11 +186,22 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         return $this->usage;
     }
 
+    /**
+     * Get the partition entry information.
+     *
+     * @return array|bool An array with the fields scheme, uuid, type, flags,
+     * number, offset, size and disk, otherwise false.
+     */
     public function getPartitionEntry()
     {
         return false;
     }
 
+    /**
+     * Get the device path of the filesystem, e.g. /dev/sdb1.
+     *
+     * @return string|bool The device path, otherwise false.
+     */
     public function getDeviceFile()
     {
         if (!$this->getData()) {
@@ -138,6 +211,12 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         return $this->deviceFile;
     }
 
+    /**
+     * Get the canonical path of a device file. E.g. the real path to the device
+     * file.
+     *
+     * @return string|bool The canonical path to a device file, otherwise false.
+     */
     public function getCanonicalDeviceFile()
     {
         if (!$this->getData()) {
@@ -147,31 +226,88 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         return $this->deviceFile;
     }
 
+    /**
+     * Get the device file by UUID.
+     *
+     * @return string|bool The device path (/dev/disk/by-uuid/xxx) if available,
+     * otherwise /dev/xxx will be returned. In case of an error false will be
+     * returned.
+     */
     public function getDeviceFileByUuid()
     {
         return false;
     }
 
+    /**
+     * Get the device file of the storage device containing this file system.
+     * Example: /dev/sdb1 => /dev/sdb
+     *
+     * @return string|bool The device file of the underlying storage device,
+     * otherwise false.
+     */
     public function getStorageDeviceFile()
     {
         return false;
     }
 
+    /**
+     * Get the filesystem block size.
+     *
+     * @return int|bool The block size, otherwise false.
+     */
     public function getBlockSize()
     {
         return false;
     }
 
+    /**
+     * Grow the filesystem.
+     *
+     * @return bool True if successful, otherwise false.
+     */
+    public function grow()
+    {
+        return false;
+    }
+
+    /**
+     * Shrink the filesystem.
+     *
+     * @return bool True if successful, otherwise false.
+     */
+    public function shrink()
+    {
+        return false;
+    }
+
+    /**
+     * Remove the filesystem.
+     *
+     * @return bool True if successful, otherwise false.
+     */
     public function remove()
     {
         return false;
     }
 
+    /**
+     * Get the mount point of the given filesystem.
+     *
+     * @return string|bool The mount point or false.
+     */
     public function getMountPoint()
     {
         return $this->deviceFile;
     }
 
+    /**
+     * Get statistics from a mounted filesystem.
+     *
+     * @return array|bool The filesystem statistics if successful, otherwise
+     * false. The following fields are included: devicefile, type, blocks, size,
+     * used, available, percentage and mountpoint. Please note, the fields size,
+     * used and available are strings and their unit is B (bytes).
+     */
     public function getStatistics()
     {
         if (!$this->getData()) {
@@ -216,6 +352,11 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         return $result;
     }
 
+    /**
+     * Check if the filesystem is mounted.
+     *
+     * @return bool
+     */
     public function isMounted()
     {
         if (!$this->getData()) {
@@ -245,6 +386,13 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         return true;
     }
 
+    /**
+     * Mount the filesystem by its device file or UUID.
+     *
+     * @param string $options Additional mount options. Empty string by default.
+     *
+     * @return bool
+     */
     public function mount($options = "")
     {
         $cmd = sprintf("export LANG=C; mount %s 2>&1", $this->getMountPoint());
@@ -260,6 +408,14 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
         return true;
     }
 
+    /**
+     * Unmount the filesystem.
+     *
+     * @param bool $force Force the unmount.
+     * @param bool $lazy Do a lazy unmount.
+     *
+     * @return bool
+     */
     public function umount($force = false, $lazy = false)
     {
         $cmd = sprintf("export LANG=C; umount %s 2>&1", $this->getMountPoint());

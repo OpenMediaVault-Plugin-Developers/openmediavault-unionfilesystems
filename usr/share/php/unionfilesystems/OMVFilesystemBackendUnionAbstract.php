@@ -25,7 +25,7 @@ require_once "unionfilesystems/OMVFilesystemUnion.php";
 abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbstract
 {
     /**
-     * Get the XPath of a filesystem by it's type.
+     * Get the XPath of a filesystem by its type.
      *
      * @param string $type The filesystem type (e.g. aufs, mhddfs).
      *
