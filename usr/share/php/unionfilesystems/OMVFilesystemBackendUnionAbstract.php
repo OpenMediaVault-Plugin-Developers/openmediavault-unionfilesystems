@@ -25,18 +25,19 @@ require_once "unionfilesystems/OMVFilesystemUnion.php";
 abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbstract
 {
     /**
-     * Get the XPath of a filesystem by its type.
+     * Get all pool configurations of a filesystem type.
      *
      * @param string $type The filesystem type (e.g. aufs, mhddfs).
      *
-     * @return string A constructed XPath.
+     * @return array Pool configurations.
      */
-    private function getPoolListXpathByType($type)
+    private function getPoolConfigurationsByType($type)
     {
-        return sprintf(
-            "/config/services/unionfilesystems/pools/pool[type='%s']",
-            $type
-        );
+        global $xmlConfig;
+
+        $xpath = "/config/services/unionfilesystems/pools/pool[type='$type']";
+
+        return $xmlConfig->getList($xpath);
     }
 
     /**
@@ -49,7 +50,7 @@ abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbs
         global $xmlConfig;
 
         $result = array();
-        $pools = $xmlConfig->getList($this->getPoolListXpathByType($this->type));
+        $pools = $this->getPoolConfigurationsByType($this->type);
 
         if ($pools) {
             foreach ($pools as $pool) {
@@ -57,9 +58,9 @@ abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbs
 
                 $result[$deviceFile] = array(
                     "devicefile" => $deviceFile,
-                    "uuid" => "",
-                    "label" => "",
-                    "type" => $this->type,
+                    "uuid" => $pool["uuid"],
+                    "label" => $pool["name"],
+                    "type" => $pool["type"],
                 );
             }
         }
