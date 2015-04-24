@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (1.8) stable; urgency=medium
+
+  * Switch to using UUID instead of the mount directory as the identifier. 
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 24 Apr 2015 21:26:30 +0200
+
 openmediavault-unionfilesystems (1.7) stable; urgency=low
 
   * Change expand dialog to show device and label
