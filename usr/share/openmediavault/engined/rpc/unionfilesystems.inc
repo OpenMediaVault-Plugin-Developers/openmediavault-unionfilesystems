@@ -205,7 +205,12 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                     "uuid": {' . $GLOBALS["OMV_JSONSCHEMA_UUID_UNDEFINED"] . '},
                     "name": { "type": "string" },
                     "type": { "type": "string", "enum": ["aufs", "mhddfs"] },
-                    "mlimit": { "type": "string", "format": "regex", "pattern": "\\/^\\\d+(m|g|%)$\\/", "optional": true },
+                    "mlimit": {
+                        "type": "string",
+                        "format": "regex",
+                        "pattern": "\\/^\\\d+(m|g|%)$\\/",
+                        "optional": true
+                    },
                     "branches": {
                         "type": "array",
                         "items": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
@@ -492,7 +497,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
         $mntentEntry = array(
             "uuid" => $mntentref,
-            "fsname" => $mountPoint,
+            "fsname" => $pool["uuid"],
             "dir" => $mountPoint,
             "type" => $pool["type"],
             "opts" => "",

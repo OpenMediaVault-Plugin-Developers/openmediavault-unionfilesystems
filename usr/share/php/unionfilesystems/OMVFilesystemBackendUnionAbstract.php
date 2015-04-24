@@ -54,13 +54,13 @@ abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbs
 
         if ($pools) {
             foreach ($pools as $pool) {
-                $deviceFile = OMVFilesystemUnion::buildMountPath($pool["uuid"]);
+                $filesystem = $this->getImpl($pool["uuid"]);
 
-                $result[$deviceFile] = array(
-                    "devicefile" => $deviceFile,
-                    "uuid" => $pool["uuid"],
-                    "label" => $pool["name"],
-                    "type" => $pool["type"],
+                $result[$filesystem->getDeviceFile()] = array(
+                    "devicefile" => $filesystem->getDeviceFile(),
+                    "uuid" => $filesystem->getUuid(),
+                    "label" => $filesystem->getLabel(),
+                    "type" => $filesystem->getType(),
                 );
             }
         }
@@ -93,7 +93,7 @@ abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbs
         $mounts = $this->enumerate();
 
         foreach ($mounts as $mount) {
-            if ($mount["devicefile"] == $id) {
+            if ($mount["uuid"] == $id || $mount["devicefile"] == $id) {
                 return true;
             }
         }

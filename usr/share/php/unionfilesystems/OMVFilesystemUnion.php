@@ -26,6 +26,28 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
     private $dataCached = false;
 
     /**
+     * Extract an UUID from a path.
+     *
+     * @param string $path A path containing the UUID last.
+     *
+     * @return string The extracted UUID.
+     */
+    private function extractUuidFromPath($path)
+    {
+        $data = explode(DIRECTORY_SEPARATOR, $path);
+
+        if (!empty($data)) {
+            $uuid = end($data);
+
+            if (is_uuid($uuid)) {
+                return $uuid;
+            }
+        }
+
+        throw new Exception("Couldn't extract an UUID from the provided path.");
+    }
+
+    /**
      * Get the pool configuration by its UUID.
      *
      * @param string $uuid The UUID.
@@ -49,7 +71,13 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
      */
     public function __construct($id)
     {
-        $this->deviceFile = $id;
+        $this->uuid = $id;
+
+        if (!is_uuid($id)) {
+            // Assume we got the mount directory.
+            $this->uuid = $this->extractUuidFromPath($id);
+        }
+
         $this->usage = "filesystem";
     }
 
@@ -64,17 +92,10 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
             return true;
         }
 
-        $uuid = str_replace(
-            $GLOBALS["OMV_MOUNT_DIR"] . "/",
-            "",
-            $this->deviceFile
-        );
-
-        if (!($pool = $this->getPoolConfiguration($uuid))) {
+        if (!($pool = $this->getPoolConfiguration($this->uuid))) {
             return false;
         }
 
-        $this->uuid = $uuid;
         $this->label = $pool["name"];
         $this->type = $pool["type"];
 
