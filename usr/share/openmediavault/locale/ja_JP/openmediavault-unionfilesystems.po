@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Toshihiro Kan <kansuke4649@gmail.com>, 2014
+# Toshihiro Kan <kansuke4649@gmail.com>, 2014-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-03-26 14:55-0500\n"
-"PO-Revision-Date: 2015-03-26 19:59+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
+"PO-Revision-Date: 2015-03-31 01:36+0000\n"
+"Last-Translator: Toshihiro Kan <kansuke4649@gmail.com>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/projects/p/openmediavault-unionfilesystems/language/ja_JP/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,13 +65,13 @@ msgid "Remove missing"
 msgstr "行方不明を削除"
 
 msgid "This field must have the format 4g, 100m, or 100%"
-msgstr ""
+msgstr "このフィールドには4g, 100m, または100%のようなフォーマットを記入してください"
 
 msgid "This name is already in use by another pool."
 msgstr "この名前は他のプールで既に使用されています。"
 
 msgid "Threshold"
-msgstr ""
+msgstr "しきい値"
 
 msgid "Type"
 msgstr "タイプ"
@@ -84,7 +84,7 @@ msgid ""
 "threshold specifed then another drive will be chosen while creating a new "
 "file.  If all the drives have free space less than the threshold specified "
 "then a drive containing most free space will be choosen."
-msgstr ""
+msgstr "単位はg, m, または %とすることができます。もし、ドライブが指定したしきい値よりも空き容量が少ない場合は、新しいファイルを作成中に別のドライブが選択されます。もし、すべてのドライブが指定されたしきい値よりも空き容量が少ない場合は空き容量が一番多いドライブが選択されます。"
 
 msgid "aufs"
 msgstr "aufs"

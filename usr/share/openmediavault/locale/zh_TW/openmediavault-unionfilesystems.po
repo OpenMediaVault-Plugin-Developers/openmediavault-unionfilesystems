@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# kochin <kochinc@outlook.com>, 2014
+# kochin <kochinc@outlook.com>, 2014-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-03-26 14:55-0500\n"
-"PO-Revision-Date: 2015-03-26 19:59+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
+"PO-Revision-Date: 2015-04-02 14:59+0000\n"
+"Last-Translator: kochin <kochinc@outlook.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/openmediavault-unionfilesystems/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,13 +65,13 @@ msgid "Remove missing"
 msgstr "移除丟失"
 
 msgid "This field must have the format 4g, 100m, or 100%"
-msgstr ""
+msgstr "此欄位的格式必須類似 4g、100m 或 100%"
 
 msgid "This name is already in use by another pool."
 msgstr "此名稱已經被另一個集用場使用。"
 
 msgid "Threshold"
-msgstr ""
+msgstr "定限"
 
 msgid "Type"
 msgstr "型式"
@@ -84,7 +84,7 @@ msgid ""
 "threshold specifed then another drive will be chosen while creating a new "
 "file.  If all the drives have free space less than the threshold specified "
 "then a drive containing most free space will be choosen."
-msgstr ""
+msgstr "單位可以是 g、m 或 %。若是一個磁碟的未用空間小於所指定的定限，則當建立新檔案時會選用另一個磁碟。如果所有的磁碟的未用空間都小於所指定的定限，則擁有最大未用空間的磁碟會被選用。"
 
 msgid "aufs"
 msgstr "aufs"

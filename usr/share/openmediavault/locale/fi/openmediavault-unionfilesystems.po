@@ -3,91 +3,90 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Miguel Anxo Bouzada <mbouzada@gmail.com>, 2014-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-03-26 14:55-0500\n"
-"PO-Revision-Date: 2015-04-23 12:13+0000\n"
-"Last-Translator: Miguel Anxo Bouzada <mbouzada@gmail.com>\n"
-"Language-Team: Galician (http://www.transifex.com/projects/p/openmediavault-unionfilesystems/language/gl/)\n"
+"PO-Revision-Date: 2014-12-04 14:17+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Finnish (http://www.transifex.com/projects/p/openmediavault-unionfilesystems/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: gl\n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Add pool"
-msgstr "Engadir agrupación"
+msgstr ""
 
 msgid ""
 "Are you sure that you really want to remove missing filesystems from this "
 "pool?"
-msgstr "Confirma que quere retirar os sistemas ficheiros non atopados nesta agrupación?"
+msgstr ""
 
 msgid "Aufs/Mhddfs"
-msgstr "Aufs/Mhddfs"
+msgstr ""
 
 msgid "Branches"
-msgstr "Ramas"
+msgstr ""
 
 msgid ""
 "By clicking yes the system will try to find and remove the missing "
 "filesystems from the pool."
-msgstr "Ao premer en «Si», o sistema tentará atopar e retirar os sistemas de ficheiros non atopados na agrupación."
+msgstr ""
 
 msgid "Confirmation"
-msgstr "Confirmación"
+msgstr ""
 
 msgid "Device"
-msgstr "Dispositivo"
+msgstr ""
 
 msgid "Expand"
-msgstr "Expandir"
+msgstr ""
 
 msgid "Expand pool"
-msgstr "Expandir agrupación"
+msgstr ""
 
 msgid "Label"
-msgstr "Etiqueta"
+msgstr ""
 
 msgid "Mountpoint"
-msgstr "Punto de montaxe"
+msgstr ""
 
 msgid "Name"
-msgstr "Nome"
+msgstr ""
 
 msgid "Pools"
-msgstr "Agrupacións"
+msgstr ""
 
 msgid "Remove missing"
-msgstr "Retirar os non atopados"
+msgstr ""
 
 msgid "This field must have the format 4g, 100m, or 100%"
-msgstr "Este campo debe ter o formato: 4g, 100m, ou 100%"
+msgstr ""
 
 msgid "This name is already in use by another pool."
-msgstr "Este nome xa está a ser usado por outra agrupación."
+msgstr ""
 
 msgid "Threshold"
-msgstr "Limiar"
+msgstr ""
 
 msgid "Type"
-msgstr "Tipo"
+msgstr ""
 
 msgid "UUID"
-msgstr "UUID"
+msgstr ""
 
 msgid ""
 "Units can be g, m, or %. If a drive has the free space less than the "
 "threshold specifed then another drive will be chosen while creating a new "
 "file.  If all the drives have free space less than the threshold specified "
 "then a drive containing most free space will be choosen."
-msgstr "As unidades deben ser g, m, ou % . Se un disco ten menos espazo que o axustado como limiar, usarase outro disco para crear o novo ficheiro. Se todos os discos teñen menos espazo libre que o indicado no axuste, entón usarase o que teña máis espazo libre."
+msgstr ""
 
 msgid "aufs"
-msgstr "aufs"
+msgstr ""
 
 msgid "mhddfs"
-msgstr "mhddfs"
+msgstr ""
