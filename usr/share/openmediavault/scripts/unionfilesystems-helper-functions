@@ -1,0 +1,89 @@
+#!/bin/bash
+#
+# Copyright (C) 2014-2015 OpenMediaVault Plugin Developers
+#
+# This file is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this file. If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+OMV_UNION_FILESYSTEMS_XPATH="/config/services/unionfilesystems"
+
+# omv_unionfilesystems_build_branch_string mntentrefs separator branch_options
+#
+function omv_unionfilesystems_build_branches_string
+{
+    local branch_options="${3}"
+    local branches="${1}"
+    local branches_with_options=""
+    local separator="${2}"
+
+    # Get all branch mount points and append options.
+    for branch in $branches; do
+        # Get mount point for branch and append options.
+        branch_entry="$(omv_unionfilesystems_get_mount_point${branch})${branch_options}"
+
+        # Combine to single string.
+        branches_with_options="${branches_with_options} ${branch_entry}"
+    done;
+
+    # Join mount points separated by the branch separator according to type.
+    omv_unionfilesystems_join_branches ${separator} ${branches_with_options}
+}
+
+# omv_unionfilesystems_get_mount_point mntentref
+# Returns the mount point for a given mntentref.
+function omv_unionfilesystems_get_mount_point
+{
+    omv_config_get "//system/fstab/mntent[uuid='${1}']/dir"
+}
+
+# omv_unionfilesystems_get_pool_count_by_fstype fstype
+# Returns the number of pools of a certain type.
+function omv_unionfilesystems_get_pool_count_by_fstype
+{
+    omv_config_get_count "${OMV_UNION_FILESYSTEMS_XPATH}/pools/pool[fstype='${1}']"
+}
+
+# omv_unionfilesystems_get_current_pool_xpath_by_fstype_and_index fstype index
+# Returns the XPath to a certain pool by type and index.
+function omv_unionfilesystems_get_pool_xpath_by_fstype_and_index
+{
+    echo "${OMV_UNION_FILESYSTEMS_XPATH}/pools/pool[fstype='${1}'][${2}]"
+}
+
+# omv_unionfilesystems_join_branches separator branches
+# Joins all branches with the given separator and returns the resulting string.
+function omv_unionfilesystems_join_branches
+{
+    local IFS="$1"
+
+    shift
+    echo "$*"
+}
+
+# omv_unionfilesystems_pool_has_multiple_branches fstype index
+# Valid if the branch count is greater than 1.
+function omv_unionfilesystems_pool_has_multiple_branches
+{
+    local xpath=$(omv_unionfilesystems_get_current_pool_xpath_by_fstype_and_index ${1} ${2})
+
+    if [ $(omv_config_get_count "${xpath}/branches/mntentref") -gt 1 ]; then
+        return 0
+    fi
+
+    return 1
+}
