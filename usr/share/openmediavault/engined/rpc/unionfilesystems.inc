@@ -204,7 +204,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                 "properties": {
                     "uuid": {' . $GLOBALS["OMV_JSONSCHEMA_UUID_UNDEFINED"] . '},
                     "name": { "type": "string" },
-                    "type": { "type": "string", "enum": ["aufs", "mhddfs"] },
+                    "type": { "type": "string", "enum": ["aufs", "mergerfs", "mhddfs"] },
                     "mlimit": {
                         "type": "string",
                         "format": "regex",
@@ -417,6 +417,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             }
 
             if ($entry["type"] == "aufs" ||
+                $entry["type"] == "mergerfs" ||
                 $entry["type"] == "mhddfs" ||
                 $entry["type"] == "none"
             ) {

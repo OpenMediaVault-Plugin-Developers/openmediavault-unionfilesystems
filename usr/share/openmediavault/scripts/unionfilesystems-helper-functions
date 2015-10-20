@@ -1,5 +1,3 @@
-#!/bin/bash
-#
 # Copyright (C) 2014-2015 OpenMediaVault Plugin Developers
 #
 # This file is free software: you can redistribute it and/or modify
@@ -34,7 +32,7 @@ function omv_unionfilesystems_build_branches_string
     # Get all branch mount points and append options.
     for branch in $branches; do
         # Get mount point for branch and append options.
-        branch_entry="$(omv_unionfilesystems_get_mount_point${branch})${branch_options}"
+        branch_entry="$(omv_unionfilesystems_get_mount_point ${branch})${branch_options}"
 
         # Combine to single string.
         branches_with_options="${branches_with_options} ${branch_entry}"
@@ -51,18 +49,18 @@ function omv_unionfilesystems_get_mount_point
     omv_config_get "//system/fstab/mntent[uuid='${1}']/dir"
 }
 
-# omv_unionfilesystems_get_pool_count_by_fstype fstype
+# omv_unionfilesystems_get_pool_count_by_type type
 # Returns the number of pools of a certain type.
-function omv_unionfilesystems_get_pool_count_by_fstype
+function omv_unionfilesystems_get_pool_count_by_type
 {
-    omv_config_get_count "${OMV_UNION_FILESYSTEMS_XPATH}/pools/pool[fstype='${1}']"
+    omv_config_get_count "${OMV_UNION_FILESYSTEMS_XPATH}/pools/pool[type='${1}']"
 }
 
-# omv_unionfilesystems_get_current_pool_xpath_by_fstype_and_index fstype index
+# omv_unionfilesystems_get_pool_xpath_by_type_and_index type index
 # Returns the XPath to a certain pool by type and index.
-function omv_unionfilesystems_get_pool_xpath_by_fstype_and_index
+function omv_unionfilesystems_get_pool_xpath_by_type_and_index
 {
-    echo "${OMV_UNION_FILESYSTEMS_XPATH}/pools/pool[fstype='${1}'][${2}]"
+    echo "${OMV_UNION_FILESYSTEMS_XPATH}/pools/pool[type='${1}'][${2}]"
 }
 
 # omv_unionfilesystems_join_branches separator branches
@@ -75,11 +73,11 @@ function omv_unionfilesystems_join_branches
     echo "$*"
 }
 
-# omv_unionfilesystems_pool_has_multiple_branches fstype index
+# omv_unionfilesystems_pool_has_multiple_branches type index
 # Valid if the branch count is greater than 1.
 function omv_unionfilesystems_pool_has_multiple_branches
 {
-    local xpath=$(omv_unionfilesystems_get_current_pool_xpath_by_fstype_and_index ${1} ${2})
+    local xpath=$(omv_unionfilesystems_get_pool_xpath_by_type_and_index ${1} ${2})
 
     if [ $(omv_config_get_count "${xpath}/branches/mntentref") -gt 1 ]; then
         return 0

@@ -20,7 +20,7 @@
 OMV.WorkspaceManager.registerNode({
     id: "unionfilesystems",
     path: "/storage",
-    text: _("Aufs/Mhddfs"),
+    text: _("Union Filesystems"),
     icon16: "images/unionfilesystems.png",
     iconSvg: "images/unionfilesystems.svg"
 });

@@ -69,6 +69,7 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
                 ],
                 data: [
                     ["aufs", _("aufs")],
+                    ["mergerfs", _("mergerfs")],
                     ["mhddfs", _("mhddfs")]
                 ]
             }),

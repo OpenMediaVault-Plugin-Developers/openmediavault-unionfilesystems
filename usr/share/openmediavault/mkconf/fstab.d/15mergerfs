@@ -21,10 +21,10 @@ set -e
 . /usr/share/openmediavault/scripts/helper-functions
 . /usr/share/openmediavault/scripts/unionfilesystems-helper-functions
 
-OMV_UNION_FILESYSTEMS_TYPE="mhddfs"
-OMV_UNION_FILESYSTEMS_TYPE_BRANCH_SEPARATOR=","
+OMV_UNION_FILESYSTEMS_TYPE="mergerfs"
+OMV_UNION_FILESYSTEMS_TYPE_BRANCH_SEPARATOR=":"
 
-OMV_FSTAB_MNTOPS_MHDDFS=${OMV_FSTAB_MNTOPS_MHDDFS:-"defaults,allow_other"}
+OMV_FSTAB_MNTOPS_MERGERFS=${OMV_FSTAB_MNTOPS_MERGERFS:-"defaults,allow_other"}
 
 count=$(omv_unionfilesystems_get_pool_count_by_type ${OMV_UNION_FILESYSTEMS_TYPE})
 index=1
@@ -42,14 +42,7 @@ while [ $index -lt $count -o $index -eq $count ]; do
         # Build the branch mount points string.
         branch_mount_points=$(omv_unionfilesystems_build_branches_string "${branches}" ${OMV_UNION_FILESYSTEMS_TYPE_BRANCH_SEPARATOR})
 
-        # Create the fstab line.
-        if omv_config_exists "${pool_xpath}/mlimit"; then
-            mlimit=",mlimit=$(omv_config_get "${pool_xpath}/mlimit")"
-        else
-            mlimit=""
-        fi
-
-        echo "mhddfs#${branch_mount_points} ${mount_point} fuse ${OMV_FSTAB_MNTOPS_MHDDFS}${mlimit} 0 0"
+        echo "${branch_mount_points} ${mount_point} fuse.mergerfs ${OMV_FSTAB_MNTOPS_MERGERFS} 0 0"
 
     fi
 
