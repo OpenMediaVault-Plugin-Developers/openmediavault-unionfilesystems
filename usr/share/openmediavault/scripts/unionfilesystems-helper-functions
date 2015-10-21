@@ -39,7 +39,7 @@ function omv_unionfilesystems_build_branches_string
     done;
 
     # Join mount points separated by the branch separator according to type.
-    omv_unionfilesystems_join_branches ${separator} ${branches_with_options}
+    omv_unionfilesystems_join ${separator} ${branches_with_options}
 }
 
 # omv_unionfilesystems_get_mount_point mntentref
@@ -63,9 +63,9 @@ function omv_unionfilesystems_get_pool_xpath_by_type_and_index
     echo "${OMV_UNION_FILESYSTEMS_XPATH}/pools/pool[type='${1}'][${2}]"
 }
 
-# omv_unionfilesystems_join_branches separator branches
+# omv_unionfilesystems_join separator items
 # Joins all branches with the given separator and returns the resulting string.
-function omv_unionfilesystems_join_branches
+function omv_unionfilesystems_join
 {
     local IFS="$1"
 
