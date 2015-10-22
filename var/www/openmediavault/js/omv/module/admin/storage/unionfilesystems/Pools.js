@@ -97,30 +97,30 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
         var me = this;
         var items = me.callParent(arguments);
         Ext.Array.insert(items, 3, [{
-            id       : me.getId() + "-expand",
-            xtype    : "button",
-            text     : _("Expand"),
-            icon     : "images/expand.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(this.onExpandButton, this),
-            disabled : true,
-            scope    : this,
-            selectionConfig : {
-                minSelections : 1,
-                maxSelections : 1
+            id: me.getId() + "-expand",
+            xtype: "button",
+            text: _("Expand"),
+            icon: "images/expand.png",
+            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler: Ext.Function.bind(this.onExpandButton, this),
+            disabled: true,
+            scope: this,
+            selectionConfig: {
+                minSelections: 1,
+                maxSelections: 1
             }
         }, {
-            id       : me.getId() + "-remove-missing",
-            xtype    : "button",
-            text     : _("Remove missing"),
-            icon     : "images/minus.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(this.onRemoveMissingButton, this),
-            disabled : true,
-            scope    : this,
-            selectionConfig : {
-                minSelections : 1,
-                maxSelections : 1
+            id: me.getId() + "-remove-missing",
+            xtype: "button",
+            text: _("Remove missing"),
+            icon: "images/minus.png",
+            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler: Ext.Function.bind(this.onRemoveMissingButton, this),
+            disabled: true,
+            scope: this,
+            selectionConfig: {
+                minSelections: 1,
+                maxSelections: 1
             }
         }]);
         return items;
@@ -170,7 +170,7 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
 
     onRemoveMissingButton: function() {
         var msg = _("Are you sure that you really want to remove missing filesystems from this pool?") + " " +
-                  _("By clicking yes the system will try to find and remove the missing filesystems from the pool.");
+            _("By clicking yes the system will try to find and remove the missing filesystems from the pool.");
 
         OMV.MessageBox.show({
             title: _("Confirmation"),

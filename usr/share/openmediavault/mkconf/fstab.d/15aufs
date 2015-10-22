@@ -24,7 +24,7 @@ set -e
 OMV_UNION_FILESYSTEMS_TYPE="aufs"
 OMV_UNION_FILESYSTEMS_TYPE_BRANCH_SEPARATOR=":"
 
-OMV_FSTAB_MNTOPS_AUFS=${OMV_FSTAB_MNTOPS_AUFS:-"create=mfs"}
+OMV_FSTAB_MNTOPS_AUFS=${OMV_FSTAB_MNTOPS_AUFS:-"sum"}
 
 count=$(omv_unionfilesystems_get_pool_count_by_type ${OMV_UNION_FILESYSTEMS_TYPE})
 index=1
@@ -41,9 +41,21 @@ while [ $index -lt $count -o $index -eq $count ]; do
 
         # Build the branch mount points string.
         branch_mount_points=$(omv_unionfilesystems_build_branches_string "${branches}" ${OMV_UNION_FILESYSTEMS_TYPE_BRANCH_SEPARATOR} "=rw")
+        branch_mount_points="br:${branch_mount_points}"
+
+        # Get filesystem specific mount options.
+        policy_create=$(omv_config_get "${pool_xpath}/options/aufs_policy_create")
+
+        # Combine keys and values.
+        policy_create="create=${policy_create}"
+
+        # Join options.
+        options=$(omv_unionfilesystems_join , ${branch_mount_points} \
+                                              ${OMV_FSTAB_MNTOPS_AUFS} \
+                                              ${policy_create})
 
         # Create the fstab line.
-        echo "none ${mount_point} aufs br:${branch_mount_points},sum,${OMV_FSTAB_MNTOPS_AUFS} 0 0"
+        echo "none ${mount_point} aufs ${options} 0 0"
 
     fi
 

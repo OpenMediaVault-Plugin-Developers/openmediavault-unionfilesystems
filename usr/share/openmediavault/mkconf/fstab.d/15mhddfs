@@ -42,14 +42,18 @@ while [ $index -lt $count -o $index -eq $count ]; do
         # Build the branch mount points string.
         branch_mount_points=$(omv_unionfilesystems_build_branches_string "${branches}" ${OMV_UNION_FILESYSTEMS_TYPE_BRANCH_SEPARATOR})
 
-        # Create the fstab line.
-        if omv_config_exists "${pool_xpath}/mlimit"; then
-            mlimit=",mlimit=$(omv_config_get "${pool_xpath}/mlimit")"
-        else
-            mlimit=""
-        fi
+        # Get filesystem specific mount options.
+        mlimit="mlimit=$(omv_config_get "${pool_xpath}/options/mhddfs_mlimit")"
 
-        echo "mhddfs#${branch_mount_points} ${mount_point} fuse ${OMV_FSTAB_MNTOPS_MHDDFS}${mlimit} 0 0"
+        # Combine keys and values.
+        mlimit="mlimit=${mlimit}"
+
+        # Join options.
+        options=$(omv_unionfilesystems_join , ${OMV_FSTAB_MNTOPS_MHDDFS} \
+                                              ${mlimit})
+
+        # Create the fstab line.
+        echo "mhddfs#${branch_mount_points} ${mount_point} fuse ${options} 0 0"
 
     fi
 

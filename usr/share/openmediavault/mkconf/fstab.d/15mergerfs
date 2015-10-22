@@ -42,7 +42,26 @@ while [ $index -lt $count -o $index -eq $count ]; do
         # Build the branch mount points string.
         branch_mount_points=$(omv_unionfilesystems_build_branches_string "${branches}" ${OMV_UNION_FILESYSTEMS_TYPE_BRANCH_SEPARATOR})
 
-        echo "${branch_mount_points} ${mount_point} fuse.mergerfs ${OMV_FSTAB_MNTOPS_MERGERFS} 0 0"
+        # Get filesystem specific mount options.
+        category_create=$(omv_config_get "${pool_xpath}/options/mergerfs_category_create")
+        min_free_space=$(omv_config_get "${pool_xpath}/options/mergerfs_min_free_space")
+
+        # Combine keys and values.
+        category_create="category.create=${category_create}"
+
+        # minfreespace is an optional value and is only used with some policies.
+        if [ -n "${min_free_space}" ]; then
+            min_free_space="minfreespace=${min_free_space}"
+        else
+            unset min_free_space
+        fi
+
+        # Join options.
+        options=$(omv_unionfilesystems_join , ${OMV_FSTAB_MNTOPS_MERGERFS} \
+                                              ${category_create} \
+                                              ${min_free_space})
+
+        echo "${branch_mount_points} ${mount_point} fuse.mergerfs ${options} 0 0"
 
     fi
 

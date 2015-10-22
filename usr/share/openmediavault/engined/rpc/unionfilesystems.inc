@@ -159,6 +159,13 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
         $pool = $xmlConfig->get($this->getPoolXpathByUuid($params["uuid"]));
 
+        if (is_null($pool)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getPoolXpathByUuid($params["uuid"])
+            );
+        }
+
         $branches = $pool["branches"]["mntentref"];
 
         // If we have no branches left, which could happen when removing all
@@ -167,7 +174,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             $branches = array();
         }
 
-        // If there's only one branch in the pool, changes are that it's being
+        // If there's only one branch in the pool, chances are that it's being
         // treated as a string, add it to an array.
         if (is_string($branches)) {
             $branches = array(
@@ -177,12 +184,10 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
         $pool["branches"] = $branches;
 
-        if (is_null($pool)) {
-            throw new OMVException(
-                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
-                $this->getPoolXpathByUuid($params["uuid"])
-            );
-        }
+        // Merge the pool configuration with its own options array.
+        $options = $pool["options"];
+        unset($pool["options"]);
+        $pool = array_merge($pool, $options);
 
         return $pool;
     }
@@ -204,12 +209,13 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                 "properties": {
                     "uuid": {' . $GLOBALS["OMV_JSONSCHEMA_UUID_UNDEFINED"] . '},
                     "name": { "type": "string" },
-                    "type": { "type": "string", "enum": ["aufs", "mergerfs", "mhddfs"] },
-                    "mlimit": {
+                    "type": {
                         "type": "string",
-                        "format": "regex",
-                        "pattern": "\\/^\\\d+(m|g|%)$\\/",
-                        "optional": true
+                        "enum": [
+                            "aufs",
+                            "mergerfs",
+                            "mhddfs"
+                        ]
                     },
                     "branches": {
                         "type": "array",
@@ -218,43 +224,79 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                         "uniqueItems": true,
                         "optional": true
                     },
-                    "mntentref": { "type": "string", "optional" : true }
+                    "mntentref": { "type": "string", "optional" : true },
+                    "aufs_policy_create": {
+                        "type": "string",
+                        "enum": [
+                            "mfs",
+                            "pmfs",
+                            "rr",
+                            "tdp"
+                        ],
+                        "optional": true
+                    },
+                    "mergerfs_category_create": {
+                        "type": "string",
+                        "enum": [
+                            "all",
+                            "epmfs",
+                            "ff",
+                            "ffwp",
+                            "fwfs",
+                            "lfs",
+                            "mfs",
+                            "newest",
+                            "rand"
+                        ],
+                        "optional": true
+                    },
+                    "mergerfs_min_free_space": {
+                        "type": "string",
+                        "format": "regex",
+                        "pattern": "\\/^\\\d+(K|M|G)$\\/",
+                        "optional": true
+                    },
+                    "mhddfs_mlimit": {
+                        "type": "string",
+                        "format": "regex",
+                        "pattern": "\\/^\\\d+(M|G|%)$\\/",
+                        "optional": true
+                    }
                 }
             }'
         );
 
-        // Check if percentage is greater than 100% or
-        // if megabytes are less than 100mb (mhddfs minimum)
-        $mlimit = intval($params["mlimit"]);
+        $options = [];
 
-        switch (substr($params["mlimit"], -1)) {
-            case "%":
-                if ($mlimit > 100) {
-                    $params["mlimit"] = "100%";
-                } elseif ($mlimit < 1) {
-                    $params["mlimit"] = "1%";
-                }
-                break;
-            case "m":
-                if ($mlimit < 100) {
-                    $params["mlimit"] = "100m";
-                }
-                break;
-            case "g":
-                if ($mlimit < 1) {
-                    $params["mlimit"] = "1g";
-                }
-                break;
-            default:
-                $params["mlimit"] = "4g";
+        // Sanitize the mount options and add them to an options array in the
+        // configuration.
+        if ($params["type"] === "aufs") {
+            $options["aufs_policy_create"] = $params["aufs_policy_create"];
         }
 
+        if ($params["type"] === "mergerfs") {
+            $params = $this->sanitizeMergerfsOptions($params);
+
+            $options["mergerfs_category_create"] = $params["mergerfs_category_create"];
+
+            if (isset($params["mergerfs_min_free_space"])) {
+                $options["mergerfs_min_free_space"] = $params["mergerfs_min_free_space"];
+            }
+        }
+
+        if ($params["type"] === "mhddfs") {
+            $params = $this->sanitizeMhddfsOptions($params);
+
+            $options["mhddfs_mlimit"] = $params["mhddfs_mlimit"];
+        }
+
+        // Create configuration array.
         $pool = array(
             "uuid" => ($params["uuid"] == $GLOBALS["OMV_UUID_UNDEFINED"]) ?
                 OMVUtil::uuid() : $params["uuid"],
             "name" => $params["name"],
             "type" => $params["type"],
-            "mlimit" => $params["mlimit"]
+            "options" => $options
         );
 
         if (isset($params["mntentref"])) {
@@ -488,6 +530,13 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         return $this->callMethod("set", $pool, $context);
     }
 
+    /**
+     * Create a mntent configuration object from a pool and mntentref.
+     *
+     * @param array $pool
+     * @param string|null $mntentref
+     * @return array
+     */
     private function createMntentEntry($pool, $mntentref = null)
     {
         if (!$mntentref) {
@@ -516,6 +565,12 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         return $mntent;
     }
 
+    /**
+     * Check if the pool is in use.
+     *
+     * @param array $pool
+     * @return bool
+     */
     private function isUsed($pool)
     {
         global $xmlConfig;
@@ -531,6 +586,66 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         }
 
         return false;
+    }
+
+    /**
+     * Sanitize Mergerfs specific options.
+     *
+     * @param array $params
+     * @return arrary
+     */
+    private function sanitizeMergerfsOptions(array $params)
+    {
+        $createPolicy = $params["category_create"];
+
+        if ($createPolicy !== "epmfs" &&
+            $createPolicy !== "fwfs" &&
+            $createPolicy !== "lfs"
+        ) {
+            unset($params["min_free_space"]);
+        }
+
+        return $params;
+    }
+
+    /**
+     * Sanitize Mhddfs specific options.
+     *
+     * @param array $params
+     * @return arrary
+     */
+    private function sanitizeMhddfsOptions(array $params)
+    {
+        $mlimitUnit = substr($params["mlimit"], -1);
+        $mlimitValue = intval($params["mlimit"]);
+
+        // Set mlimit to the default value.
+        $params["mlimit"] = "4G";
+
+        if ($mlimitUnit === "%") {
+            // Make sure the limit is not out of range.
+            if ($mlimitValue > 100) {
+                $params["mlimit"] = "100%";
+            } elseif ($mlimitValue < 1) {
+                $params["mlimit"] = "1%";
+            }
+        }
+
+        if ($mlimitUnit === "M") {
+            // Make sure to not go below the 100MB limit.
+            if ($mlimitValue < 100) {
+                $params["mlimit"] = "100m";
+            }
+        }
+
+        if ($mlimitUnit === "G") {
+            // 1GB is the lowest allowed when using GB.
+            if ($mlimitValue < 1) {
+                $params["mlimit"] = "1g";
+            }
+        }
+
+        return $params;
     }
 }
 
