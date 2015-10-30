@@ -20,7 +20,9 @@
 require_once "openmediavault/system.inc";
 
 require_once "unionfilesystems/OMVFilesystemBackendAufs.php";
+require_once "unionfilesystems/OMVFilesystemBackendMergerfs.php";
 require_once "unionfilesystems/OMVFilesystemBackendMhddfs.php";
 
 OMVFilesystems::registerBackend(new OMVFilesystemBackendAufs());
+OMVFilesystems::registerBackend(new OMVFilesystemBackendMergerfs());
 OMVFilesystems::registerBackend(new OMVFilesystemBackendMhddfs());

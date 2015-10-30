@@ -1,0 +1,62 @@
+#!/bin/bash
+#
+# Copyright (C) 2014-2015 OpenMediaVault Plugin Developers
+#
+# This file is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This file is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this file. If not, see <http://www.gnu.org/licenses/>.
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+. /usr/share/openmediavault/scripts/unionfilesystems-helper-functions
+
+OMV_UNION_FILESYSTEMS_TYPE="mhddfs"
+OMV_UNION_FILESYSTEMS_TYPE_BRANCH_SEPARATOR=","
+
+OMV_FSTAB_MNTOPS_MHDDFS=${OMV_FSTAB_MNTOPS_MHDDFS:-"defaults,allow_other"}
+
+count=$(omv_unionfilesystems_get_pool_count_by_type ${OMV_UNION_FILESYSTEMS_TYPE})
+index=1
+
+while [ $index -lt $count -o $index -eq $count ]; do
+
+    pool_xpath=$(omv_unionfilesystems_get_pool_xpath_by_type_and_index ${OMV_UNION_FILESYSTEMS_TYPE} ${index})
+
+    if omv_unionfilesystems_pool_has_multiple_branches ${OMV_UNION_FILESYSTEMS_TYPE} ${index}; then
+
+        branches="$(omv_config_get "${pool_xpath}/branches/mntentref")"
+        mntentref=$(omv_config_get "${pool_xpath}/mntentref")
+        mount_point=$(omv_unionfilesystems_get_mount_point ${mntentref})
+
+        # Build the branch mount points string.
+        branch_mount_points=$(omv_unionfilesystems_build_branches_string "${branches}" ${OMV_UNION_FILESYSTEMS_TYPE_BRANCH_SEPARATOR})
+
+        # Get filesystem specific mount options.
+        mlimit="mlimit=$(omv_config_get "${pool_xpath}/options/mhddfs_mlimit")"
+
+        # Combine keys and values.
+        mlimit="mlimit=${mlimit}"
+
+        # Join options.
+        options=$(omv_unionfilesystems_join , ${OMV_FSTAB_MNTOPS_MHDDFS} \
+                                              ${mlimit})
+
+        # Create the fstab line.
+        echo "mhddfs#${branch_mount_points} ${mount_point} fuse ${options} 0 0"
+
+    fi
+
+    index=$(( ${index} + 1 ))
+
+done
