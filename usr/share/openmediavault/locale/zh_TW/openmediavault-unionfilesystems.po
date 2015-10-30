@@ -8,10 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-26 14:55-0500\n"
-"PO-Revision-Date: 2015-04-02 14:59+0000\n"
-"Last-Translator: kochin <kochinc@outlook.com>\n"
-"Language-Team: Chinese (Taiwan) (http://www.transifex.com/projects/p/openmediavault-unionfilesystems/language/zh_TW/)\n"
+"POT-Creation-Date: 2015-10-30 06:55-0500\n"
+"PO-Revision-Date: 2015-10-30 11:55+0000\n"
+"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
+"Language-Team: Chinese (Taiwan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,13 +21,13 @@ msgstr ""
 msgid "Add pool"
 msgstr "新增集用場"
 
+msgid "All."
+msgstr ""
+
 msgid ""
 "Are you sure that you really want to remove missing filesystems from this "
 "pool?"
 msgstr "您確定真的要從這個集用場移除丟失的檔案系統嗎？"
-
-msgid "Aufs/Mhddfs"
-msgstr "Aufs/Mhddfs"
 
 msgid "Branches"
 msgstr "分支"
@@ -40,8 +40,14 @@ msgstr "一旦點按 '是'，系統將試著在集用場中尋找並移除丟失
 msgid "Confirmation"
 msgstr "確認"
 
+msgid "Create policy"
+msgstr ""
+
 msgid "Device"
 msgstr "裝置"
+
+msgid "Existing path, most free space."
+msgstr ""
 
 msgid "Expand"
 msgstr "擴展"
@@ -49,23 +55,50 @@ msgstr "擴展"
 msgid "Expand pool"
 msgstr "擴展集用場"
 
+msgid "First found with permissions."
+msgstr ""
+
+msgid "First found."
+msgstr ""
+
+msgid "First with free space."
+msgstr ""
+
 msgid "Label"
 msgstr "標籤"
 
-msgid "Mountpoint"
-msgstr "掛載點"
+msgid "Least free space."
+msgstr ""
+
+msgid "Minimum free space"
+msgstr ""
+
+msgid "Most free space."
+msgstr ""
+
+msgid "Mount options"
+msgstr ""
 
 msgid "Name"
 msgstr "名稱"
 
+msgid "Newest file."
+msgstr ""
+
 msgid "Pools"
 msgstr "集用場"
+
+msgid "Random."
+msgstr ""
 
 msgid "Remove missing"
 msgstr "移除丟失"
 
-msgid "This field must have the format 4g, 100m, or 100%"
-msgstr "此欄位的格式必須類似 4g、100m 或 100%"
+msgid "This field must have the format 4G, 100M or 1000K."
+msgstr ""
+
+msgid "This field must have the format 4G, 100M, or 100%"
+msgstr ""
 
 msgid "This name is already in use by another pool."
 msgstr "此名稱已經被另一個集用場使用。"
@@ -79,15 +112,33 @@ msgstr "型式"
 msgid "UUID"
 msgstr "UUID"
 
+msgid "Union Filesystems"
+msgstr ""
+
 msgid ""
-"Units can be g, m, or %. If a drive has the free space less than the "
+"Units can be G, M, or %. If a drive has the free space less than the "
 "threshold specifed then another drive will be chosen while creating a new "
 "file.  If all the drives have free space less than the threshold specified "
 "then a drive containing most free space will be choosen."
-msgstr "單位可以是 g、m 或 %。若是一個磁碟的未用空間小於所指定的定限，則當建立新檔案時會選用另一個磁碟。如果所有的磁碟的未用空間都小於所指定的定限，則擁有最大未用空間的磁碟會被選用。"
+msgstr ""
 
 msgid "aufs"
 msgstr "aufs"
 
+msgid "mergerfs"
+msgstr ""
+
+msgid "mfs"
+msgstr ""
+
 msgid "mhddfs"
 msgstr "mhddfs"
+
+msgid "pmfs"
+msgstr ""
+
+msgid "rr"
+msgstr ""
+
+msgid "tdp"
+msgstr ""
