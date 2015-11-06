@@ -115,7 +115,7 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
                 scope: this,
                 submit: function() {
                     this.doReload();
-                    OMV.MessageBox.info(null, _("Note: changes won't take effect until you've restarted the system or manually remounted the filesystem."));
+                    OMV.MessageBox.info(null, _("NOTE: The changes won't take effect until you've restarted the system or manually remounted the filesystem."));
                 }
             }
         }).show();

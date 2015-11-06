@@ -1,13 +1,14 @@
 openmediavault-unionfilesystems (2.1) stable; urgency=low
 
   * Add support for mergerfs. Mergerfs package needs to be installed manually.
+  * Add support for editing pools.
   * Update locales.
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 30 Oct 2015 06:54:42 -0500
 
 openmediavault-unionfilesystems (1.8) stable; urgency=medium
 
-  * Switch to using UUID instead of the mount directory as the identifier. 
+  * Switch to using UUID instead of the mount directory as the identifier.
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 24 Apr 2015 21:26:30 +0200
 
