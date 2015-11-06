@@ -85,24 +85,35 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
             xtype: "combo",
             name: "type",
             fieldLabel: _("Type"),
-            queryMode: "local",
-            store: Ext.create("Ext.data.SimpleStore", {
-                fields: [
-                    "value",
-                    "text"
-                ],
-                data: [
-                    ["aufs", _("aufs")],
-                    ["mergerfs", _("mergerfs")],
-                    ["mhddfs", _("mhddfs")]
-                ]
-            }),
-            displayField: "text",
-            valueField: "value",
+            emptyText: _("Select a type ..."),
             allowBlank: false,
+            allowNone: false,
             editable: false,
             triggerAction: "all",
-            value: "aufs"
+            displayField: "type",
+            valueField: "type",
+            store: Ext.create("OMV.data.Store", {
+                autoLoad: true,
+                model: OMV.data.Model.createImplicit({
+                    idProperty: "type",
+                    fields: [{
+                        name: "type",
+                        type: "string"
+                    }]
+                }),
+                proxy: {
+                    type: "rpc",
+                    rpcData: {
+                        service: "UnionFilesystems",
+                        method: "enumerateAvailableBackends"
+                    },
+                },
+                sorters: [{
+                    direction: "ASC",
+                    property: "type"
+                }]
+            }),
+            value: ""
         }, {
             xtype: "checkboxgridfield",
             name: "branches",

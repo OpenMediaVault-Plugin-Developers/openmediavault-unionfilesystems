@@ -8,7 +8,7 @@ XB-Plugin-Section: filesystems
 
 Package: openmediavault-unionfilesystems
 Architecture: all
-Depends: openmediavault (>= 1.7),
+Depends: openmediavault (>= 2.1.18),
          aufs-tools,
          mhddfs,
          ${misc:Depends}

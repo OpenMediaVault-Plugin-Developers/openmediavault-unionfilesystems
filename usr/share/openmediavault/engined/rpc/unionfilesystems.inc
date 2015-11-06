@@ -52,6 +52,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         $this->registerMethod("get");
         $this->registerMethod("set");
         $this->registerMethod("delete");
+        $this->registerMethod("enumerateAvailableBackends");
         $this->registerMethod("enumerateCandidates");
         $this->registerMethod("setExpand");
         $this->registerMethod("removeMissingFilesystems");
@@ -434,6 +435,30 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         $mntent = OMVRpc::exec("FsTab", "delete", array(
             "uuid" => $pool["mntentref"]
         ), $context);
+    }
+
+    public function enumerateAvailableBackends($params, $context)
+    {
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, array(
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ));
+
+        $backendCommands = [
+            "aufs" => "mount.aufs",
+            "mergerfs" => "mergerfs",
+            "mhddfs" => "mhddfs",
+        ];
+
+        $backends = [];
+
+        foreach ($backendCommands as $backend => $command) {
+            if (shell_exec("which $command")) {
+                $backends[] = ["type" => $backend];
+            }
+        }
+
+        return $backends;
     }
 
     public function enumerateCandidates($params, $context)

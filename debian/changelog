@@ -1,7 +1,7 @@
-openmediavault-unionfilesystems (1.9) stable; urgency=low
+openmediavault-unionfilesystems (2.1) stable; urgency=low
 
-  * Add mergefs
-  * Update locales
+  * Add support for mergerfs. Mergerfs package needs to be installed manually.
+  * Update locales.
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 30 Oct 2015 06:54:42 -0500
 
