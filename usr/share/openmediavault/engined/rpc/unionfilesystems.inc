@@ -26,38 +26,175 @@ require_once "openmediavault/rpcservice.inc";
 
 class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 {
+    /**
+     * Get the service configuration XPath.
+     *
+     * @return string
+     */
     private function getXpath()
     {
         return sprintf("/config/services/unionfilesystems");
     }
 
+    /**
+     * Get the service configuration base XPath for pools.
+     *
+     * @return string
+     */
     private function getPoolsXpath()
     {
         return sprintf("%s/pools", $this->getXpath());
     }
 
+    /**
+     * Get the service configuration XPath for a single pool by its UUID.
+     *
+     * @param string $uuid
+     * @return string
+     */
     private function getPoolXpathByUuid($uuid)
     {
         return sprintf("%s/pool[uuid='%s']", $this->getPoolsXpath(), $uuid);
     }
 
+    /**
+     * Get the name of the RPC service.
+     *
+     * @return string
+     */
     public function getName()
     {
         return "UnionFilesystems";
     }
 
+    /**
+     * Initialize the RPC service.
+     *
+     * @return void
+     */
     public function initialize()
     {
+        $this->registerMethod("enumerateAvailableBackends");
+        $this->registerMethod("enumerateCandidates");
         $this->registerMethod("getList");
         $this->registerMethod("get");
         $this->registerMethod("set");
         $this->registerMethod("delete");
-        $this->registerMethod("enumerateAvailableBackends");
-        $this->registerMethod("enumerateCandidates");
-        $this->registerMethod("setExpand");
-        $this->registerMethod("removeMissingFilesystems");
     }
 
+    /**
+     * Enumerate the available backends on the system.
+     *
+     * @param array $params The method parameters.
+     * @param array $context The context of the caller.
+     * @return array
+     */
+    public function enumerateAvailableBackends($params, $context)
+    {
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, array(
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ));
+
+        $backendCommands = [
+            "aufs" => "mount.aufs",
+            "mergerfs" => "mergerfs",
+            "mhddfs" => "mhddfs",
+        ];
+
+        $backends = [];
+
+        foreach ($backendCommands as $backend => $command) {
+            if (shell_exec("which $command")) {
+                $backends[] = ["type" => $backend];
+            }
+        }
+
+        return $backends;
+    }
+
+    /**
+     * Enumerate the available filesystem candidates that can be added to a
+     * union filesystem.
+     *
+     * @param array $params The method parameters.
+     * @param array $context The context of the caller.
+     * @return mixed
+     */
+    public function enumerateCandidates($params, $context)
+    {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext($context, array(
+            "role" => OMV_ROLE_ADMINISTRATOR
+        ));
+
+        $entries = OMVRpc::exec("FsTab", "enumerateEntries", array(), $context);
+
+        // Prepare the result list.
+        $result = array();
+
+        // Set the correct XPath filter to filter out candidates.
+        $xpathFormat = sprintf(
+            "%s//pool//branches[contains(.,'%%s')]",
+            $this->getPoolsXpath()
+        );
+
+        if ($params["uuid"] != $GLOBALS["OMV_UUID_UNDEFINED"]) {
+            // If we're editing a pool we want to include the filesystems
+            // already in the pool.
+            $xpathFormat = sprintf(
+                "%s//pool[not(uuid='%s')]//branches[contains(.,'%%s')]",
+                $this->getPoolsXpath(),
+                $params["uuid"]
+            );
+        }
+
+        foreach ($entries as $entry) {
+            // Check if the device is already referenced/used by a branch.
+            $xpath = sprintf($xpathFormat, $entry["uuid"]);
+
+            if ($xmlConfig->exists($xpath)) {
+                continue;
+            }
+
+            if ($entry["type"] == "aufs" ||
+                $entry["type"] == "mergerfs" ||
+                $entry["type"] == "mhddfs" ||
+                $entry["type"] == "none"
+            ) {
+                continue;
+            }
+
+            $filesystem = OMVFilesystemFactory::get($entry["fsname"]);
+
+            if (!is_null($filesystem) && $filesystem->exists()) {
+                // The device is a potential candidate to be a member of a union
+                // filesystem pool.
+                $result[] = array(
+                    "uuid" => $entry["uuid"],
+                    "devicefile" => $filesystem->getDeviceFile(),
+                    "dir" => $entry["dir"],
+                    "fsname" => $entry["fsname"],
+                    "label" => $filesystem->getLabel(),
+                    "type" => $entry["type"],
+                );
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get a list of the existing union filesystems.
+     *
+     * @param array $params The method parameters.
+     * @param array $context The context of the caller.
+     * @return array
+     *
+     * @throws OMVException
+     */
     public function getList($params, $context)
     {
         global $xmlConfig;
@@ -81,7 +218,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             }'
         );
 
-        // Get configuration object
+        // Get the configuration object.
         $xpath = sprintf("%s/pool/uuid", $this->getPoolsXpath());
         $uuids = $xmlConfig->getList($xpath);
 
@@ -138,6 +275,15 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         );
     }
 
+    /**
+     * Get the configuration for a single existing union filesystem.
+     *
+     * @param array $params The method parameters.
+     * @param array $context The context of the caller.
+     * @return mixed
+     *
+     * @throws OMVException
+     */
     public function get($params, $context)
     {
         global $xmlConfig;
@@ -185,14 +331,26 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
         $pool["branches"] = $branches;
 
-        // Merge the pool configuration with its own options array.
-        $options = $pool["options"];
-        unset($pool["options"]);
-        $pool = array_merge($pool, $options);
+        // Merge the pool configuration with its own options array if the
+        // options array exists.
+        if (isset($pool["options"])) {
+            $options = $pool["options"];
+            unset($pool["options"]);
+            $pool = array_merge($pool, $options);
+        }
 
         return $pool;
     }
 
+    /**
+     * Set the configuration for a single new or existing union filesystem.
+     *
+     * @param array $params The method parameters.
+     * @param array $context The context of the caller.
+     * @return mixed
+     *
+     * @throws OMVException
+     */
     public function set($params, $context)
     {
         global $xmlConfig;
@@ -291,13 +449,13 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             $options["mhddfs_mlimit"] = $params["mhddfs_mlimit"];
         }
 
-        // Create configuration array.
+        // Create the configuration array.
         $pool = array(
             "uuid" => ($params["uuid"] == $GLOBALS["OMV_UUID_UNDEFINED"]) ?
                 OMVUtil::uuid() : $params["uuid"],
             "name" => $params["name"],
             "type" => $params["type"],
-            "options" => $options
+            "options" => $options,
         );
 
         if (isset($params["mntentref"])) {
@@ -318,7 +476,22 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
 
         $pool["branches"] = $branches;
 
-        // Save configuration.
+        // Validate the name.
+        $nameXpath = sprintf(
+            "%s/pool[not(uuid='%s') and name='%s']",
+            $this->getPoolsXpath(),
+            $pool["uuid"],
+            $params["name"]
+        );
+
+        if ($xmlConfig->exists($nameXpath)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_OBJECT_UNIQUENESS,
+                gettext("This name is already in use by another pool.")
+            );
+        }
+
+        // Save the configuration.
         $success = false;
         $xpath = null;
 
@@ -326,19 +499,6 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             // Create the Mntent entry.
             $mntent = $this->createMntentEntry($pool);
             $pool["mntentref"] = $mntent["uuid"];
-
-            $xpath = sprintf(
-                "%s/pool[name='%s']",
-                $this->getPoolsXpath(),
-                $params["name"]
-            );
-
-            if ($xmlConfig->exists($xpath)) {
-                throw new OMVException(
-                    OMVErrorMsg::E_CONFIG_OBJECT_UNIQUENESS,
-                    gettext("This name is already in use by another pool.")
-                );
-            }
 
             $success = $xmlConfig->set(
                 $xpath = $this->getPoolsXpath(),
@@ -369,41 +529,15 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         return $pool;
     }
 
-    public function setExpand($params, $context)
-    {
-        global $xmlConfig;
-
-        // Validate the RPC caller context.
-        $this->validateMethodContext($context, array(
-            "role" => OMV_ROLE_ADMINISTRATOR
-        ));
-
-        // Validate the parameters of the RPC service method.
-        $this->validateMethodParams(
-            $params,
-            '{
-                "type": "object",
-                "properties": {
-                    "uuid": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
-                    "branches": {
-                        "type": "array",
-                        "items": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '},
-                        "minItems": 1,
-                        "uniqueItems": true
-                    }
-                }
-            }'
-        );
-
-        $pool = $this->callMethod("get", array(
-            "uuid" => $params["uuid"]
-        ), $context);
-
-        $pool["branches"] = array_merge($pool["branches"], $params["branches"]);
-
-        return $this->callMethod("set", $pool, $context);
-    }
-
+    /**
+     * Delete the configuration of a single existing union filesystem.
+     *
+     * @param array $params The method parameters.
+     * @param array $context The context of the caller.
+     * @return mixed
+     *
+     * @throws OMVException
+     */
     public function delete($params, $context)
     {
         global $xmlConfig;
@@ -435,124 +569,6 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
         $mntent = OMVRpc::exec("FsTab", "delete", array(
             "uuid" => $pool["mntentref"]
         ), $context);
-    }
-
-    public function enumerateAvailableBackends($params, $context)
-    {
-        // Validate the RPC caller context.
-        $this->validateMethodContext($context, array(
-            "role" => OMV_ROLE_ADMINISTRATOR
-        ));
-
-        $backendCommands = [
-            "aufs" => "mount.aufs",
-            "mergerfs" => "mergerfs",
-            "mhddfs" => "mhddfs",
-        ];
-
-        $backends = [];
-
-        foreach ($backendCommands as $backend => $command) {
-            if (shell_exec("which $command")) {
-                $backends[] = ["type" => $backend];
-            }
-        }
-
-        return $backends;
-    }
-
-    public function enumerateCandidates($params, $context)
-    {
-        global $xmlConfig;
-
-        // Validate the RPC caller context.
-        $this->validateMethodContext($context, array(
-            "role" => OMV_ROLE_ADMINISTRATOR
-        ));
-
-        $entries = OMVRpc::exec("FsTab", "enumerateEntries", array(), $context);
-
-        // Prepare the result list.
-        $result = array();
-
-        foreach ($entries as $entry) {
-            // Check if device is referenced/used by a branch.
-            $xpath = sprintf("//branches[contains(.,'%s')]", $entry["uuid"]);
-
-            if ($xmlConfig->exists($xpath)) {
-                continue;
-            }
-
-            if ($entry["type"] == "aufs" ||
-                $entry["type"] == "mergerfs" ||
-                $entry["type"] == "mhddfs" ||
-                $entry["type"] == "none"
-            ) {
-                continue;
-            }
-
-            $filesystem = OMVFilesystemFactory::get($entry["fsname"]);
-
-            if (!is_null($filesystem) && $filesystem->exists()) {
-                // The device is a potential candidate to be a member of a
-                // union filesystem pool.
-                $result[] = array(
-                    "uuid" => $entry["uuid"],
-                    "devicefile" => $filesystem->getDeviceFile(),
-                    "dir" => $entry["dir"],
-                    "fsname" => $entry["fsname"],
-                    "label" => $filesystem->getLabel(),
-                    "type" => $entry["type"],
-                );
-            }
-        }
-
-        return $result;
-    }
-
-    public function removeMissingFilesystems($params, $context)
-    {
-        global $xmlConfig;
-
-        // Validate the RPC caller context.
-        $this->validateMethodContext($context, array(
-            "role" => OMV_ROLE_ADMINISTRATOR
-        ));
-
-        // Validate the parameters of the RPC service method.
-        $this->validateMethodParams(
-            $params,
-            '{
-                "type": "object",
-                "properties": {
-                    "uuid": {' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . '}
-                }
-            }'
-        );
-
-        $pool = $this->callMethod("get", $params, $context);
-        $branches = array();
-
-        foreach ($pool["branches"] as $branch) {
-            $mntent = OMVRpc::exec("FsTab", "get", array(
-                "uuid" => $branch
-            ), $context);
-
-            $filesystem = OMVFilesystemFactory::get($mntent["fsname"]);
-
-            if (!is_null($filesystem) && $filesystem->exists()) {
-                $branches[] = $branch;
-            }
-        }
-
-        // If the branches are the same, don't do anything.
-        if ($branches == $pool["branches"]) {
-            return $pool;
-        }
-
-        $pool["branches"] = empty($branches) ? null : $branches;
-
-        return $this->callMethod("set", $pool, $context);
     }
 
     /**
@@ -591,7 +607,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
     }
 
     /**
-     * Check if the pool is in use.
+     * Check if the provided pool is in use.
      *
      * @param array $pool
      * @return bool
