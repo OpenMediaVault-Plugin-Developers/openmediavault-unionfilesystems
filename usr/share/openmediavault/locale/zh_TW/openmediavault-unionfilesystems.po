@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-30 06:55-0500\n"
-"PO-Revision-Date: 2015-10-30 11:55+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
+"POT-Creation-Date: 2015-11-09 07:38-0600\n"
+"PO-Revision-Date: 2015-11-09 13:38+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,21 +24,8 @@ msgstr "新增集用場"
 msgid "All."
 msgstr ""
 
-msgid ""
-"Are you sure that you really want to remove missing filesystems from this "
-"pool?"
-msgstr "您確定真的要從這個集用場移除丟失的檔案系統嗎？"
-
 msgid "Branches"
 msgstr "分支"
-
-msgid ""
-"By clicking yes the system will try to find and remove the missing "
-"filesystems from the pool."
-msgstr "一旦點按 '是'，系統將試著在集用場中尋找並移除丟失的檔案系統。"
-
-msgid "Confirmation"
-msgstr "確認"
 
 msgid "Create policy"
 msgstr ""
@@ -46,14 +33,11 @@ msgstr ""
 msgid "Device"
 msgstr "裝置"
 
-msgid "Existing path, most free space."
+msgid "Edit pool"
 msgstr ""
 
-msgid "Expand"
-msgstr "擴展"
-
-msgid "Expand pool"
-msgstr "擴展集用場"
+msgid "Existing path, most free space."
+msgstr ""
 
 msgid "First found with permissions."
 msgstr ""
@@ -79,6 +63,11 @@ msgstr ""
 msgid "Mount options"
 msgstr ""
 
+msgid ""
+"NOTE: The changes won't take effect until you've restarted the system or "
+"manually remounted the filesystem."
+msgstr ""
+
 msgid "Name"
 msgstr "名稱"
 
@@ -91,8 +80,8 @@ msgstr "集用場"
 msgid "Random."
 msgstr ""
 
-msgid "Remove missing"
-msgstr "移除丟失"
+msgid "Select a type ..."
+msgstr ""
 
 msgid "This field must have the format 4G, 100M or 1000K."
 msgstr ""
@@ -122,17 +111,8 @@ msgid ""
 "then a drive containing most free space will be choosen."
 msgstr ""
 
-msgid "aufs"
-msgstr "aufs"
-
-msgid "mergerfs"
-msgstr ""
-
 msgid "mfs"
 msgstr ""
-
-msgid "mhddfs"
-msgstr "mhddfs"
 
 msgid "pmfs"
 msgstr ""

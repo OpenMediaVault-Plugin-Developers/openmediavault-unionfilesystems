@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-30 06:55-0500\n"
+"POT-Creation-Date: 2015-11-09 07:38-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,16 +23,7 @@ msgstr ""
 msgid "All."
 msgstr ""
 
-msgid "Are you sure that you really want to remove missing filesystems from this pool?"
-msgstr ""
-
 msgid "Branches"
-msgstr ""
-
-msgid "By clicking yes the system will try to find and remove the missing filesystems from the pool."
-msgstr ""
-
-msgid "Confirmation"
 msgstr ""
 
 msgid "Create policy"
@@ -41,13 +32,10 @@ msgstr ""
 msgid "Device"
 msgstr ""
 
+msgid "Edit pool"
+msgstr ""
+
 msgid "Existing path, most free space."
-msgstr ""
-
-msgid "Expand"
-msgstr ""
-
-msgid "Expand pool"
 msgstr ""
 
 msgid "First found with permissions."
@@ -74,6 +62,9 @@ msgstr ""
 msgid "Mount options"
 msgstr ""
 
+msgid "NOTE: The changes won't take effect until you've restarted the system or manually remounted the filesystem."
+msgstr ""
+
 msgid "Name"
 msgstr ""
 
@@ -86,7 +77,7 @@ msgstr ""
 msgid "Random."
 msgstr ""
 
-msgid "Remove missing"
+msgid "Select a type ..."
 msgstr ""
 
 msgid "This field must have the format 4G, 100M or 1000K."
@@ -113,16 +104,7 @@ msgstr ""
 msgid "Units can be G, M, or %. If a drive has the free space less than the threshold specifed then another drive will be chosen while creating a new file.  If all the drives have free space less than the threshold specified then a drive containing most free space will be choosen."
 msgstr ""
 
-msgid "aufs"
-msgstr ""
-
-msgid "mergerfs"
-msgstr ""
-
 msgid "mfs"
-msgstr ""
-
-msgid "mhddfs"
 msgstr ""
 
 msgid "pmfs"

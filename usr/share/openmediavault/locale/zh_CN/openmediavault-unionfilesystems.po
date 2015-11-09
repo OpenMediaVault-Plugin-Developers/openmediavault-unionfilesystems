@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-30 06:55-0500\n"
-"PO-Revision-Date: 2015-10-30 11:55+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
+"POT-Creation-Date: 2015-11-09 07:38-0600\n"
+"PO-Revision-Date: 2015-11-09 13:38+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,21 +24,8 @@ msgstr "添加池"
 msgid "All."
 msgstr ""
 
-msgid ""
-"Are you sure that you really want to remove missing filesystems from this "
-"pool?"
-msgstr "你确定要删除池中丢失的文件系统？"
-
 msgid "Branches"
 msgstr "分支"
-
-msgid ""
-"By clicking yes the system will try to find and remove the missing "
-"filesystems from the pool."
-msgstr "点击yes系统将会尝试找到并删除池中丢失的文件系统。"
-
-msgid "Confirmation"
-msgstr "确认"
 
 msgid "Create policy"
 msgstr ""
@@ -46,14 +33,11 @@ msgstr ""
 msgid "Device"
 msgstr "设备"
 
-msgid "Existing path, most free space."
+msgid "Edit pool"
 msgstr ""
 
-msgid "Expand"
-msgstr "扩展"
-
-msgid "Expand pool"
-msgstr "扩展池"
+msgid "Existing path, most free space."
+msgstr ""
 
 msgid "First found with permissions."
 msgstr ""
@@ -79,6 +63,11 @@ msgstr ""
 msgid "Mount options"
 msgstr ""
 
+msgid ""
+"NOTE: The changes won't take effect until you've restarted the system or "
+"manually remounted the filesystem."
+msgstr ""
+
 msgid "Name"
 msgstr "名称"
 
@@ -91,8 +80,8 @@ msgstr "池"
 msgid "Random."
 msgstr ""
 
-msgid "Remove missing"
-msgstr "移除丢失"
+msgid "Select a type ..."
+msgstr ""
 
 msgid "This field must have the format 4G, 100M or 1000K."
 msgstr ""
@@ -122,17 +111,8 @@ msgid ""
 "then a drive containing most free space will be choosen."
 msgstr ""
 
-msgid "aufs"
-msgstr "aufs"
-
-msgid "mergerfs"
-msgstr ""
-
 msgid "mfs"
 msgstr ""
-
-msgid "mhddfs"
-msgstr "mhddfs"
 
 msgid "pmfs"
 msgstr ""

@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-30 06:55-0500\n"
-"PO-Revision-Date: 2015-10-30 11:55+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
+"POT-Creation-Date: 2015-11-09 07:38-0600\n"
+"PO-Revision-Date: 2015-11-09 13:38+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Japanese (Japan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/ja_JP/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,83 +22,72 @@ msgid "Add pool"
 msgstr "プールの追加"
 
 msgid "All."
-msgstr ""
-
-msgid ""
-"Are you sure that you really want to remove missing filesystems from this "
-"pool?"
-msgstr "本当にこのプールから行方不明のファイルシステムを削除ししてもよろしいですか？"
+msgstr "すべて。"
 
 msgid "Branches"
 msgstr "ブランチ"
 
-msgid ""
-"By clicking yes the system will try to find and remove the missing "
-"filesystems from the pool."
-msgstr "はい をクリックした場合、システムはプールから行方不明のファイルシステムを削除しようと試みます。"
-
-msgid "Confirmation"
-msgstr "確認"
-
 msgid "Create policy"
-msgstr ""
+msgstr "ポリシーの作成"
 
 msgid "Device"
 msgstr "デバイス"
 
-msgid "Existing path, most free space."
+msgid "Edit pool"
 msgstr ""
 
-msgid "Expand"
-msgstr "拡張"
-
-msgid "Expand pool"
-msgstr "プールの拡張"
+msgid "Existing path, most free space."
+msgstr "多くの空き容量がある既存のパス。"
 
 msgid "First found with permissions."
-msgstr ""
+msgstr "パーミッションによる最初の発見。"
 
 msgid "First found."
-msgstr ""
+msgstr "最初の発見。"
 
 msgid "First with free space."
-msgstr ""
+msgstr "空き容量による発見。"
 
 msgid "Label"
 msgstr "ラベル"
 
 msgid "Least free space."
-msgstr ""
+msgstr "最少の空き容量。"
 
 msgid "Minimum free space"
-msgstr ""
+msgstr "最少の空き容量"
 
 msgid "Most free space."
-msgstr ""
+msgstr "多くの空き容量。"
 
 msgid "Mount options"
+msgstr "マウントオプション"
+
+msgid ""
+"NOTE: The changes won't take effect until you've restarted the system or "
+"manually remounted the filesystem."
 msgstr ""
 
 msgid "Name"
 msgstr "名前"
 
 msgid "Newest file."
-msgstr ""
+msgstr "新しいファイル。"
 
 msgid "Pools"
 msgstr "プール"
 
 msgid "Random."
-msgstr ""
+msgstr "ランダム。"
 
-msgid "Remove missing"
-msgstr "行方不明を削除"
+msgid "Select a type ..."
+msgstr ""
 
 msgid "This field must have the format 4G, 100M or 1000K."
-msgstr ""
+msgstr "このフィールドは以下のフォーマットである必要があります。 4G, 100M または 1000K。"
 
 msgid "This field must have the format 4G, 100M, or 100%"
-msgstr ""
+msgstr "このフィールドは以下のフォーマットである必要があります。 4G, 100M または 100%。"
 
 msgid "This name is already in use by another pool."
 msgstr "この名前は他のプールで既に使用されています。"
@@ -113,32 +102,23 @@ msgid "UUID"
 msgstr "UUID"
 
 msgid "Union Filesystems"
-msgstr ""
+msgstr "Unionファイルシステム"
 
 msgid ""
 "Units can be G, M, or %. If a drive has the free space less than the "
 "threshold specifed then another drive will be chosen while creating a new "
 "file.  If all the drives have free space less than the threshold specified "
 "then a drive containing most free space will be choosen."
-msgstr ""
-
-msgid "aufs"
-msgstr "aufs"
-
-msgid "mergerfs"
-msgstr ""
+msgstr "単位はG,M,または%にすることができます。ドライブは、指定したしきい値よりも小さい空き容量の場合、新しいファイルを作成するときに別のドライブが選択されます。すべてのドライブが指定したしきい値よりも空き領域少ない場合、もっとも空き容量が多いドライブが選択されます。"
 
 msgid "mfs"
-msgstr ""
-
-msgid "mhddfs"
-msgstr "mhddfs"
+msgstr "mfs"
 
 msgid "pmfs"
-msgstr ""
+msgstr "pmfs"
 
 msgid "rr"
-msgstr ""
+msgstr "rr"
 
 msgid "tdp"
-msgstr ""
+msgstr "tdp"

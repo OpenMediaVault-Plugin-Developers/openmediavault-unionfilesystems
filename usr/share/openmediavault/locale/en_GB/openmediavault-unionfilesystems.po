@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-30 06:55-0500\n"
-"PO-Revision-Date: 2015-10-30 11:55+0000\n"
-"Last-Translator: Aaron Murray <aaron27@ryecoinc.com>\n"
+"POT-Creation-Date: 2015-11-09 07:38-0600\n"
+"PO-Revision-Date: 2015-11-09 13:38+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: English (United Kingdom) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/en_GB/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,83 +22,72 @@ msgid "Add pool"
 msgstr "Add pool"
 
 msgid "All."
-msgstr ""
-
-msgid ""
-"Are you sure that you really want to remove missing filesystems from this "
-"pool?"
-msgstr "Are you sure that you really want to remove missing filesystems from this pool?"
+msgstr "All."
 
 msgid "Branches"
 msgstr "Branches"
 
-msgid ""
-"By clicking yes the system will try to find and remove the missing "
-"filesystems from the pool."
-msgstr "By clicking yes the system will try to find and remove the missing filesystems from the pool."
-
-msgid "Confirmation"
-msgstr "Confirmation"
-
 msgid "Create policy"
-msgstr ""
+msgstr "Create policy"
 
 msgid "Device"
 msgstr "Device"
 
-msgid "Existing path, most free space."
+msgid "Edit pool"
 msgstr ""
 
-msgid "Expand"
-msgstr "Expand"
-
-msgid "Expand pool"
-msgstr "Expand pool"
+msgid "Existing path, most free space."
+msgstr "Existing path, most free space."
 
 msgid "First found with permissions."
-msgstr ""
+msgstr "First found with permissions."
 
 msgid "First found."
-msgstr ""
+msgstr "First found."
 
 msgid "First with free space."
-msgstr ""
+msgstr "First with free space."
 
 msgid "Label"
 msgstr "Label"
 
 msgid "Least free space."
-msgstr ""
+msgstr "Least free space."
 
 msgid "Minimum free space"
-msgstr ""
+msgstr "Minimum free space"
 
 msgid "Most free space."
-msgstr ""
+msgstr "Most free space."
 
 msgid "Mount options"
+msgstr "Mount options"
+
+msgid ""
+"NOTE: The changes won't take effect until you've restarted the system or "
+"manually remounted the filesystem."
 msgstr ""
 
 msgid "Name"
 msgstr "Name"
 
 msgid "Newest file."
-msgstr ""
+msgstr "Newest file."
 
 msgid "Pools"
 msgstr "Pools"
 
 msgid "Random."
-msgstr ""
+msgstr "Random."
 
-msgid "Remove missing"
-msgstr "Remove missing"
+msgid "Select a type ..."
+msgstr ""
 
 msgid "This field must have the format 4G, 100M or 1000K."
-msgstr ""
+msgstr "This field must have the format 4G, 100M or 1000K."
 
 msgid "This field must have the format 4G, 100M, or 100%"
-msgstr ""
+msgstr "This field must have the format 4G, 100M, or 100%"
 
 msgid "This name is already in use by another pool."
 msgstr "This name is already in use by another pool."
@@ -113,32 +102,23 @@ msgid "UUID"
 msgstr "UUID"
 
 msgid "Union Filesystems"
-msgstr ""
+msgstr "Union Filesystems"
 
 msgid ""
 "Units can be G, M, or %. If a drive has the free space less than the "
 "threshold specifed then another drive will be chosen while creating a new "
 "file.  If all the drives have free space less than the threshold specified "
 "then a drive containing most free space will be choosen."
-msgstr ""
-
-msgid "aufs"
-msgstr "aufs"
-
-msgid "mergerfs"
-msgstr ""
+msgstr "Units can be G, M, or %. If a drive has less free space than the threshold specifed then another drive will be chosen while creating a new file.  If all the drives have less free space than the threshold specified then a drive containing most free space will be choosen."
 
 msgid "mfs"
-msgstr ""
-
-msgid "mhddfs"
-msgstr "mhddfs"
+msgstr "mfs"
 
 msgid "pmfs"
-msgstr ""
+msgstr "pmfs"
 
 msgid "rr"
-msgstr ""
+msgstr "rr"
 
 msgid "tdp"
-msgstr ""
+msgstr "tdp"
