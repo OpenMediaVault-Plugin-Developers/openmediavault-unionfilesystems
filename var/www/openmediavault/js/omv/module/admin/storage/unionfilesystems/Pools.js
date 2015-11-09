@@ -31,7 +31,6 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
         "OMV.module.admin.storage.unionfilesystems.Pool"
     ],
 
-    hideEditButton: true,
     hidePagingToolbar: false,
     reloadOnActivate: true,
 
@@ -93,39 +92,6 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
         }]
     }),
 
-    getTopToolbarItems: function() {
-        var me = this;
-        var items = me.callParent(arguments);
-        Ext.Array.insert(items, 3, [{
-            id: me.getId() + "-expand",
-            xtype: "button",
-            text: _("Expand"),
-            icon: "images/expand.png",
-            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler: Ext.Function.bind(this.onExpandButton, this),
-            disabled: true,
-            scope: this,
-            selectionConfig: {
-                minSelections: 1,
-                maxSelections: 1
-            }
-        }, {
-            id: me.getId() + "-remove-missing",
-            xtype: "button",
-            text: _("Remove missing"),
-            icon: "images/minus.png",
-            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler: Ext.Function.bind(this.onRemoveMissingButton, this),
-            disabled: true,
-            scope: this,
-            selectionConfig: {
-                minSelections: 1,
-                maxSelections: 1
-            }
-        }]);
-        return items;
-    },
-
     onAddButton: function() {
         Ext.create("OMV.module.admin.storage.unionfilesystems.Pool", {
             title: _("Add pool"),
@@ -134,6 +100,22 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
                 scope: this,
                 submit: function() {
                     this.doReload();
+                }
+            }
+        }).show();
+    },
+
+    onEditButton: function() {
+        var record = this.getSelected();
+
+        Ext.create("OMV.module.admin.storage.unionfilesystems.Pool", {
+            title: _("Edit pool"),
+            uuid: record.get("uuid"),
+            listeners: {
+                scope: this,
+                submit: function() {
+                    this.doReload();
+                    OMV.MessageBox.info(null, _("NOTE: The changes won't take effect until you've restarted the system or manually remounted the filesystem."));
                 }
             }
         }).show();
@@ -150,55 +132,6 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
                     uuid: record.get("uuid")
                 }
             }
-        });
-    },
-
-    onExpandButton: function() {
-        var record = this.getSelected();
-
-        Ext.create("OMV.module.admin.storage.unionfilesystems.Expand", {
-            title: _("Expand pool"),
-            uuid: record.get("uuid"),
-            listeners: {
-                scope: this,
-                submit: function() {
-                    this.doReload();
-                }
-            }
-        }).show();
-    },
-
-    onRemoveMissingButton: function() {
-        var msg = _("Are you sure that you really want to remove missing filesystems from this pool?") + " " +
-            _("By clicking yes the system will try to find and remove the missing filesystems from the pool.");
-
-        OMV.MessageBox.show({
-            title: _("Confirmation"),
-            msg: msg,
-            buttons: Ext.Msg.YESNO,
-            fn: function(answer) {
-                if (answer !== "yes") {
-                    return;
-                }
-
-                var record = this.getSelected();
-
-                OMV.Rpc.request({
-                    scope: this,
-                    callback: function() {
-                        this.doReload();
-                    },
-                    rpcData: {
-                        service: "UnionFilesystems",
-                        method: "removeMissingFilesystems",
-                        params: {
-                            uuid: record.get("uuid")
-                        }
-                    }
-                });
-            },
-            scope: this,
-            icon: Ext.Msg.QUESTION
         });
     }
 });

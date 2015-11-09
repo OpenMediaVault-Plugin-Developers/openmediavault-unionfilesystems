@@ -119,7 +119,7 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
             name: "branches",
             fieldLabel: _("Branches"),
             valueField: "uuid",
-            minSelections: 2,
+            minSelections: 1,
             flex: 1,
             store: Ext.create("OMV.data.Store", {
                 autoLoad: true,
@@ -150,7 +150,10 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
                     appendSortParams: false,
                     rpcData: {
                         service: "UnionFilesystems",
-                        method: "enumerateCandidates"
+                        method: "enumerateCandidates",
+                        params: {
+                            uuid: this.uuid
+                        }
                     }
                 },
                 sorters: [{
