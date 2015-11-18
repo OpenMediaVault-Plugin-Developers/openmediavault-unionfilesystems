@@ -74,12 +74,12 @@ function omv_unionfilesystems_join
 }
 
 # omv_unionfilesystems_pool_has_multiple_branches type index
-# Valid if the branch count is greater than 1.
-function omv_unionfilesystems_pool_has_multiple_branches
+# Valid if the branch count is equal to 1 or greater.
+function omv_unionfilesystems_pool_has_enough_branches
 {
     local xpath=$(omv_unionfilesystems_get_pool_xpath_by_type_and_index ${1} ${2})
 
-    if [ $(omv_config_get_count "${xpath}/branches/mntentref") -gt 1 ]; then
+    if [ $(omv_config_get_count "${xpath}/branches/mntentref") -gt 0 ]; then
         return 0
     fi
 

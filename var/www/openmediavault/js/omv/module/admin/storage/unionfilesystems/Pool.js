@@ -180,6 +180,10 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
                 }]
             }
         }, {
+            xtype: "hiddenfield",
+            name: "mntentref",
+            value: OMV.UUID_UNDEFINED
+        }, {
             xtype: "fieldset",
             title: _("Mount options"),
             defaults: {
