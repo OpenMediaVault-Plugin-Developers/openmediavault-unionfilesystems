@@ -1,9 +1,10 @@
-openmediavault-unionfilesystems (2.2) UNRELEASED; urgency=low
+openmediavault-unionfilesystems (2.2) stable; urgency=low
 
   * Mntentref should now be preserved after editing.
   * Prevent mlimit= to be set twice.
+  * Update locales
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 18 Nov 2015 14:46:27 +0100
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 18 Nov 2015 09:10:58 -0600
 
 openmediavault-unionfilesystems (2.1) stable; urgency=low
 

@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Marco, 2015
 # Paolo Velati <paolo.velati@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-09 07:38-0600\n"
-"PO-Revision-Date: 2015-11-09 13:38+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"PO-Revision-Date: 2015-11-17 20:10+0000\n"
+"Last-Translator: Marco\n"
 "Language-Team: Italian (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,34 +20,34 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Add pool"
-msgstr ""
+msgstr "Aggiungi pool"
 
 msgid "All."
-msgstr ""
+msgstr "Tutti"
 
 msgid "Branches"
 msgstr ""
 
 msgid "Create policy"
-msgstr ""
+msgstr "Crea regola"
 
 msgid "Device"
 msgstr "Dispositivo"
 
 msgid "Edit pool"
-msgstr ""
+msgstr "Modifica pool"
 
 msgid "Existing path, most free space."
 msgstr ""
 
 msgid "First found with permissions."
-msgstr ""
+msgstr "Primo trovato con permessi."
 
 msgid "First found."
-msgstr ""
+msgstr "Primo trovato."
 
 msgid "First with free space."
-msgstr ""
+msgstr "Primo con spazio libero."
 
 msgid "Label"
 msgstr "Etichetta"
@@ -55,45 +56,45 @@ msgid "Least free space."
 msgstr ""
 
 msgid "Minimum free space"
-msgstr ""
+msgstr "Minimo spazio libero"
 
 msgid "Most free space."
-msgstr ""
+msgstr "Con più spazio libero"
 
 msgid "Mount options"
-msgstr ""
+msgstr "Opzioni di mount"
 
 msgid ""
 "NOTE: The changes won't take effect until you've restarted the system or "
 "manually remounted the filesystem."
-msgstr ""
+msgstr "NOTA: I cambiamenti non avranno effetto fino a quando non avrete riavviato il sistema o manualmente rimontato il filesystem."
 
 msgid "Name"
 msgstr "Nome"
 
 msgid "Newest file."
-msgstr ""
+msgstr "File più recente."
 
 msgid "Pools"
-msgstr ""
+msgstr "Pools"
 
 msgid "Random."
-msgstr ""
+msgstr "Random."
 
 msgid "Select a type ..."
-msgstr ""
+msgstr "seleziona un tipo ..."
 
 msgid "This field must have the format 4G, 100M or 1000K."
-msgstr ""
+msgstr "Questo campo deve avere il formato 4G, 100M o 1000K."
 
 msgid "This field must have the format 4G, 100M, or 100%"
-msgstr ""
+msgstr "Questo campo deve avere il formato 4G, 100M, o 100%"
 
 msgid "This name is already in use by another pool."
-msgstr ""
+msgstr "Questo nome è già in uso da un altro pool."
 
 msgid "Threshold"
-msgstr ""
+msgstr "Soglia"
 
 msgid "Type"
 msgstr "Tipo"
@@ -102,14 +103,14 @@ msgid "UUID"
 msgstr "UUID"
 
 msgid "Union Filesystems"
-msgstr ""
+msgstr "Filesystem Union"
 
 msgid ""
 "Units can be G, M, or %. If a drive has the free space less than the "
 "threshold specifed then another drive will be chosen while creating a new "
 "file.  If all the drives have free space less than the threshold specified "
 "then a drive containing most free space will be choosen."
-msgstr ""
+msgstr "Le unità possono essere G, M, oppure %. Se un disco ha spazio libero inferiore alla soglia specificata verrà scelto un altro disco creando un nuovo file. Se tutti i dischi hanno spazio libero inferiore alla soglia specificata allora verrà scelto il disco che contiene più spazio libero."
 
 msgid "mfs"
 msgstr ""
