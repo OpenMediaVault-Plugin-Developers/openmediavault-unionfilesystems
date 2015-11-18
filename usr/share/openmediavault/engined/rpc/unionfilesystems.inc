@@ -571,8 +571,8 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
     /**
      * Create or update a mntent configuration object from a pool.
      *
-     * @param array $pool
-     * @return array
+     * @param array $pool The pool to create a mntent entry for.
+     * @return string Returns the mntentref for the mntent entry.
      */
     private function setMntentEntry($pool)
     {
@@ -625,7 +625,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
      * Sanitize Mergerfs specific options.
      *
      * @param array $params
-     * @return arrary
+     * @return array
      */
     private function sanitizeMergerfsOptions(array $params)
     {
@@ -645,7 +645,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
      * Sanitize Mhddfs specific options.
      *
      * @param array $params
-     * @return arrary
+     * @return array
      */
     private function sanitizeMhddfsOptions(array $params)
     {
