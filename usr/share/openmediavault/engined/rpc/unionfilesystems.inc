@@ -383,7 +383,7 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                         "uniqueItems": true,
                         "optional": true
                     },
-                    "mntentref": { "type": "string", "optional" : true },
+                    "mntentref": {' . $GLOBALS["OMV_JSONSCHEMA_UUID_UNDEFINED"] . '},
                     "aufs_policy_create": {
                         "type": "string",
                         "enum": [
@@ -455,12 +455,9 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                 OMVUtil::uuid() : $params["uuid"],
             "name" => $params["name"],
             "type" => $params["type"],
+            "mntentref" => $params["mntentref"],
             "options" => $options,
         );
-
-        if (isset($params["mntentref"])) {
-            $pool["mntentref"] = $params["mntentref"];
-        }
 
         // Add an empty branches list if the branches option is not set.
         $branches = array();
@@ -491,15 +488,15 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
             );
         }
 
+        // Create or update the mntent entry.
+        $mntent = $this->setMntentEntry($pool);
+        $pool["mntentref"] = $mntent["uuid"];
+
         // Save the configuration.
         $success = false;
         $xpath = null;
 
         if ($params["uuid"] == $GLOBALS["OMV_UUID_UNDEFINED"]) {
-            // Create the Mntent entry.
-            $mntent = $this->createMntentEntry($pool);
-            $pool["mntentref"] = $mntent["uuid"];
-
             $success = $xmlConfig->set(
                 $xpath = $this->getPoolsXpath(),
                 array("pool" => $pool),
@@ -572,22 +569,17 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
     }
 
     /**
-     * Create a mntent configuration object from a pool and mntentref.
+     * Create or update a mntent configuration object from a pool.
      *
      * @param array $pool
-     * @param string|null $mntentref
      * @return array
      */
-    private function createMntentEntry($pool, $mntentref = null)
+    private function setMntentEntry($pool)
     {
-        if (!$mntentref) {
-            $mntentref = $GLOBALS["OMV_UUID_UNDEFINED"];
-        }
-
         $mountPoint = OMVFilesystemUnion::buildMountPath($pool["uuid"]);
 
         $mntentEntry = array(
-            "uuid" => $mntentref,
+            "uuid" => $pool["mntentref"],
             "fsname" => $pool["uuid"],
             "dir" => $mountPoint,
             "type" => $pool["type"],
