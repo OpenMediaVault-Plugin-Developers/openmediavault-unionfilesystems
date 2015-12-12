@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-09 07:38-0600\n"
-"PO-Revision-Date: 2015-11-09 13:38+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"PO-Revision-Date: 2015-11-20 08:27+0000\n"
+"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,72 +22,72 @@ msgid "Add pool"
 msgstr "Přidat fond"
 
 msgid "All."
-msgstr ""
+msgstr "Vše."
 
 msgid "Branches"
 msgstr "Větve"
 
 msgid "Create policy"
-msgstr ""
+msgstr "Vytvořit pravidlo"
 
 msgid "Device"
 msgstr "Zařízení"
 
 msgid "Edit pool"
-msgstr ""
+msgstr "Upravit fond"
 
 msgid "Existing path, most free space."
-msgstr ""
+msgstr "Existující umístění, nejvíce volného místa."
 
 msgid "First found with permissions."
-msgstr ""
+msgstr "První nalezené, s příslušnými přístupovými právy"
 
 msgid "First found."
-msgstr ""
+msgstr "První nalezené."
 
 msgid "First with free space."
-msgstr ""
+msgstr "První, na kterém volné místo."
 
 msgid "Label"
 msgstr "Popisek"
 
 msgid "Least free space."
-msgstr ""
+msgstr "S nejméně volného místa."
 
 msgid "Minimum free space"
-msgstr ""
+msgstr "Přinejmenším volného místa"
 
 msgid "Most free space."
-msgstr ""
+msgstr "S nejvíce volného místa."
 
 msgid "Mount options"
-msgstr ""
+msgstr "Předvolby připojení (mount)"
 
 msgid ""
 "NOTE: The changes won't take effect until you've restarted the system or "
 "manually remounted the filesystem."
-msgstr ""
+msgstr "UPOZORNĚNÍ: Změny se promítnou až po restartu serveru nebo ručním odpojení a připojení souborového systému. "
 
 msgid "Name"
 msgstr "Název"
 
 msgid "Newest file."
-msgstr ""
+msgstr "Nejnovější soubor."
 
 msgid "Pools"
 msgstr "Fondy"
 
 msgid "Random."
-msgstr ""
+msgstr "Náhodné."
 
 msgid "Select a type ..."
-msgstr ""
+msgstr "Vyberte typ…"
 
 msgid "This field must have the format 4G, 100M or 1000K."
-msgstr ""
+msgstr "Je třeba, aby obsah této kolonky měl podobu jako 4G, 100M nebo 1000K"
 
 msgid "This field must have the format 4G, 100M, or 100%"
-msgstr ""
+msgstr "Je třeba, aby obsah této kolonky měl podobu jako 4G, 100M nebo 100%"
 
 msgid "This name is already in use by another pool."
 msgstr "Název je již používán jiným fondem."
@@ -102,23 +102,23 @@ msgid "UUID"
 msgstr "Univerzálně jedinečný identifikátor"
 
 msgid "Union Filesystems"
-msgstr ""
+msgstr "Souborový systém Union"
 
 msgid ""
 "Units can be G, M, or %. If a drive has the free space less than the "
 "threshold specifed then another drive will be chosen while creating a new "
 "file.  If all the drives have free space less than the threshold specified "
 "then a drive containing most free space will be choosen."
-msgstr ""
+msgstr "Jednotky mohou být G, M, nebo %. Pokud na disku zbývá méně volného místa, než je nastavená hranice, pak pro vytvoření nového souboru bude použit jiný disk. Pokud takovým nedostatkem trpí všechny disky, pak bude použit ten, na kterém zbývá nejvíce volného místa."
 
 msgid "mfs"
-msgstr ""
+msgstr "mfs"
 
 msgid "pmfs"
-msgstr ""
+msgstr "pmfs"
 
 msgid "rr"
-msgstr ""
+msgstr "rr"
 
 msgid "tdp"
-msgstr ""
+msgstr "tdp"

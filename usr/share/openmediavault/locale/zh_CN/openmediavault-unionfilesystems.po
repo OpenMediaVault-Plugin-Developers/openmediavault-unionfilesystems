@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# songming <by@songming.me>, 2014
+# songming <by@songming.me>, 2014-2015
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-11-09 07:38-0600\n"
-"PO-Revision-Date: 2015-11-09 13:38+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"PO-Revision-Date: 2015-12-11 14:17+0000\n"
+"Last-Translator: songming <by@songming.me>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,19 +22,19 @@ msgid "Add pool"
 msgstr "添加池"
 
 msgid "All."
-msgstr ""
+msgstr "所有."
 
 msgid "Branches"
 msgstr "分支"
 
 msgid "Create policy"
-msgstr ""
+msgstr "创建策略"
 
 msgid "Device"
 msgstr "设备"
 
 msgid "Edit pool"
-msgstr ""
+msgstr "编辑池"
 
 msgid "Existing path, most free space."
 msgstr ""
@@ -55,13 +55,13 @@ msgid "Least free space."
 msgstr ""
 
 msgid "Minimum free space"
-msgstr ""
+msgstr "最小剩余空间"
 
 msgid "Most free space."
 msgstr ""
 
 msgid "Mount options"
-msgstr ""
+msgstr "挂载选项"
 
 msgid ""
 "NOTE: The changes won't take effect until you've restarted the system or "
@@ -78,22 +78,22 @@ msgid "Pools"
 msgstr "池"
 
 msgid "Random."
-msgstr ""
+msgstr "随机."
 
 msgid "Select a type ..."
-msgstr ""
+msgstr "选择类型 ..."
 
 msgid "This field must have the format 4G, 100M or 1000K."
-msgstr ""
+msgstr "此字段格式必须如4G、100M或1000K。"
 
 msgid "This field must have the format 4G, 100M, or 100%"
-msgstr ""
+msgstr "此字段格式必须如4G、100M或100%"
 
 msgid "This name is already in use by another pool."
 msgstr "该名称已经被其它池占用。"
 
 msgid "Threshold"
-msgstr ""
+msgstr "阈值"
 
 msgid "Type"
 msgstr "类型"
@@ -102,7 +102,7 @@ msgid "UUID"
 msgstr "UUID"
 
 msgid "Union Filesystems"
-msgstr ""
+msgstr "联合文件系统"
 
 msgid ""
 "Units can be G, M, or %. If a drive has the free space less than the "
@@ -112,13 +112,13 @@ msgid ""
 msgstr ""
 
 msgid "mfs"
-msgstr ""
+msgstr "mfs"
 
 msgid "pmfs"
-msgstr ""
+msgstr "pmfs"
 
 msgid "rr"
-msgstr ""
+msgstr "rr"
 
 msgid "tdp"
-msgstr ""
+msgstr "tdp"
