@@ -363,7 +363,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
                 continue;
             }
 
-            $result = array(
+            $result = [
                 "devicefile" => $this->getDeviceFile(),
                 "type" => $matches[1],
                 "blocks" => $matches[2],
@@ -372,7 +372,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
                 "available" => binary_convert($matches[4], "KiB", "B"),
                 "percentage" => intval(trim($matches[5], "%")),
                 "mountpoint" => $matches[6]
-            );
+            ];
         }
 
         return $result;

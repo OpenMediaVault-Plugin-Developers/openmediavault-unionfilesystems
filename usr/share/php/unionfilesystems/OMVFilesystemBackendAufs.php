@@ -17,9 +17,6 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once "openmediavault/config.inc";
-require_once "openmediavault/system.inc";
-
 require_once "unionfilesystems/OMVFilesystemBackendUnionAbstract.php";
 
 class OMVFilesystemBackendAufs extends OMVFilesystemBackendUnionAbstract

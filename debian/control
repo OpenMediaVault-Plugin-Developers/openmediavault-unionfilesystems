@@ -8,11 +8,11 @@ XB-Plugin-Section: filesystems
 
 Package: openmediavault-unionfilesystems
 Architecture: all
-Depends: openmediavault (>= 2.1.18),
-         aufs-tools,
-         mhddfs,
+Depends: aufs-tools,
          mergerfs,
+         mhddfs,
+         openmediavault (>= 3.0),
          ${misc:Depends}
 Description: Union filesystems plugin for OpenMediaVault.
- Make it possible to mount drives under a single mountpoint with an union
- filesystem such as aufs or mhddfs.
+ Makes it possible to mount drives under a single mountpoint with an union
+ filesystem such as aufs, mhddfs and mergerfs.

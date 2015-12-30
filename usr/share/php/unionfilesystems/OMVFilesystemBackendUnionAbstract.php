@@ -49,19 +49,19 @@ abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbs
     {
         global $xmlConfig;
 
-        $result = array();
+        $result = [];
         $pools = $this->getPoolConfigurationsByType($this->type);
 
         if ($pools) {
             foreach ($pools as $pool) {
                 $filesystem = $this->getImpl($pool["uuid"]);
 
-                $result[$filesystem->getDeviceFile()] = array(
+                $result[$filesystem->getDeviceFile()] = [
                     "devicefile" => $filesystem->getDeviceFile(),
                     "uuid" => $filesystem->getUuid(),
                     "label" => $filesystem->getLabel(),
                     "type" => $filesystem->getType(),
-                );
+                ];
             }
         }
 
