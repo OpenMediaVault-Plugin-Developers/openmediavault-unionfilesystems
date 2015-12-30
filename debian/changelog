@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (3.0) stable; urgency=low
+
+  * OMV 3.0 release. 
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 30 Dec 2015 15:40:58 +0100
+
 openmediavault-unionfilesystems (2.3) stable; urgency=low
 
   * Make mergerfs a dependency
