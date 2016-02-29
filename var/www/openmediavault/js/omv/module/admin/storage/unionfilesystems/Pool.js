@@ -54,7 +54,7 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
                 func: function(values) {
                     var value = values.mergerfs_category_create;
 
-                    return value === "epmfs" || value === "fwfs" || value === "lfs";
+                    return value === "eplfs" || value === "epmfs" || value === "fwfs" || value === "lfs";
                 }
             }],
             name: ["mergerfs_min_free_space"],
@@ -224,9 +224,10 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
                     ],
                     data: [
                         ["all", _("All.")],
+                        ["eplfs", _("Existing path, lesast free space.")],
                         ["epmfs", _("Existing path, most free space.")],
+                        ["erofs", _("Read-only.")],
                         ["ff", _("First found.")],
-                        ["ffwp", _("First found with permissions.")],
                         ["fwfs", _("First with free space.")],
                         ["lfs", _("Least free space.")],
                         ["mfs", _("Most free space.")],

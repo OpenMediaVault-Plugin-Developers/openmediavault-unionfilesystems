@@ -395,9 +395,10 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
                         "type": "string",
                         "enum": [
                             "all",
+                            "eplfs",
                             "epmfs",
+                            "erofs",
                             "ff",
-                            "ffwp",
                             "fwfs",
                             "lfs",
                             "mfs",
@@ -628,7 +629,8 @@ class OMVRpcServiceUnionFilesystems extends OMVRpcServiceAbstract
     {
         $createPolicy = $params["category_create"];
 
-        if ($createPolicy !== "epmfs" &&
+        if ($createPolicy !== "eplfs" &&
+            $createPolicy !== "epmfs" &&
             $createPolicy !== "fwfs" &&
             $createPolicy !== "lfs"
         ) {
