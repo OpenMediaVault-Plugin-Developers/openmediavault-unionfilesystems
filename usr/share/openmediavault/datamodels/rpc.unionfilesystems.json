@@ -1,0 +1,79 @@
+[{
+    "type": "rpc",
+    "id": "rpc.unionfilesystems.set",
+    "params": {
+        "type": "object",
+        "properties": {
+            "uuid": {
+                "type": "string",
+                "format": "uuidv4",
+                "required": true
+            },
+            "name": {
+                "type": "string",
+                "required": true
+            },
+            "type": {
+                "type": "string",
+                "enum": [
+                    "aufs",
+                    "mergerfs",
+                    "mhddfs"
+                ],
+                "required": true
+            },
+            "branches": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "format": "uuidv4"
+                },
+                "minItems": 2,
+                "uniqueItems": true
+            },
+            "mntentref": {
+                "type": "string",
+                "format": "uuidv4",
+                "required": true
+            },
+            "aufs_policy_create": {
+                "type": "string",
+                "enum": [
+                    "mfs",
+                    "pmfs",
+                    "rr",
+                    "tdp"
+                ],
+                "required": false
+            },
+            "mergerfs_category_create": {
+                "type": "string",
+                "enum": [
+                    "all",
+                    "eplfs",
+                    "epmfs",
+                    "erofs",
+                    "ff",
+                    "fwfs",
+                    "lfs",
+                    "mfs",
+                    "newest",
+                    "rand"
+                ],
+                "required": false
+            },
+            "mergerfs_min_free_space": {
+                "type": "string",
+                "format": "regex",
+                "pattern": "/^\\d+(K|M|G)$/",
+                "required": false
+            },
+            "mhddfs_mlimit": {
+                "type": "string",
+                "format": "regex",
+                "pattern": "/^\\d+(M|G|%)$/",
+                "required": false
+            }
+        }
+    }
+}]

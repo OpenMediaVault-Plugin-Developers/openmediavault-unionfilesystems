@@ -1,0 +1,84 @@
+{
+    "type": "config",
+    "id": "conf.service.unionfilesystems.pool",
+    "title": "Unionfilesystem pool",
+    "queryinfo": {
+        "xpath": "/config/services/unionfilesystems/pools/pool",
+        "iterable": true,
+        "idproperty": "uuid"
+    },
+    "properties": {
+        "uuid": {
+            "type": "string",
+            "format": "uuidv4"
+        },
+        "name": {
+            "type": "string"
+        },
+        "type": {
+            "type": "string",
+            "enum": [
+                "aufs",
+                "mergerfs",
+                "mhddfs"
+            ]
+        },
+        "branches": {
+            "type": "object",
+            "properties": {
+                "mntentref": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuidv4"
+                    },
+                    "minItems": 2,
+                    "uniqueItems": true
+                }
+            }
+        },
+        "mntentref": {
+            "type": "string",
+            "format": "uuidv4"
+        },
+        "options": {
+            "type": "object",
+            "properties": {
+                "aufs_policy_create": {
+                    "type": "string",
+                    "enum": [
+                        "mfs",
+                        "pmfs",
+                        "rr",
+                        "tdp"
+                    ]
+                },
+                "mergerfs_category_create": {
+                    "type": "string",
+                    "enum": [
+                        "all",
+                        "eplfs",
+                        "epmfs",
+                        "erofs",
+                        "ff",
+                        "fwfs",
+                        "lfs",
+                        "mfs",
+                        "newest",
+                        "rand"
+                    ]
+                },
+                "mergerfs_min_free_space": {
+                    "type": "string",
+                    "format": "regex",
+                    "pattern": "/^\\d+(K|M|G)$/"
+                },
+                "mhddfs_mlimit": {
+                    "type": "string",
+                    "format": "regex",
+                    "pattern": "/^\\d+(M|G|%)$/"
+                }
+            }
+        }
+    }
+}

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2014-2015 OpenMediaVault Plugin Developers
+ * Copyright (C) 2014-2015 OpenMediaVault Plugin Developers.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "openmediavault/system.inc";
+namespace OMV\System\Filesystem\Backend;
 
-require_once "unionfilesystems/OMVFilesystemBackendAufs.php";
-require_once "unionfilesystems/OMVFilesystemBackendMergerfs.php";
-require_once "unionfilesystems/OMVFilesystemBackendMhddfs.php";
-
-OMVFilesystems::registerBackend(new OMVFilesystemBackendAufs());
-OMVFilesystems::registerBackend(new OMVFilesystemBackendMergerfs());
-OMVFilesystems::registerBackend(new OMVFilesystemBackendMhddfs());
+class Mhddfs extends UnionAbstract
+{
+    public function __construct()
+    {
+        $this->type = 'mhddfs';
+        $this->properties = self::PROP_POSIX_ACL;
+    }
+}
