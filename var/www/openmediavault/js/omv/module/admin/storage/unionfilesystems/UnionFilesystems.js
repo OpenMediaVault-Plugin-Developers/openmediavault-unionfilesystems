@@ -18,9 +18,9 @@
 // require("js/omv/WorkspaceManager.js")
 
 OMV.WorkspaceManager.registerNode({
-    id: "unionfilesystems",
-    path: "/storage",
-    text: _("Union Filesystems"),
-    icon16: "images/unionfilesystems.png",
-    iconSvg: "images/unionfilesystems.svg"
+    id: 'unionfilesystems',
+    path: '/storage',
+    text: _('Union Filesystems'),
+    icon16: 'images/unionfilesystems.png',
+    iconSvg: 'images/unionfilesystems.svg'
 });
