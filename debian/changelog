@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (3.1.1) UNRELEASED; urgency=medium
+
+  * OMV 3.0.15 compatibility.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 13 Apr 2016 00:33:00 +0200
+
 openmediavault-unionfilesystems (3.0.1) stable; urgency=medium
 
   * Add support for new policies eplfs and erofs.
@@ -7,7 +13,7 @@ openmediavault-unionfilesystems (3.0.1) stable; urgency=medium
 
 openmediavault-unionfilesystems (3.0) stable; urgency=low
 
-  * OMV 3.0 release. 
+  * OMV 3.0 release.
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 30 Dec 2015 15:40:58 +0100
 
