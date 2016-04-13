@@ -20,7 +20,6 @@
 namespace OMV\Engined\Rpc;
 
 use Exception;
-use OMV\AssertException;
 use OMV\Config\ConfigObject;
 use OMV\Config\Database;
 use OMV\Engine\Module\Manager as ModuleManager;
@@ -41,6 +40,9 @@ class UnionFilesystems extends ServiceAbstract
 
     /** @var Dispatcher */
     private $dispatcher;
+
+    /** @var string */
+    private $mountPointDataModelPath = 'conf.system.filesystem.mountpoint';
 
     public function __construct(Database $database = null, Dispatcher $dispatcher = null)
     {
@@ -94,7 +96,7 @@ class UnionFilesystems extends ServiceAbstract
         $backends = [];
 
         foreach ($backendCommands as $backend => $command) {
-            if (shell_exec('which '.$command)) {
+            if (shell_exec('which ' . $command)) {
                 $backends[] = ['type' => $backend];
             }
         }
@@ -120,23 +122,30 @@ class UnionFilesystems extends ServiceAbstract
 
         $candidates = [];
 
-        // Create a predicate to filter out all filesystems already used.
-        $predicateFormat = './branches/mntentref[contains(.,\'%s\')]';
-
-        if ($params['uuid'] !== $GLOBALS['OMV_UUID_UNDEFINED']) {
-            // If we're editing a pool we don't want to exclude the filesystems
-            // already in the pool.
-            $predicateFormat = sprintf(
-                'not(uuid=\'%s\') and ./branches/mntentref[contains(.,\'%%s\')]',
-                $params['uuid']
-            );
-        }
-
         foreach ($entries as $entry) {
-            $predicate = sprintf($predicateFormat, $entry['uuid']);
+            // Create filter to exclude all filesystems already used.
+            $filter = [
+                'operator' => 'stringEquals',
+                'arg0' => 'mntentref',
+                'arg1' => $entry['uuid'],
+            ];
+
+            if ($params['uuid'] !== $GLOBALS['OMV_UUID_UNDEFINED']) {
+                // If we're editing a pool we don't want to exclude the filesystems
+                // already in the pool.
+                $filter = [
+                    'operator' => 'and',
+                    'arg0' => [
+                        'operator' => 'stringNotEquals',
+                        'arg0' => 'uuid',
+                        'arg1' => $params['uuid'],
+                    ],
+                    'arg1' => $filter,
+                ];
+            }
 
             // Filter out used filesystems.
-            if ($this->database->existsByPredicate($this->dataModelPath, $predicate)) {
+            if ($this->database->exists($this->dataModelPath, $filter)) {
                 continue;
             }
 
@@ -185,20 +194,20 @@ class UnionFilesystems extends ServiceAbstract
             // Add additional information.
             $branchesInfo = [];
 
-            foreach ($object->get('branches.mntentref') as $branch) {
+            foreach ($object->get('mntentref') as $mntentref) {
                 $branchInfo = 'n/a';
-                $mntent = Rpc::call('FsTab', 'get', ['uuid' => $branch], $context);
+                $mntent = Rpc::call('FsTab', 'get', ['uuid' => $mntentref], $context);
                 $filesystem = Filesystem::getImpl($mntent['fsname']);
 
                 if ($filesystem && $filesystem->exists()) {
-                    $branchInfo = $filesystem->getDeviceFile().' ('.$filesystem->getLabel().')';
+                    $branchInfo = $filesystem->getDeviceFile() . ' (' . $filesystem->getLabel() . ')';
                 }
 
                 $branchesInfo[] = $branchInfo;
             }
 
-            $object->add('branches_info', 'any');
-            $object->set('branches_info', $branchesInfo);
+            $object->add('source_mounts_info', 'any');
+            $object->set('source_mounts_info', $branchesInfo);
 
             $pools[] = $object->getAssoc();
         }
@@ -227,35 +236,6 @@ class UnionFilesystems extends ServiceAbstract
 
         $object = $this->database->get($this->dataModelPath, $params['uuid']);
 
-        $object->move('branches.mntentref', 'branches');
-
-        // Merge the pool configuration with its own options array if the
-        // options array exists.
-        $properties = [
-            'aufs_policy_create',
-            'mergerfs_category_create',
-            'mergerfs_min_free_space',
-            'mhddfs_mlimit',
-        ];
-
-        foreach ($properties as $property) {
-            $beforeProperty = 'options.'.$property;
-
-            try {
-                // Remove empty properties.
-                if ($object->isEmpty($beforeProperty)) {
-                    $object->remove($beforeProperty);
-                    continue;
-                }
-
-                $object->move($beforeProperty, $property);
-            } catch (AssertException $e) {
-                // Property doesn't exist. Ignore the error.
-            }
-        }
-
-        $object->remove('options');
-
         return $object->getAssoc();
     }
 
@@ -272,38 +252,15 @@ class UnionFilesystems extends ServiceAbstract
         $this->validateMethodContext($context, ['role' => OMV_ROLE_ADMINISTRATOR]);
         $this->validateMethodParams($params, 'rpc.unionfilesystems.set');
 
-        $options = [];
-
-        foreach ([
-            'aufs_policy_create',
-            'mergerfs_category_create',
-            'mergerfs_min_free_space',
-            'mhddfs_mlimit',
-        ] as $optionKey) {
-            if (isset($params[$optionKey])) {
-                $options[$optionKey] = $params[$optionKey];
-            }
-        }
-
-        // Sanitize the mount options.
-        if ($params['type'] === 'mergerfs') {
-            $options = $this->sanitizeMergerfsOptions($options);
-        }
-
-        if ($params['type'] === 'mhddfs') {
-            $options = $this->sanitizeMhddfsOptions($options);
-        }
+        // Hack around "is not array" issue in OMV.
+        $mntentref = $params['mntentref'];
+        unset($params['mntentref']);
 
         $object = new ConfigObject($this->dataModelPath);
-        $object->setAssoc([
-            'uuid' => $params['uuid'],
-            'name' => $params['name'],
-            'type' => $params['type'],
-            'mntentref' => $params['mntentref'],
-            'options' => $options,
-        ]);
+        $object->setAssoc($params);
 
-        $object->set('branches.mntentref', $params['branches']);
+        // Hack around "is not array" issue in OMV.
+        $object->set('mntentref', $mntentref);
 
         $isNewObject = $object->isNew();
 
@@ -312,8 +269,8 @@ class UnionFilesystems extends ServiceAbstract
         }
 
         // Create or update the mntent entry.
-        $mntent = $this->setMntentEntry($object);
-        $object->set('mntentref', $mntent['uuid']);
+        $selfMntent = $this->setMntentEntry($object);
+        $object->set('self-mntentref', $selfMntent['uuid']);
 
         // Try to save the pool. If it fails and it's a new pool, remove the
         // newly created mntent configuration.
@@ -321,7 +278,7 @@ class UnionFilesystems extends ServiceAbstract
             $this->database->set($object);
         } catch (Exception $e) {
             if (!$isNewObject) {
-                Rpc::call('FsTab', 'delete', ['uuid' => $mntent['uuid']], $context);
+                Rpc::call('FsTab', 'delete', ['uuid' => $selfMntent['uuid']], $context);
             }
 
             throw $e;
@@ -354,7 +311,7 @@ class UnionFilesystems extends ServiceAbstract
         $object = $this->database->get($this->dataModelPath, $params['uuid']);
         $this->database->delete($object);
 
-        Rpc::call('FsTab', 'delete', ['uuid' => $object->get('mntentref')], $context);
+        Rpc::call('FsTab', 'delete', ['uuid' => $object->get('self-mntentref')], $context);
     }
 
     /**
@@ -364,15 +321,15 @@ class UnionFilesystems extends ServiceAbstract
      *
      * @return string Returns the mntentref for the mntent entry.
      */
-    private function setMntentEntry(ConfigObject $pool)
+    private function setMntentEntry(ConfigObject $object)
     {
-        $mountPoint = UnionFilesystem::buildMountPath($pool->get('uuid'));
+        $mountPoint = UnionFilesystem::buildMountPath($object->get('uuid'));
 
         $mntentEntry = [
-            'uuid' => $pool->get('mntentref'),
-            'fsname' => $pool->get('uuid'),
+            'uuid' => $object->get('self-mntentref'),
+            'fsname' => $object->get('uuid'),
             'dir' => $mountPoint,
-            'type' => $pool->get('type'),
+            'type' => $object->get('type'),
             'opts' => '',
             'freq' => 0,
             'passno' => 0,
@@ -381,68 +338,5 @@ class UnionFilesystems extends ServiceAbstract
         $mntent = Rpc::call('FsTab', 'set', $mntentEntry, $this->getAdminContext());
 
         return $mntent;
-    }
-
-    /**
-     * Sanitize Mergerfs specific options.
-     *
-     * @param $options
-     *
-     * @return array
-     */
-    private function sanitizeMergerfsOptions(array $options)
-    {
-        $createPolicy = $options['mergerfs_category_create'];
-
-        if ($createPolicy !== 'eplfs' &&
-            $createPolicy !== 'epmfs' &&
-            $createPolicy !== 'fwfs' &&
-            $createPolicy !== 'lfs'
-        ) {
-            unset($options['mergerfs_min_free_space']);
-        }
-
-        return $options;
-    }
-
-    /**
-     * Sanitize Mhddfs specific options.
-     *
-     * @param $options
-     *
-     * @return array
-     */
-    private function sanitizeMhddfsOptions(array $options)
-    {
-        $mlimitUnit = substr($options['mhddfs_mlimit'], -1);
-        $mlimitValue = intval($options['mhddfs_mlimit']);
-
-        // Set mlimit to the default value.
-        $options['mhddfs_mlimit'] = '4G';
-
-        if ($mlimitUnit === '%') {
-            // Make sure the limit is not out of range.
-            if ($mlimitValue > 100) {
-                $options['mhddfs_mlimit'] = '100%';
-            } elseif ($mlimitValue < 1) {
-                $options['mhddfs_mlimit'] = '1%';
-            }
-        }
-
-        if ($mlimitUnit === 'M') {
-            // Make sure to not go below the 100MB limit.
-            if ($mlimitValue < 100) {
-                $options['mhddfs_mlimit'] = '100m';
-            }
-        }
-
-        if ($mlimitUnit === 'G') {
-            // 1GB is the lowest allowed when using GB.
-            if ($mlimitValue < 1) {
-                $options['mhddfs_mlimit'] = '1g';
-            }
-        }
-
-        return $options;
     }
 }

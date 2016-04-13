@@ -47,7 +47,7 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Pools', {
         header: _('Branches'),
         flex: 1,
         sortable: true,
-        dataIndex: 'branches_info',
+        dataIndex: 'source_mounts_info',
         renderer: function(value) {
             var template = Ext.create('Ext.XTemplate', '<tpl for=".">{.}<br/></tpl>');
 
@@ -74,7 +74,7 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Pools', {
                 name: 'type',
                 type: 'string'
             }, {
-                name: 'branches_info',
+                name: 'source_mounts_info',
                 type: 'array'
             }]
         }),

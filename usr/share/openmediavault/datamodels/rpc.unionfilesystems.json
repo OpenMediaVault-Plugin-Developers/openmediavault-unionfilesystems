@@ -15,64 +15,52 @@
             },
             "type": {
                 "type": "string",
-                "enum": [
-                    "aufs",
-                    "mergerfs",
-                    "mhddfs"
-                ],
+                "enum": ["aufs", "mergerfs", "mhddfs"],
                 "required": true
             },
-            "branches": {
+            "self-mntentref": {
+                "type": "string",
+                "format": "uuidv4",
+                "required": true
+            },
+            "mntentref": {
                 "type": "array",
                 "items": {
                     "type": "string",
                     "format": "uuidv4"
                 },
                 "minItems": 2,
-                "uniqueItems": true
-            },
-            "mntentref": {
-                "type": "string",
-                "format": "uuidv4",
+                "uniqueItems": true,
                 "required": true
             },
-            "aufs_policy_create": {
+            "create-policy": {
                 "type": "string",
-                "enum": [
-                    "mfs",
-                    "pmfs",
-                    "rr",
-                    "tdp"
-                ],
-                "required": false
+                "oneOf": [{
+                    "description": "aufs: create",
+                    "type": "string",
+                    "enum": ["mfs", "pmfs", "rr", "tdp"]
+                }, {
+                    "description": "mergerfs: category.create",
+                    "type": "string",
+                    "enum": ["all", "eplfs", "epmfs", "erofs", "ff", "fwfs", "lfs", "mfs", "newest", "rand"]
+                }]
             },
-            "mergerfs_category_create": {
+            "min-free-space": {
                 "type": "string",
-                "enum": [
-                    "all",
-                    "eplfs",
-                    "epmfs",
-                    "erofs",
-                    "ff",
-                    "fwfs",
-                    "lfs",
-                    "mfs",
-                    "newest",
-                    "rand"
-                ],
-                "required": false
+                "oneOf": [{
+                    "description": "mergerfs: minfreespace",
+                    "type": "string",
+                    "format": "regex",
+                    "pattern": "/^[0-9]+[KMG]$/"
+                }, {
+                    "description": "mhddfs: mlimit",
+                    "type": "string",
+                    "format": "regex",
+                    "pattern": "/^((100|[1-9][0-9]?)%|[1-9][0-9]*[KMG])$/"
+                }]
             },
-            "mergerfs_min_free_space": {
-                "type": "string",
-                "format": "regex",
-                "pattern": "/^\\d+(K|M|G)$/",
-                "required": false
-            },
-            "mhddfs_mlimit": {
-                "type": "string",
-                "format": "regex",
-                "pattern": "/^\\d+(M|G|%)$/",
-                "required": false
+            "options": {
+                "type": "string"
             }
         }
     }

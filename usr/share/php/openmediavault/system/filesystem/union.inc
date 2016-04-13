@@ -27,7 +27,32 @@ use OMV\System\Process;
 
 class Union extends FilesystemAbstract
 {
+    /** @var Database */
+    private $database;
+
+    /** @var boolean */
     private $dataCached = false;
+
+    /** @var string */
+    private $dataModelPath = 'conf.service.unionfilesystems.pool';
+
+    /**
+     * Constructor.
+     *
+     * @param string $id The UUID or device path of the filesystem.
+     */
+    public function __construct($id)
+    {
+        $this->database = Database::getInstance();
+        $this->uuid = $id;
+
+        if (!is_uuid($id)) {
+            // Assume we got the mount directory.
+            $this->uuid = $this->extractUuidFromPath($id);
+        }
+
+        $this->usage = 'filesystem';
+    }
 
     /**
      * Extract an UUID from a path.
@@ -52,41 +77,6 @@ class Union extends FilesystemAbstract
     }
 
     /**
-     * Get the pool configuration by its UUID.
-     *
-     * @param string $uuid The UUID.
-     *
-     * @return array|false A pool configuration.
-     */
-    private function getPoolConfiguration($uuid)
-    {
-        $database = Database::getInstance();
-
-        try {
-            return $database->get('conf.service.unionfilesystems.pool', $uuid);
-        } catch (DatabaseException $e) {
-            return false;
-        }
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param string $id The UUID or device path of the filesystem.
-     */
-    public function __construct($id)
-    {
-        $this->uuid = $id;
-
-        if (!is_uuid($id)) {
-            // Assume we got the mount directory.
-            $this->uuid = $this->extractUuidFromPath($id);
-        }
-
-        $this->usage = 'filesystem';
-    }
-
-    /**
      * Get the filesystem detailed information.
      *
      * @return bool True if successful, otherwise false.
@@ -97,12 +87,14 @@ class Union extends FilesystemAbstract
             return true;
         }
 
-        if (!($pool = $this->getPoolConfiguration($this->uuid))) {
+        try {
+            $object = $this->database->get($this->dataModelPath, $this->uuid);
+        } catch (DatabaseException $e) {
             return false;
         }
 
-        $this->label = $pool->get('name');
-        $this->type = $pool->get('type');
+        $this->label = $object->get('name');
+        $this->type = $object->get('type');
 
         $this->dataCached = true;
 
@@ -354,11 +346,7 @@ class Union extends FilesystemAbstract
             return false;
         }
 
-        $cmd = new Process('df', [
-            '-PT',
-            escapeshellarg($this->getMountPoint()),
-        ]);
-
+        $cmd = new Process('df', '-PT', escapeshellarg($this->getMountPoint()));
         $cmd->setRedirect2to1();
         $cmd->execute($output);
 
@@ -405,9 +393,7 @@ class Union extends FilesystemAbstract
             return false;
         }
 
-        $cmd = new Process('findmnt', [
-            escapeshellarg($this->getMountPoint()),
-        ]);
+        $cmd = new Process('findmnt', escapeshellarg($this->getMountPoint()));
 
         try {
             $cmd->execute();
@@ -429,10 +415,7 @@ class Union extends FilesystemAbstract
      */
     public function mount($options = '')
     {
-        $cmd = new Process('mount', [
-            escapeshellarg($this->getMountPoint()),
-        ]);
-
+        $cmd = new Process('mount', escapeshellarg($this->getMountPoint()));
         $cmd->setRedirect2to1();
         $cmd->execute();
     }
@@ -449,10 +432,7 @@ class Union extends FilesystemAbstract
      */
     public function umount($force = false, $lazy = false)
     {
-        $cmd = new Process('umount', [
-            escapeshellarg($this->getMountPoint()),
-        ]);
-
+        $cmd = new Process('umount', escapeshellarg($this->getMountPoint()));
         $cmd->setRedirect2to1();
         $cmd->execute();
     }

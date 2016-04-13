@@ -25,31 +25,8 @@ use OMV\System\Filesystem\Union as UnionFilesystem;
 
 abstract class UnionAbstract extends BackendAbstract
 {
-    /**
-     * Get all pool configurations of a filesystem type.
-     *
-     * @param string $type The filesystem type (e.g. aufs, mhddfs).
-     *
-     * @return array Pool configurations.
-     */
-    private function getPoolConfigurationsByType($type)
-    {
-        $database = Database::getInstance();
-
-        $pools = [];
-
-        try {
-            foreach ($database->get('conf.service.unionfilesystems.pool') as $pool) {
-                if ($pool->get('type') === $type) {
-                    $pools[] = $pool;
-                }
-            }
-        } catch (DatabaseException $e) {
-            return [];
-        }
-
-        return $pools;
-    }
+    /** @var string */
+    private $dataModelPath = 'conf.service.unionfilesystems.pool';
 
     /**
      * Get a list of filesystems of the given filesystem backend.
@@ -58,13 +35,25 @@ abstract class UnionAbstract extends BackendAbstract
      */
     public function enumerate()
     {
-        $result = [];
-        $pools = $this->getPoolConfigurationsByType($this->type);
+        $filesystems = [];
+        $objects = [];
 
-        foreach ($pools as $pool) {
-            $filesystem = $this->getImpl($pool->get('uuid'));
+        try {
+            $database = Database::getInstance();
 
-            $result[$filesystem->getDeviceFile()] = [
+            foreach ($database->get($this->dataModelPath) as $object) {
+                if ($object->get('type') === $this->type) {
+                    $objects[] = $object;
+                }
+            }
+        } catch (DatabaseException $e) {
+            return $filesystems;
+        }
+
+        foreach ($objects as $object) {
+            $filesystem = $this->getImpl($object->get('uuid'));
+
+            $filesystems[$filesystem->getDeviceFile()] = [
                 'devicefile' => $filesystem->getDeviceFile(),
                 'uuid' => $filesystem->getUuid(),
                 'label' => $filesystem->getLabel(),
@@ -72,7 +61,7 @@ abstract class UnionAbstract extends BackendAbstract
             ];
         }
 
-        return $result;
+        return $filesystems;
     }
 
     /**

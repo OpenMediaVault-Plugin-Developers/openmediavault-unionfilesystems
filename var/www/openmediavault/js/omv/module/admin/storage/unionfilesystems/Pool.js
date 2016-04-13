@@ -19,12 +19,18 @@
 // require("js/omv/workspace/window/Form.js")
 // require("js/omv/workspace/window/plugin/ConfigObject.js")
 // require("js/omv/form/plugin/LinkedFields.js")
+// require("js/omv/form/field/plugin/FieldInfo.js")
+// require("js/omv/module/admin/storage/unionfilesystems/AufsCreatePolicyStore.js")
+// require("js/omv/module/admin/storage/unionfilesystems/MergerfsCreatePolicyStore.js")
 
 Ext.define('OMV.module.admin.storage.unionfilesystems.Pool', {
     extend: 'OMV.workspace.window.Form',
     requires: [
+        'OMV.form.field.plugin.FieldInfo',
+        'OMV.form.plugin.LinkedFields',
         'OMV.workspace.window.plugin.ConfigObject',
-        'OMV.form.plugin.LinkedFields'
+        'OMV.module.admin.storage.unionfilesystems.AufsCreatePolicyStore',
+        'OMV.module.admin.storage.unionfilesystems.MergerfsCreatePolicyStore'
     ],
 
     plugins: [{
@@ -36,51 +42,38 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Pool', {
                 name: 'type',
                 value: 'aufs'
             }],
-            name: ['aufs_policy_create'],
-            properties: ['show']
-        }, {
-            conditions: [{
-                name: 'type',
-                value: 'mergerfs'
-            }],
-            name: ['mergerfs_category_create'],
-            properties: ['show']
-        }, {
-            conditions: [{
-                name: 'type',
-                value: 'mergerfs'
-            }, {
-                name: 'mergerfs_category_create',
-                func: function(values) {
-                    var value = values.mergerfs_category_create;
-
-                    return value === 'eplfs' || value === 'epmfs' || value === 'fwfs' || value === 'lfs';
-                }
-            }],
-            name: ['mergerfs_min_free_space'],
-            properties: ['show']
+            name: ['min-free-space'],
+            properties: ['!show', '!submitValue']
         }, {
             conditions: [{
                 name: 'type',
                 value: 'mhddfs'
             }],
-            name: ['mhddfs_mlimit'],
-            properties: ['show']
+            name: ['create-policy'],
+            properties: ['!show', '!submitValue']
         }]
     }],
+
+    hideResetButton: true,
 
     rpcService: 'UnionFilesystems',
     rpcGetMethod: 'get',
     rpcSetMethod: 'set',
 
-    hideResetButton: true,
+    aufsPolicyStore: Ext.create('OMV.module.admin.storage.unionfilesystems.AufsCreatePolicyStore'),
+    aufsPolicyStoreDefaultValue: 'tdp',
+    mergerfsPolicyStore: Ext.create('OMV.module.admin.storage.unionfilesystems.MergerfsCreatePolicyStore'),
+    mergerfsPolicyStoreDefaultValue: 'epmfs',
+    mergerfsMinFreeSpaceRegex: /^[0-9]+[KMG]$/,
+    mhddfsMinFreeSpaceRegex: /^((100|[1-9][0-9]?)%|[1-9][0-9]*[KMG])$/,
 
     getFormItems: function() {
         return [{
             xtype: 'textfield',
             name: 'name',
             fieldLabel: _('Name'),
-            allowBlank: false
+            allowBlank: false,
+            readOnly: this.uuid !== OMV.UUID_UNDEFINED
         }, {
             xtype: 'combo',
             name: 'type',
@@ -113,10 +106,18 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Pool', {
                     property: 'type'
                 }]
             }),
-            value: ''
+            listeners: {
+                change: this.onTypeChange.bind(this),
+                scope: this
+            },
+            value: 'mergerfs'
+        }, {
+            xtype: 'hiddenfield',
+            name: 'self-mntentref',
+            value: OMV.UUID_UNDEFINED
         }, {
             xtype: 'checkboxgridfield',
-            name: 'branches',
+            name: 'mntentref',
             fieldLabel: _('Branches'),
             valueField: 'uuid',
             minSelections: 2,
@@ -180,10 +181,6 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Pool', {
                 }]
             }
         }, {
-            xtype: 'hiddenfield',
-            name: 'mntentref',
-            value: OMV.UUID_UNDEFINED
-        }, {
             xtype: 'fieldset',
             title: _('Mount options'),
             defaults: {
@@ -191,81 +188,61 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Pool', {
             },
             items: [{
                 xtype: 'combo',
-                name: 'aufs_policy_create',
+                name: 'create-policy',
                 fieldLabel: _('Create policy'),
                 queryMode: 'local',
-                store: Ext.create('Ext.data.SimpleStore', {
-                    fields: [
-                        'value',
-                        'text'
-                    ],
-                    data: [
-                        ['mfs', _('mfs')],
-                        ['pmfs', _('pmfs')],
-                        ['rr', _('rr')],
-                        ['tdp', _('tdp')]
-                    ]
-                }),
+                store: this.mergerfsPolicyStore,
                 displayField: 'text',
                 valueField: 'value',
                 allowBlank: false,
                 editable: false,
+                hidden: true,
                 triggerAction: 'all',
-                value: 'tdp'
-            }, {
-                xtype: 'combo',
-                name: 'mergerfs_category_create',
-                fieldLabel: _('Create policy'),
-                queryMode: 'local',
-                store: Ext.create('Ext.data.SimpleStore', {
-                    fields: [
-                        'value',
-                        'text'
-                    ],
-                    data: [
-                        ['all', _('All.')],
-                        ['eplfs', _('Existing path, lesast free space.')],
-                        ['epmfs', _('Existing path, most free space.')],
-                        ['erofs', _('Read-only.')],
-                        ['ff', _('First found.')],
-                        ['fwfs', _('First with free space.')],
-                        ['lfs', _('Least free space.')],
-                        ['mfs', _('Most free space.')],
-                        ['newest', _('Newest file.')],
-                        ['rand', _('Random.')]
-                    ]
-                }),
-                displayField: 'text',
-                valueField: 'value',
-                allowBlank: false,
-                editable: false,
-                triggerAction: 'all',
-                value: 'epmfs'
+                value: this.mergerfsPolicyStoreDefaultValue
             }, {
                 xtype: 'textfield',
-                name: 'mergerfs_min_free_space',
+                name: 'min-free-space',
                 fieldLabel: _('Minimum free space'),
                 allowBlank: false,
-                maskRe: /[\dKMG]/,
-                regex: /^\d+(K|M|G)$/,
-                regexText: _('This field must have the format 4G, 100M or 1000K.'),
-                maxLength: 5,
-                value: '4G'
-            }, {
-                xtype: 'textfield',
-                name: 'mhddfs_mlimit',
-                fieldLabel: _('Threshold'),
-                allowBlank: false,
-                maskRe: /[\dMG%]/,
-                regex: /^\d+(M|G|%)$/,
-                regexText: _('This field must have the format 4G, 100M, or 100%'),
-                maxLength: 5,
+                hidden: true,
+                maskRe: /[0-9KMG%]/,
+                regex: this.mergerfsMinFreeSpaceRegex,
                 value: '4G',
                 plugins: [{
                     ptype: 'fieldinfo',
-                    text: _('Units can be G, M, or %. If a drive has the free space less than the threshold specifed then another drive will be chosen while creating a new file.  If all the drives have free space less than the threshold specified then a drive containing most free space will be choosen.')
+                    text: _('When the minimum free space is reached on a filesystem it will not be written to unless all the other filesystem also has reached the limit. Format: {amount}{unit}. Mergerfs allows the units K, M and G. Mhddfs also allows %.')
                 }]
+            }, {
+                xtype: 'textfield',
+                name: 'options',
+                fieldLabel: _('Options')
             }]
         }];
+    },
+
+    onTypeChange: function(combo, newValue, oldValue) {
+        var createPolicy = this.findField('create-policy');
+        var minFreeSpace = this.findField('min-free-space');
+        var options = this.findField('options');
+
+        if (newValue === 'aufs') {
+            createPolicy.setStore(this.aufsPolicyStore);
+            createPolicy.setValue(this.aufsPolicyStoreDefaultValue);
+            options.setValue('sum');
+        }
+
+        if (newValue === 'mergerfs') {
+            createPolicy.setStore(this.mergerfsPolicyStore);
+            createPolicy.setValue(this.mergerfsPolicyStoreDefaultValue);
+            minFreeSpace.regex = this.mergerfsMinFreeSpaceRegex;
+            minFreeSpace.setValue('4G');
+            options.setValue('defaults,allow_other');
+        }
+
+        if (newValue === 'mhddfs') {
+            minFreeSpace.regex = this.mhddfsMinFreeSpaceRegex;
+            minFreeSpace.setValue('4G');
+            options.setValue('defaults,allow_other');
+        }
     }
 });
