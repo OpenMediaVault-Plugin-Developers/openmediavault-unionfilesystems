@@ -1,5 +1,7 @@
+<?php
+
 /**
- * Copyright (C) 2013-2015 OpenMediaVault Plugin Developers
+ * Copyright (C) 2014-2015 OpenMediaVault Plugin Developers.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -8,19 +10,20 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// require("js/omv/WorkspaceManager.js")
+namespace OMV\System\Filesystem\Backend;
 
-OMV.WorkspaceManager.registerNode({
-    id: 'unionfilesystems',
-    path: '/storage',
-    text: _('Union Filesystems'),
-    icon16: 'images/unionfilesystems.png',
-    iconSvg: 'images/unionfilesystems.svg'
-});
+class Mhddfs extends UnionAbstract
+{
+    public function __construct()
+    {
+        $this->type = 'mhddfs';
+        $this->properties = self::PROP_POSIX_ACL;
+    }
+}

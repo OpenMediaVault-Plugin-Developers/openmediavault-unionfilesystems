@@ -1,0 +1,71 @@
+#!/usr/bin/env php5
+<?php
+/**
+ * Copyright (C) 2016 OpenMediaVault Plugin Developers.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+require_once '/usr/share/php/openmediavault/autoloader.inc';
+require_once '/usr/share/php/openmediavault/globals.inc';
+
+use OMV\Rpc\Rpc;
+use OMV\System\Filesystem\Union as UnionFilesystem;
+
+// Introduce some main anonymous functions to generate the specific entry lines.
+$aufs = function ($mountPoint, array $sourceMounts, array $options, $createPolicy, $minFreeSpace) {
+    for ($i = 0; $i < count($sourceMounts); ++$i) {
+        $sourceMounts[$i] .= '=rw';
+    }
+
+    $options[] = 'br:' . implode(':', $sourceMounts);
+    $options[] = 'create=' . $createPolicy;
+
+    return sprintf('none %s aufs %s 0 0', $mountPoint, implode(',', $options));
+};
+
+$mergerfs = function ($mountPoint, array $sourceMounts, array $options, $createPolicy, $minFreeSpace) {
+    $options[] = 'category.create=' . $createPolicy;
+    $options[] = 'minfreespace=' . $minFreeSpace;
+
+    return sprintf('%s %s fuse.mergerfs %s 0 0', implode(':', $sourceMounts), $mountPoint, implode(',', $options));
+};
+
+$mhddfs = function ($mountPoint, array $sourceMounts, array $options, $createPolicy, $minFreeSpace) {
+    $options[] = 'mlimit=' . $minFreeSpace;
+
+    return sprintf('mhddfs#%s %s fuse %s 0 0', implode(',', $sourceMounts), $mountPoint, implode(',', $options));
+};
+
+// Start processing entries.
+$context = ['username' => 'admin', 'role' => OMV_ROLE_ADMINISTRATOR];
+$objects = Rpc::call('UnionFilesystems', 'getList', ['start' => 0, 'limit' => null], $context, OMV_RPC_MODE_REMOTE);
+
+foreach ($objects['data'] as $object) {
+    $mountPoint = UnionFilesystem::buildMountPath($object['uuid']);
+    $options = !empty($object['options']) ? explode(',', $object['options']) : [];
+    $sourceMounts = [];
+    $type = $object['type'];
+
+    $createPolicy = $object['create-policy'];
+    $minFreeSpace = $object['min-free-space'];
+
+    foreach ($object['mntentref'] as $mntentref) {
+        $mntent = Rpc::call('FsTab', 'get', ['uuid' => $mntentref], $context, OMV_RPC_MODE_REMOTE);
+        $sourceMounts[] = $mntent['dir'];
+    }
+
+    $entry = ${$type}($mountPoint, $sourceMounts, $options, $createPolicy, $minFreeSpace);
+
+    echo $entry . PHP_EOL;
+}

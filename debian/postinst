@@ -5,15 +5,62 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
+migrate_to_3_1_1()
+{
+    pool_index=1
+    pool_count=0
+    pool_xpath="/config/services/unionfilesystems/pools/pool"
+
+    pool_count=$(omv_config_get_count "$pool_xpath")
+
+    while [ "$pool_index" -lt "$pool_count" ] || [ "$pool_index" -eq "$pool_count" ]; do
+        xpath="$pool_xpath[$pool_index]"
+
+        omv_config_rename "$xpath/mntentref" "self-mntentref"
+
+        branch_count=0
+        branch_index=1
+
+        branch_count=$(omv_config_get_count "$xpath/branches/mntentref")
+
+        while [ "$branch_index" -lt "$branch_count" ] || [ "$branch_index" -eq "$branch_count" ]; do
+            branch=$(omv_config_get "$xpath/branches/mntentref[$branch_index]")
+            omv_config_add_element "$xpath" "mntentref" "$branch"
+            branch_index=$((branch_index + 1))
+        done
+
+        # Remove unneeded elements.
+        omv_config_delete "$xpath/branches"
+
+        # Add/set default values.
+        omv_config_add_element "$xpath" "create-policy" "epmfs"
+        omv_config_add_element "$xpath" "min-free-space" "4G"
+        omv_config_update "$xpath/options" "defaults,allow_other"
+
+        if [ "$(omv_config_get "$xpath/type")" = "aufs" ]; then
+            omv_config_update "$xpath/create-policy" "tdp"
+            omv_config_update "$xpath/options" "sum"
+        fi
+
+        pool_index=$((pool_index + 1))
+    done
+}
+
 case "$1" in
     configure)
         SERVICE_XPATH_NAME="unionfilesystems"
-        SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
+        SERVICE_XPATH="/config/services/$SERVICE_XPATH_NAME"
 
         # Add the default configuration
-        if ! omv_config_exists "${SERVICE_XPATH}"; then
-            omv_config_add_element "/config/services" "${SERVICE_XPATH_NAME}"
-            omv_config_add_element "${SERVICE_XPATH}" "pools"
+        if ! omv_config_exists "$SERVICE_XPATH"; then
+            omv_config_add_element "/config/services" "$SERVICE_XPATH_NAME"
+            omv_config_add_element "$SERVICE_XPATH" "pools"
+        fi
+
+        # Migrate to 3.1.1.
+        # TODO: Remove migration with the next major OMV release.
+        if dpkg --compare-versions "$2" lt-nl "3.1.1"; then
+            migrate_to_3_1_1
         fi
 
         # Activate package triggers. These triggers are only set during the

@@ -1,5 +1,3 @@
-<?php
-
 /**
  * Copyright (C) 2014-2015 OpenMediaVault Plugin Developers
  *
@@ -17,12 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "openmediavault/system.inc";
+// require("js/omv/WorkspaceManager.js")
+// require("js/omv/workspace/window/Form.js")
+// require("js/omv/workspace/window/plugin/ConfigObject.js")
+// require("js/omv/form/plugin/LinkedFields.js")
 
-require_once "unionfilesystems/OMVFilesystemBackendAufs.php";
-require_once "unionfilesystems/OMVFilesystemBackendMergerfs.php";
-require_once "unionfilesystems/OMVFilesystemBackendMhddfs.php";
-
-OMVFilesystems::registerBackend(new OMVFilesystemBackendAufs());
-OMVFilesystems::registerBackend(new OMVFilesystemBackendMergerfs());
-OMVFilesystems::registerBackend(new OMVFilesystemBackendMhddfs());
+Ext.define('OMV.module.admin.storage.unionfilesystems.AufsCreatePolicyStore', {
+    extend: 'Ext.data.SimpleStore',
+    fields: [
+        'value',
+        'text'
+    ],
+    data: [
+        ['mfs', _('mfs')],
+        ['pmfs', _('pmfs')],
+        ['rr', _('rr')],
+        ['tdp', _('tdp')]
+    ]
+});

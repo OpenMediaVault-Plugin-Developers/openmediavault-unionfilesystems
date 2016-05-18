@@ -22,79 +22,79 @@
 // require("js/omv/data/proxy/Rpc.js")
 // require("js/omv/module/admin/storage/unionfilesystems/Pool.js")
 
-Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
-    extend: "OMV.workspace.grid.Panel",
+Ext.define('OMV.module.admin.storage.unionfilesystems.Pools', {
+    extend: 'OMV.workspace.grid.Panel',
     requires: [
-        "OMV.data.Store",
-        "OMV.data.Model",
-        "OMV.data.proxy.Rpc",
-        "OMV.module.admin.storage.unionfilesystems.Pool"
+        'OMV.data.Store',
+        'OMV.data.Model',
+        'OMV.data.proxy.Rpc',
+        'OMV.module.admin.storage.unionfilesystems.Pool'
     ],
 
     hidePagingToolbar: false,
     reloadOnActivate: true,
 
     columns: [{
-        header: _("UUID"),
+        header: _('UUID'),
         hidden: true,
-        dataIndex: "uuid"
+        dataIndex: 'uuid'
     }, {
-        header: _("Name"),
+        header: _('Name'),
         flex: 1,
         sortable: true,
-        dataIndex: "name"
+        dataIndex: 'name'
     }, {
-        header: _("Branches"),
+        header: _('Branches'),
         flex: 1,
         sortable: true,
-        dataIndex: "branches_info",
+        dataIndex: 'source_mounts_info',
         renderer: function(value) {
-            var template = Ext.create("Ext.XTemplate", '<tpl for=".">{.}<br/></tpl>');
+            var template = Ext.create('Ext.XTemplate', '<tpl for=".">{.}<br/></tpl>');
 
             return template.apply(value);
         }
     }, {
-        header: _("Type"),
+        header: _('Type'),
         flex: 1,
         sortable: true,
-        dataIndex: "type"
+        dataIndex: 'type'
     }],
 
-    store: Ext.create("OMV.data.Store", {
+    store: Ext.create('OMV.data.Store', {
         autoLoad: true,
         model: OMV.data.Model.createImplicit({
-            idProperty: "uuid",
+            idProperty: 'uuid',
             fields: [{
-                name: "uuid",
-                type: "string"
+                name: 'uuid',
+                type: 'string'
             }, {
-                name: "name",
-                type: "string"
+                name: 'name',
+                type: 'string'
             }, {
-                name: "type",
-                type: "string"
+                name: 'type',
+                type: 'string'
             }, {
-                name: "branches_info",
-                type: "array"
+                name: 'source_mounts_info',
+                type: 'array'
             }]
         }),
         proxy: {
-            type: "rpc",
+            type: 'rpc',
             rpcData: {
-                "service": "UnionFilesystems",
-                "method": "getList"
+                'service': 'UnionFilesystems',
+                'method': 'getList'
             }
         },
         remoteSort: true,
         sorters: [{
-            direction: "ASC",
-            property: "name"
+            direction: 'ASC',
+            property: 'name'
         }]
     }),
 
     onAddButton: function() {
-        Ext.create("OMV.module.admin.storage.unionfilesystems.Pool", {
-            title: _("Add pool"),
+        Ext.create('OMV.module.admin.storage.unionfilesystems.Pool', {
+            title: _('Add pool'),
             uuid: OMV.UUID_UNDEFINED,
             listeners: {
                 scope: this,
@@ -108,14 +108,14 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
     onEditButton: function() {
         var record = this.getSelected();
 
-        Ext.create("OMV.module.admin.storage.unionfilesystems.Pool", {
-            title: _("Edit pool"),
-            uuid: record.get("uuid"),
+        Ext.create('OMV.module.admin.storage.unionfilesystems.Pool', {
+            title: _('Edit pool'),
+            uuid: record.get('uuid'),
             listeners: {
                 scope: this,
                 submit: function() {
                     this.doReload();
-                    OMV.MessageBox.info(null, _("NOTE: The changes won't take effect until you've restarted the system or manually remounted the filesystem."));
+                    OMV.MessageBox.info(null, _('NOTE: The changes won\'t take effect until you\'ve restarted the system or manually remounted the filesystem.'));
                 }
             }
         }).show();
@@ -126,10 +126,10 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
             scope: this,
             callback: this.onDeletion,
             rpcData: {
-                service: "UnionFilesystems",
-                method: "delete",
+                service: 'UnionFilesystems',
+                method: 'delete',
                 params: {
-                    uuid: record.get("uuid")
+                    uuid: record.get('uuid')
                 }
             }
         });
@@ -137,9 +137,9 @@ Ext.define("OMV.module.admin.storage.unionfilesystems.Pools", {
 });
 
 OMV.WorkspaceManager.registerPanel({
-    id: "pools",
-    path: "/storage/unionfilesystems",
-    text: _("Pools"),
+    id: 'pools',
+    path: '/storage/unionfilesystems',
+    text: _('Pools'),
     position: 30,
-    className: "OMV.module.admin.storage.unionfilesystems.Pools"
+    className: 'OMV.module.admin.storage.unionfilesystems.Pools'
 });

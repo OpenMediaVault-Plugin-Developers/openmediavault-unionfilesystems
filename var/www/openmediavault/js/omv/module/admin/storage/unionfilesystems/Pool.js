@@ -19,252 +19,230 @@
 // require("js/omv/workspace/window/Form.js")
 // require("js/omv/workspace/window/plugin/ConfigObject.js")
 // require("js/omv/form/plugin/LinkedFields.js")
+// require("js/omv/form/field/plugin/FieldInfo.js")
+// require("js/omv/module/admin/storage/unionfilesystems/AufsCreatePolicyStore.js")
+// require("js/omv/module/admin/storage/unionfilesystems/MergerfsCreatePolicyStore.js")
 
-Ext.define("OMV.module.admin.storage.unionfilesystems.Pool", {
-    extend: "OMV.workspace.window.Form",
+Ext.define('OMV.module.admin.storage.unionfilesystems.Pool', {
+    extend: 'OMV.workspace.window.Form',
     requires: [
-        "OMV.workspace.window.plugin.ConfigObject",
-        "OMV.form.plugin.LinkedFields"
+        'OMV.form.field.plugin.FieldInfo',
+        'OMV.form.plugin.LinkedFields',
+        'OMV.workspace.window.plugin.ConfigObject',
+        'OMV.module.admin.storage.unionfilesystems.AufsCreatePolicyStore',
+        'OMV.module.admin.storage.unionfilesystems.MergerfsCreatePolicyStore'
     ],
 
     plugins: [{
-        ptype: "configobject"
+        ptype: 'configobject'
     }, {
-        ptype: "linkedfields",
+        ptype: 'linkedfields',
         correlations: [{
             conditions: [{
-                name: "type",
-                value: "aufs"
+                name: 'type',
+                value: 'aufs'
             }],
-            name: ["aufs_policy_create"],
-            properties: ["show"]
+            name: ['min-free-space'],
+            properties: ['!show', '!submitValue']
         }, {
             conditions: [{
-                name: "type",
-                value: "mergerfs"
+                name: 'type',
+                value: 'mhddfs'
             }],
-            name: ["mergerfs_category_create"],
-            properties: ["show"]
-        }, {
-            conditions: [{
-                name: "type",
-                value: "mergerfs"
-            }, {
-                name: "mergerfs_category_create",
-                func: function(values) {
-                    var value = values.mergerfs_category_create;
-
-                    return value === "epmfs" || value === "fwfs" || value === "lfs";
-                }
-            }],
-            name: ["mergerfs_min_free_space"],
-            properties: ["show"]
-        }, {
-            conditions: [{
-                name: "type",
-                value: "mhddfs"
-            }],
-            name: ["mhddfs_mlimit"],
-            properties: ["show"]
+            name: ['create-policy'],
+            properties: ['!show', '!submitValue']
         }]
     }],
 
-    rpcService: "UnionFilesystems",
-    rpcGetMethod: "get",
-    rpcSetMethod: "set",
-
     hideResetButton: true,
+
+    rpcService: 'UnionFilesystems',
+    rpcGetMethod: 'get',
+    rpcSetMethod: 'set',
+
+    aufsPolicyStore: Ext.create('OMV.module.admin.storage.unionfilesystems.AufsCreatePolicyStore'),
+    aufsPolicyStoreDefaultValue: 'tdp',
+    mergerfsPolicyStore: Ext.create('OMV.module.admin.storage.unionfilesystems.MergerfsCreatePolicyStore'),
+    mergerfsPolicyStoreDefaultValue: 'epmfs',
+    mergerfsMinFreeSpaceRegex: /^[0-9]+[KMG]$/,
+    mhddfsMinFreeSpaceRegex: /^((100|[1-9][0-9]?)%|[1-9][0-9]*[KMG])$/,
 
     getFormItems: function() {
         return [{
-            xtype: "textfield",
-            name: "name",
-            fieldLabel: _("Name"),
-            allowBlank: false
+            xtype: 'textfield',
+            name: 'name',
+            fieldLabel: _('Name'),
+            allowBlank: false,
+            readOnly: this.uuid !== OMV.UUID_UNDEFINED
         }, {
-            xtype: "combo",
-            name: "type",
-            fieldLabel: _("Type"),
-            emptyText: _("Select a type ..."),
+            xtype: 'combo',
+            name: 'type',
+            fieldLabel: _('Type'),
+            emptyText: _('Select a type ...'),
             allowBlank: false,
             allowNone: false,
             editable: false,
-            triggerAction: "all",
-            displayField: "type",
-            valueField: "type",
-            store: Ext.create("OMV.data.Store", {
+            triggerAction: 'all',
+            displayField: 'type',
+            valueField: 'type',
+            store: Ext.create('OMV.data.Store', {
                 autoLoad: true,
                 model: OMV.data.Model.createImplicit({
-                    idProperty: "type",
+                    idProperty: 'type',
                     fields: [{
-                        name: "type",
-                        type: "string"
+                        name: 'type',
+                        type: 'string'
                     }]
                 }),
                 proxy: {
-                    type: "rpc",
+                    type: 'rpc',
                     rpcData: {
-                        service: "UnionFilesystems",
-                        method: "enumerateAvailableBackends"
+                        service: 'UnionFilesystems',
+                        method: 'enumerateAvailableBackends'
                     },
                 },
                 sorters: [{
-                    direction: "ASC",
-                    property: "type"
+                    direction: 'ASC',
+                    property: 'type'
                 }]
             }),
-            value: ""
+            listeners: {
+                change: this.onTypeChange.bind(this),
+                scope: this
+            },
+            value: 'mergerfs'
         }, {
-            xtype: "checkboxgridfield",
-            name: "branches",
-            fieldLabel: _("Branches"),
-            valueField: "uuid",
-            minSelections: 1,
+            xtype: 'hiddenfield',
+            name: 'self-mntentref',
+            value: OMV.UUID_UNDEFINED
+        }, {
+            xtype: 'checkboxgridfield',
+            name: 'mntentref',
+            fieldLabel: _('Branches'),
+            valueField: 'uuid',
+            minSelections: 2,
             flex: 1,
-            store: Ext.create("OMV.data.Store", {
+            store: Ext.create('OMV.data.Store', {
                 autoLoad: true,
                 model: OMV.data.Model.createImplicit({
-                    idProperty: "uuid",
+                    idProperty: 'uuid',
                     fields: [{
-                        name: "uuid",
-                        type: "string"
+                        name: 'uuid',
+                        type: 'string'
                     }, {
-                        name: "devicefile",
-                        type: "string"
+                        name: 'devicefile',
+                        type: 'string'
                     }, {
-                        name: "dir",
-                        type: "string"
+                        name: 'dir',
+                        type: 'string'
                     }, {
-                        name: "fsname",
-                        type: "string"
+                        name: 'fsname',
+                        type: 'string'
                     }, {
-                        name: "label",
-                        type: "string"
+                        name: 'label',
+                        type: 'string'
                     }, {
-                        name: "type",
-                        type: "string"
+                        name: 'type',
+                        type: 'string'
                     }]
                 }),
                 proxy: {
-                    type: "rpc",
+                    type: 'rpc',
                     appendSortParams: false,
                     rpcData: {
-                        service: "UnionFilesystems",
-                        method: "enumerateCandidates",
+                        service: 'UnionFilesystems',
+                        method: 'enumerateCandidates',
                         params: {
                             uuid: this.uuid
                         }
                     }
                 },
                 sorters: [{
-                    direction: "ASC",
-                    property: "devicefile"
+                    direction: 'ASC',
+                    property: 'devicefile'
                 }]
             }),
             gridConfig: {
                 columns: [{
-                    text: _("Device"),
+                    text: _('Device'),
                     sortable: true,
-                    dataIndex: "devicefile",
+                    dataIndex: 'devicefile',
                     flex: 1
                 }, {
-                    text: _("Label"),
+                    text: _('Label'),
                     sortable: true,
-                    dataIndex: "label",
+                    dataIndex: 'label',
                     flex: 1
                 }, {
-                    text: _("Type"),
+                    text: _('Type'),
                     sortable: true,
-                    dataIndex: "type",
+                    dataIndex: 'type',
                     flex: 1
                 }]
             }
         }, {
-            xtype: "hiddenfield",
-            name: "mntentref",
-            value: OMV.UUID_UNDEFINED
-        }, {
-            xtype: "fieldset",
-            title: _("Mount options"),
+            xtype: 'fieldset',
+            title: _('Mount options'),
             defaults: {
-                labelSeparator: ""
+                labelSeparator: ''
             },
             items: [{
-                xtype: "combo",
-                name: "aufs_policy_create",
-                fieldLabel: _("Create policy"),
-                queryMode: "local",
-                store: Ext.create("Ext.data.SimpleStore", {
-                    fields: [
-                        "value",
-                        "text"
-                    ],
-                    data: [
-                        ["mfs", _("mfs")],
-                        ["pmfs", _("pmfs")],
-                        ["rr", _("rr")],
-                        ["tdp", _("tdp")]
-                    ]
-                }),
-                displayField: "text",
-                valueField: "value",
+                xtype: 'combo',
+                name: 'create-policy',
+                fieldLabel: _('Create policy'),
+                queryMode: 'local',
+                store: this.mergerfsPolicyStore,
+                displayField: 'text',
+                valueField: 'value',
                 allowBlank: false,
                 editable: false,
-                triggerAction: "all",
-                value: "tdp"
+                hidden: true,
+                triggerAction: 'all',
+                value: this.mergerfsPolicyStoreDefaultValue
             }, {
-                xtype: "combo",
-                name: "mergerfs_category_create",
-                fieldLabel: _("Create policy"),
-                queryMode: "local",
-                store: Ext.create("Ext.data.SimpleStore", {
-                    fields: [
-                        "value",
-                        "text"
-                    ],
-                    data: [
-                        ["all", _("All.")],
-                        ["epmfs", _("Existing path, most free space.")],
-                        ["ff", _("First found.")],
-                        ["ffwp", _("First found with permissions.")],
-                        ["fwfs", _("First with free space.")],
-                        ["lfs", _("Least free space.")],
-                        ["mfs", _("Most free space.")],
-                        ["newest", _("Newest file.")],
-                        ["rand", _("Random.")]
-                    ]
-                }),
-                displayField: "text",
-                valueField: "value",
+                xtype: 'textfield',
+                name: 'min-free-space',
+                fieldLabel: _('Minimum free space'),
                 allowBlank: false,
-                editable: false,
-                triggerAction: "all",
-                value: "epmfs"
-            }, {
-                xtype: "textfield",
-                name: "mergerfs_min_free_space",
-                fieldLabel: _("Minimum free space"),
-                allowBlank: false,
-                maskRe: /[\dKMG]/,
-                regex: /^\d+(K|M|G)$/,
-                regexText: _("This field must have the format 4G, 100M or 1000K."),
-                maxLength: 5,
-                value: "4G"
-            }, {
-                xtype: "textfield",
-                name: "mhddfs_mlimit",
-                fieldLabel: _("Threshold"),
-                allowBlank: false,
-                maskRe: /[\dMG%]/,
-                regex: /^\d+(M|G|%)$/,
-                regexText: _("This field must have the format 4G, 100M, or 100%"),
-                maxLength: 5,
-                value: "4G",
+                hidden: true,
+                maskRe: /[0-9KMG%]/,
+                regex: this.mergerfsMinFreeSpaceRegex,
+                value: '4G',
                 plugins: [{
-                    ptype: "fieldinfo",
-                    text: _("Units can be G, M, or %. If a drive has the free space less than the threshold specifed then another drive will be chosen while creating a new file.  If all the drives have free space less than the threshold specified then a drive containing most free space will be choosen.")
+                    ptype: 'fieldinfo',
+                    text: _('When the minimum free space is reached on a filesystem it will not be written to unless all the other filesystem also has reached the limit. Format: {amount}{unit}. Mergerfs allows the units K, M and G. Mhddfs also allows %.')
                 }]
+            }, {
+                xtype: 'textfield',
+                name: 'options',
+                fieldLabel: _('Options')
             }]
         }];
+    },
+
+    onTypeChange: function(combo, newValue, oldValue) {
+        var createPolicy = this.findField('create-policy');
+        var minFreeSpace = this.findField('min-free-space');
+        var options = this.findField('options');
+
+        if (newValue === 'aufs') {
+            createPolicy.setStore(this.aufsPolicyStore);
+            createPolicy.setValue(this.aufsPolicyStoreDefaultValue);
+            options.setValue('sum');
+        }
+
+        if (newValue === 'mergerfs') {
+            createPolicy.setStore(this.mergerfsPolicyStore);
+            createPolicy.setValue(this.mergerfsPolicyStoreDefaultValue);
+            minFreeSpace.regex = this.mergerfsMinFreeSpaceRegex;
+            minFreeSpace.setValue('4G');
+            options.setValue('defaults,allow_other');
+        }
+
+        if (newValue === 'mhddfs') {
+            minFreeSpace.regex = this.mhddfsMinFreeSpaceRegex;
+            minFreeSpace.setValue('4G');
+            options.setValue('defaults,allow_other');
+        }
     }
 });

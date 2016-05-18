@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2014-2015 OpenMediaVault Plugin Developers
+ * Copyright (C) 2014-2015 OpenMediaVault Plugin Developers.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,28 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "openmediavault/config.inc";
-require_once "openmediavault/system.inc";
+namespace OMV\System\Filesystem\Backend;
 
-require_once "unionfilesystems/OMVFilesystemUnion.php";
+use OMV\Config\Database;
+use OMV\Config\DatabaseException;
+use OMV\System\Filesystem\Union as UnionFilesystem;
 
-abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbstract
+abstract class UnionAbstract extends BackendAbstract
 {
-    /**
-     * Get all pool configurations of a filesystem type.
-     *
-     * @param string $type The filesystem type (e.g. aufs, mhddfs).
-     *
-     * @return array Pool configurations.
-     */
-    private function getPoolConfigurationsByType($type)
-    {
-        global $xmlConfig;
-
-        $xpath = "/config/services/unionfilesystems/pools/pool[type='$type']";
-
-        return $xmlConfig->getList($xpath);
-    }
+    /** @var string */
+    private $dataModelPath = 'conf.service.unionfilesystems.pool';
 
     /**
      * Get a list of filesystems of the given filesystem backend.
@@ -47,25 +35,33 @@ abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbs
      */
     public function enumerate()
     {
-        global $xmlConfig;
+        $filesystems = [];
+        $objects = [];
 
-        $result = [];
-        $pools = $this->getPoolConfigurationsByType($this->type);
+        try {
+            $database = Database::getInstance();
 
-        if ($pools) {
-            foreach ($pools as $pool) {
-                $filesystem = $this->getImpl($pool["uuid"]);
-
-                $result[$filesystem->getDeviceFile()] = [
-                    "devicefile" => $filesystem->getDeviceFile(),
-                    "uuid" => $filesystem->getUuid(),
-                    "label" => $filesystem->getLabel(),
-                    "type" => $filesystem->getType(),
-                ];
+            foreach ($database->get($this->dataModelPath) as $object) {
+                if ($object->get('type') === $this->type) {
+                    $objects[] = $object;
+                }
             }
+        } catch (DatabaseException $e) {
+            return $filesystems;
         }
 
-        return $result;
+        foreach ($objects as $object) {
+            $filesystem = $this->getImpl($object->get('uuid'));
+
+            $filesystems[$filesystem->getDeviceFile()] = [
+                'devicefile' => $filesystem->getDeviceFile(),
+                'uuid' => $filesystem->getUuid(),
+                'label' => $filesystem->getLabel(),
+                'type' => $filesystem->getType(),
+            ];
+        }
+
+        return $filesystems;
     }
 
     /**
@@ -93,7 +89,7 @@ abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbs
         $mounts = $this->enumerate();
 
         foreach ($mounts as $mount) {
-            if ($mount["uuid"] == $id || $mount["devicefile"] == $id) {
+            if ($mount['uuid'] == $id || $mount['devicefile'] == $id) {
                 return true;
             }
         }
@@ -118,10 +114,13 @@ abstract class OMVFilesystemBackendUnionAbstract extends OMVFilesystemBackendAbs
      *
      * @param array $args The arguments to the class constructor.
      *
-     * @return OMVFilesystemAbstract|null
+     * @return \OMV\System\Filesystem\FilesystemAbstract|null
      */
     public function getImpl($args)
     {
-        return new OMVFilesystemUnion($args);
+        $filesystem = new UnionFilesystem($args);
+        $filesystem->setBackend($this);
+
+        return $filesystem;
     }
 }

@@ -1,0 +1,74 @@
+{
+    "type": "config",
+    "title": "Unionfilesystem pool",
+    "id": "conf.service.unionfilesystems.pool",
+    "queryinfo": {
+        "xpath": "/config/services/unionfilesystems/pools/pool",
+        "iterable": true,
+        "idproperty": "uuid"
+    },
+    "properties": {
+        "uuid": {
+            "description": "The uniquie identifier for a union mount",
+            "type": "string",
+            "format": "uuidv4"
+        },
+        "name": {
+            "description": "A virtual label for a union mount",
+            "type": "string",
+            "minLength": 1
+        },
+        "type": {
+            "description": "The type of a union mount",
+            "type": "string",
+            "enum": ["aufs", "mergerfs", "mhddfs"]
+        },
+        "self-mntentref": {
+            "description": "Reference to a mount entity",
+            "type": "string",
+            "format": "uuidv4"
+        },
+        "mntentref": {
+            "description": "Filesystems used in a union mount",
+            "type": "array",
+            "items": {
+                "type": "string",
+                "format": "uuidv4"
+            },
+            "minItems": 2,
+            "uniqueItems": true
+        },
+        "create-policy": {
+            "description": "The policy used when creating files in a union mount",
+            "type": "string",
+            "oneOf": [{
+                "description": "Create policy for an Aufs mount",
+                "type": "string",
+                "enum": ["mfs", "pmfs", "rr", "tdp"]
+            }, {
+                "description": "Create policy for a Mergerfs mount",
+                "type": "string",
+                "enum": ["all", "eplfs", "epmfs", "erofs", "ff", "fwfs", "lfs", "mfs", "newest", "rand"]
+            }]
+        },
+        "min-free-space": {
+            "description": "The minimum free space left on a filesystem for it to be written to",
+            "type": "string",
+            "oneOf": [{
+                "description": "Minimum free space for a Mergerfs mount",
+                "type": "string",
+                "format": "regex",
+                "pattern": "/^[0-9]+[KMG]$/"
+            }, {
+                "description": "Minimum free space for a Mhddfs mount",
+                "type": "string",
+                "format": "regex",
+                "pattern": "/^((100|[1-9][0-9]?)%|[1-9][0-9]*[KMG])$/"
+            }]
+        },
+        "options": {
+            "description": "Additional mount options",
+            "type": "string"
+        }
+    }
+}

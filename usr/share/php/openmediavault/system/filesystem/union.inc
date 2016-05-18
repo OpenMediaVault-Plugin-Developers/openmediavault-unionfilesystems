@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2014-2015 OpenMediaVault Plugin Developers
+ * Copyright (C) 2014-2015 OpenMediaVault Plugin Developers.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once "openmediavault/config.inc";
-require_once "openmediavault/system.inc";
-require_once "openmediavault/util.inc";
+namespace OMV\System\Filesystem;
 
-class OMVFilesystemUnion extends OMVFilesystemAbstract
+use Exception;
+use OMV\Config\Database;
+use OMV\Config\DatabaseException;
+use OMV\ExecException;
+use OMV\System\Process;
+
+class Union extends FilesystemAbstract
 {
+    /** @var Database */
+    private $database;
+
+    /** @var boolean */
     private $dataCached = false;
+
+    /** @var string */
+    private $dataModelPath = 'conf.service.unionfilesystems.pool';
+
+    /**
+     * Constructor.
+     *
+     * @param string $id The UUID or device path of the filesystem.
+     */
+    public function __construct($id)
+    {
+        $this->database = Database::getInstance();
+        $this->uuid = $id;
+
+        if (!is_uuid($id)) {
+            // Assume we got the mount directory.
+            $this->uuid = $this->extractUuidFromPath($id);
+        }
+
+        $this->usage = 'filesystem';
+    }
 
     /**
      * Extract an UUID from a path.
@@ -44,41 +73,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
             }
         }
 
-        throw new Exception("Couldn't extract an UUID from the provided path.");
-    }
-
-    /**
-     * Get the pool configuration by its UUID.
-     *
-     * @param string $uuid The UUID.
-     *
-     * @return array|false A pool configuration.
-     */
-    private function getPoolConfiguration($uuid)
-    {
-        global $xmlConfig;
-
-        $xpath = "/config/services/unionfilesystems/pools/pool[uuid='$uuid']";
-        $pool = $xmlConfig->get($xpath);
-
-        return !is_null($pool) ?  $pool : false;
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param string $id The UUID or device path of the filesystem.
-     */
-    public function __construct($id)
-    {
-        $this->uuid = $id;
-
-        if (!is_uuid($id)) {
-            // Assume we got the mount directory.
-            $this->uuid = $this->extractUuidFromPath($id);
-        }
-
-        $this->usage = "filesystem";
+        throw new Exception('Couldn\'t extract an UUID from the provided path.');
     }
 
     /**
@@ -92,12 +87,14 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
             return true;
         }
 
-        if (!($pool = $this->getPoolConfiguration($this->uuid))) {
+        try {
+            $object = $this->database->get($this->dataModelPath, $this->uuid);
+        } catch (DatabaseException $e) {
             return false;
         }
 
-        $this->label = $pool["name"];
-        $this->type = $pool["type"];
+        $this->label = $object->get('name');
+        $this->type = $object->get('type');
 
         $this->dataCached = true;
 
@@ -195,7 +192,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
      */
     public function getPartitionScheme()
     {
-         return false;
+        return false;
     }
 
     /**
@@ -216,7 +213,7 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
      * Get the partition entry information.
      *
      * @return array|bool An array with the fields scheme, uuid, type, flags,
-     * number, offset, size and disk, otherwise false.
+     *                    number, offset, size and disk, otherwise false.
      */
     public function getPartitionEntry()
     {
@@ -252,8 +249,8 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
      * Get the device file by UUID.
      *
      * @return string|bool The device path (/dev/disk/by-uuid/xxx) if available,
-     * otherwise /dev/xxx will be returned. In case of an error false will be
-     * returned.
+     *                     otherwise /dev/xxx will be returned. In case of an
+     *                     error false will be returned.
      */
     public function getDeviceFileByUuid()
     {
@@ -262,10 +259,10 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
 
     /**
      * Get the device file of the storage device containing this file system.
-     * Example: /dev/sdb1 => /dev/sdb
+     * Example: /dev/sdb1 => /dev/sdb.
      *
      * @return string|bool The device file of the underlying storage device,
-     * otherwise false.
+     *                     otherwise false.
      */
     public function getStorageDeviceFile()
     {
@@ -330,9 +327,12 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
      * Get statistics from a mounted filesystem.
      *
      * @return array|bool The filesystem statistics if successful, otherwise
-     * false. The following fields are included: devicefile, type, blocks, size,
-     * used, available, percentage and mountpoint. Please note, the fields size,
-     * used and available are strings and their unit is B (bytes).
+     *                    false. The following fields are included: devicefile,
+     *                    type, blocks, size, used, available, percentage and
+     *                    mountpoint. Please note, the fields size, used and
+     *                    available are strings and their unit is B (bytes).
+     *
+     * @throws ExecException
      */
     public function getStatistics()
     {
@@ -346,32 +346,28 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
             return false;
         }
 
-        @OMVUtil::exec("export LANG=C; df -PT $mountPoint", $output, $result);
-
-        if ($result !== 0) {
-            $this->setLastError($output);
-
-            return true;
-        }
+        $cmd = new Process('df', '-PT', escapeshellarg($this->getMountPoint()));
+        $cmd->setRedirect2to1();
+        $cmd->execute($output);
 
         $result = false;
 
         foreach ($output as $line) {
-            $matches = preg_split("/[\s,]+/", $line);
+            $matches = preg_split('/[\s,]+/', $line);
 
             if (0 !== strcasecmp($mountPoint, $matches[6])) {
                 continue;
             }
 
             $result = [
-                "devicefile" => $this->getDeviceFile(),
-                "type" => $matches[1],
-                "blocks" => $matches[2],
-                "size" => bcmul($matches[2], "1024", 0),
-                "used" => binary_convert($matches[3], "KiB", "B"),
-                "available" => binary_convert($matches[4], "KiB", "B"),
-                "percentage" => intval(trim($matches[5], "%")),
-                "mountpoint" => $matches[6]
+                'devicefile' => $this->getDeviceFile(),
+                'type' => $matches[1],
+                'blocks' => $matches[2],
+                'size' => bcmul($matches[2], '1024', 0),
+                'used' => binary_convert($matches[3], 'KiB', 'B'),
+                'available' => binary_convert($matches[4], 'KiB', 'B'),
+                'percentage' => intval(trim($matches[5], '%')),
+                'mountpoint' => $matches[6],
             ];
         }
 
@@ -382,6 +378,8 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
      * Check if the filesystem is mounted.
      *
      * @return bool
+     *
+     * @throws ExecException
      */
     public function isMounted()
     {
@@ -395,17 +393,11 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
             return false;
         }
 
-        $cmd = sprintf(
-            "export LANG=C; mount | grep %s | grep %s",
-            $this->type,
-            $mountPoint
-        );
+        $cmd = new Process('findmnt', escapeshellarg($this->getMountPoint()));
 
-        @OMVUtil::exec($cmd, $output, $result);
-
-        if ($result !== 0) {
-            $this->setLastError($output);
-
+        try {
+            $cmd->execute();
+        } catch (ExecException $e) {
             return false;
         }
 
@@ -417,43 +409,31 @@ class OMVFilesystemUnion extends OMVFilesystemAbstract
      *
      * @param string $options Additional mount options. Empty string by default.
      *
-     * @return bool
+     * @return void
+     *
+     * @throws ExecException
      */
-    public function mount($options = "")
+    public function mount($options = '')
     {
-        $cmd = sprintf("export LANG=C; mount %s 2>&1", $this->getMountPoint());
-
-        @OMVUtil::exec($cmd, $output, $result);
-
-        if ($result !== 0) {
-            $this->setLastError($output);
-
-            return false;
-        }
-
-        return true;
+        $cmd = new Process('mount', escapeshellarg($this->getMountPoint()));
+        $cmd->setRedirect2to1();
+        $cmd->execute();
     }
 
     /**
      * Unmount the filesystem.
      *
      * @param bool $force Force the unmount.
-     * @param bool $lazy Do a lazy unmount.
+     * @param bool $lazy  Do a lazy unmount.
      *
-     * @return bool
+     * @return void
+     *
+     * @throws ExecException
      */
     public function umount($force = false, $lazy = false)
     {
-        $cmd = sprintf("export LANG=C; umount %s 2>&1", $this->getMountPoint());
-
-        @OMVUtil::exec($cmd, $output, $result);
-
-        if ($result !== 0) {
-            $this->setLastError($output);
-
-            return false;
-        }
-
-        return true;
+        $cmd = new Process('umount', escapeshellarg($this->getMountPoint()));
+        $cmd->setRedirect2to1();
+        $cmd->execute();
     }
 }
