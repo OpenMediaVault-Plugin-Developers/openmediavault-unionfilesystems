@@ -23,7 +23,6 @@ use Exception;
 use OMV\Config\ConfigObject;
 use OMV\Config\Database;
 use OMV\Engine\Module\Manager as ModuleManager;
-use OMV\Engine\Notify\Dispatcher;
 use OMV\Rpc\Rpc;
 use OMV\Rpc\ServiceAbstract;
 use OMV\System\Filesystem\Filesystem;
@@ -38,16 +37,12 @@ class UnionFilesystems extends ServiceAbstract
     /** @var string */
     private $dataModelPath = 'conf.service.unionfilesystems.pool';
 
-    /** @var Dispatcher */
-    private $dispatcher;
-
     /** @var string */
     private $mountPointDataModelPath = 'conf.system.filesystem.mountpoint';
 
-    public function __construct(Database $database = null, Dispatcher $dispatcher = null)
+    public function __construct(Database $database = null)
     {
         $this->database = $database ?: Database::getInstance();
-        $this->dispatcher = $dispatcher ?: Dispatcher::getInstance();
     }
 
     /**
