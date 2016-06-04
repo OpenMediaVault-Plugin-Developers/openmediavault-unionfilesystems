@@ -11,7 +11,7 @@ Architecture: all
 Depends: aufs-tools,
          mergerfs,
          mhddfs,
-         openmediavault (>= 3.0.15),
+         openmediavault (>= 3.0.21),
          php5-cli,
          ${misc:Depends}
 Description: Union filesystems plugin for OpenMediaVault.
