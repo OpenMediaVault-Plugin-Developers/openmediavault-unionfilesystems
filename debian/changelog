@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (3.1.2) stable; urgency=medium
+
+  * Depend on OMV 3.0.21.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 04 Jun 2016 18:55:58 +0200
+
 openmediavault-unionfilesystems (3.1.1) stable; urgency=medium
 
   * OMV 3.0.15 compatibility.
