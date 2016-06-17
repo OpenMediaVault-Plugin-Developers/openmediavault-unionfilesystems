@@ -263,27 +263,31 @@ class UnionFilesystems extends ServiceAbstract
             $this->database->assertIsUnique($object, 'name');
         }
 
+        // Save the object before generating a fstab entry to generate a valid
+        // UUID.
+        $this->database->set($object);
+
         // Create or update the mntent entry.
         $selfMntent = $this->setMntentEntry($object);
-        $object->set('self-mntentref', $selfMntent['uuid']);
 
-        // Try to save the pool. If it fails and it's a new pool, remove the
-        // newly created mntent configuration.
-        try {
-            $this->database->set($object);
-        } catch (Exception $e) {
-            if (!$isNewObject) {
-                Rpc::call('FsTab', 'delete', ['uuid' => $selfMntent['uuid']], $context);
-            }
-
-            throw $e;
-        }
-
-        // The fstab module do not mark itself as dirty when a mntent
+        // The fstab module does not mark itself as dirty when a mntent
         // configuration is modified, only when created or deleted.
         if (!$isNewObject) {
             $moduleManager = ModuleManager::getInstance();
             $moduleManager->setModuleDirty('fstab');
+        }
+
+        if ($isNewObject) {
+            try {
+                $object->set('self-mntentref', $selfMntent['uuid']);
+
+                $this->database->set($object);
+            } catch (Exception $e) {
+                $this->database->delete($object);
+                Rpc::call('FsTab', 'delete', ['uuid' => $selfMntent['uuid']], $context);
+
+                throw $e;
+            }
         }
 
         return $object->getAssoc();
