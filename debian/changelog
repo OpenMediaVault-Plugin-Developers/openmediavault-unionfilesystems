@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (3.1.3) stable; urgency=low
+
+  * Save pool to DB before generate fstab entry to have correct UUID
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 18 Jun 2016 08:10:26 -0500
+
 openmediavault-unionfilesystems (3.1.2) stable; urgency=medium
 
   * Depend on OMV 3.0.21.
