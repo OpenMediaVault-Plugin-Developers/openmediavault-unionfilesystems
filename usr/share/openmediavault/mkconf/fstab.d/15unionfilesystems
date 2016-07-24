@@ -49,7 +49,7 @@ $mhddfs = function ($mountPoint, array $sourceMounts, array $options, $createPol
 
 // Start processing entries.
 $context = ['username' => 'admin', 'role' => OMV_ROLE_ADMINISTRATOR];
-$objects = Rpc::call('UnionFilesystems', 'getList', ['start' => 0, 'limit' => null], $context, OMV_RPC_MODE_REMOTE);
+$objects = Rpc::call('UnionFilesystems', 'getList', ['start' => 0, 'limit' => null], $context, \OMV\Rpc\Rpc::MODE_REMOTE);
 
 foreach ($objects['data'] as $object) {
     $mountPoint = UnionFilesystem::buildMountPath($object['uuid']);
@@ -61,7 +61,7 @@ foreach ($objects['data'] as $object) {
     $minFreeSpace = $object['min-free-space'];
 
     foreach ($object['mntentref'] as $mntentref) {
-        $mntent = Rpc::call('FsTab', 'get', ['uuid' => $mntentref], $context, OMV_RPC_MODE_REMOTE);
+        $mntent = Rpc::call('FsTab', 'get', ['uuid' => $mntentref], $context, \OMV\Rpc\Rpc::MODE_REMOTE);
         $sourceMounts[] = $mntent['dir'];
     }
 

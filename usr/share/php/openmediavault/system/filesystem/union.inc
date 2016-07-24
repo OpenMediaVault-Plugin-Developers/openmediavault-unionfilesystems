@@ -25,7 +25,7 @@ use OMV\Config\DatabaseException;
 use OMV\ExecException;
 use OMV\System\Process;
 
-class Union extends FilesystemAbstract
+class Union extends Filesystem
 {
     /** @var Database */
     private $database;
