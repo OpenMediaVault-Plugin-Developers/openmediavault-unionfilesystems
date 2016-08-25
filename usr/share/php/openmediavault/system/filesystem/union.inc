@@ -234,6 +234,15 @@ class Union extends Filesystem
         return $this->getMountPoint();
     }
 
+    public function getDeviceFiles()
+    {
+        if (!$this->getData()) {
+            return false;
+        }
+
+        return $this->getMountPoint();
+    }
+
     /**
      * Get the canonical path of a device file. E.g. the real path to the device
      * file.
