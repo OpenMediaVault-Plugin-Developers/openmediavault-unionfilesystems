@@ -234,13 +234,18 @@ class Union extends Filesystem
         return $this->getMountPoint();
     }
 
+    /**
+     * Get all devices that make up the filesystem.
+     *
+     * @return array
+     */
     public function getDeviceFiles()
     {
         if (!$this->getData()) {
             return false;
         }
 
-        return $this->getMountPoint();
+        return [$this->getDeviceFile()];
     }
 
     /**
