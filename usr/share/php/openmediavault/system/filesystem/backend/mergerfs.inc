@@ -19,10 +19,14 @@
 
 namespace OMV\System\Filesystem\Backend;
 
+use OMV\Config\Database;
+
 class Mergerfs extends UnionAbstract
 {
-    public function __construct()
+    public function __construct(Database $database)
     {
+        parent::__construct($database);
+
         $this->type = 'mergerfs';
         $this->properties = self::PROP_POSIX_ACL;
     }

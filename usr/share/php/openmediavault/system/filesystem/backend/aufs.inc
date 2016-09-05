@@ -19,10 +19,14 @@
 
 namespace OMV\System\Filesystem\Backend;
 
+use OMV\Config\Database;
+
 class Aufs extends UnionAbstract
 {
-    public function __construct()
+    public function __construct(Database $database)
     {
+        parent::__construct($database);
+
         $this->type = 'aufs';
         $this->properties = self::PROP_NONE;
     }

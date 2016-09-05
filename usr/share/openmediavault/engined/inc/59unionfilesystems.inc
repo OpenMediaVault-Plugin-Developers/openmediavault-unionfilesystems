@@ -17,13 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use OMV\Config\Database;
 use OMV\System\Filesystem\Backend\Aufs;
 use OMV\System\Filesystem\Backend\Manager;
 use OMV\System\Filesystem\Backend\Mergerfs;
 use OMV\System\Filesystem\Backend\Mhddfs;
 
+$database = Database::getInstance();
 $filesystemBackendManager = Manager::getInstance();
 
-$filesystemBackendManager->registerBackend(new Aufs());
-$filesystemBackendManager->registerBackend(new Mergerfs());
-$filesystemBackendManager->registerBackend(new Mhddfs());
+$filesystemBackendManager->registerBackend(new Aufs($database));
+$filesystemBackendManager->registerBackend(new Mergerfs($database));
+$filesystemBackendManager->registerBackend(new Mhddfs($database));

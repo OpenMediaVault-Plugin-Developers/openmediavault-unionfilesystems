@@ -16,101 +16,71 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace OMV\System\Filesystem;
 
 use Exception;
-use OMV\Config\Database;
-use OMV\Config\DatabaseException;
+use OMV\Config\ConfigObject;
 use OMV\ExecException;
+use OMV\System\Filesystem\Backend\BackendAbstract;
 use OMV\System\Process;
 
-class Union extends Filesystem
+class Union implements IFilesystem
 {
-    /** @var Database */
-    private $database;
+    /**
+     * @var BackendAbstract
+     */
+    private $backend;
 
-    /** @var boolean */
-    private $dataCached = false;
-
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dataModelPath = 'conf.service.unionfilesystems.pool';
 
     /**
-     * Constructor.
-     *
-     * @param string $id The UUID or device path of the filesystem.
+     * @var string
      */
-    public function __construct($id)
-    {
-        $this->database = Database::getInstance();
-        $this->uuid = $id;
-
-        if (!is_uuid($id)) {
-            // Assume we got the mount directory.
-            $this->uuid = $this->extractUuidFromPath($id);
-        }
-
-        $this->usage = 'filesystem';
-    }
+    private $label;
 
     /**
-     * Extract an UUID from a path.
-     *
-     * @param string $path A path containing the UUID last.
-     *
-     * @return string The extracted UUID.
+     * @var string
      */
-    private function extractUuidFromPath($path)
-    {
-        $data = explode(DIRECTORY_SEPARATOR, $path);
-
-        if (!empty($data)) {
-            $uuid = end($data);
-
-            if (is_uuid($uuid)) {
-                return $uuid;
-            }
-        }
-
-        throw new Exception('Couldn\'t extract an UUID from the provided path.');
-    }
+    private $mountPoint;
 
     /**
-     * Get the filesystem detailed information.
-     *
-     * @return bool True if successful, otherwise false.
+     * @var string
      */
-    protected function getData()
+    private $type;
+
+    /**
+     * @var string
+     */
+    private $usage = 'filesystem';
+
+    /**
+     * @var string
+     */
+    private $uuid;
+
+    /**
+     * @param string          $uuid    The UUID or the mount point of the filesystem.
+     * @param BackendAbstract $backend The backend that manages this filesystem.
+     */
+    public function __construct(ConfigObject $object, BackendAbstract $backend)
     {
-        if ($this->dataCached) {
-            return true;
+        if ($object->getModelId() !== $this->dataModelPath) {
+            throw new Exception(sprintf(
+                'Expected the param \'$object\' the be a ConfigObject with the model ID: \'%s\'',
+                $this->dataModelPath
+            ));
         }
 
-        try {
-            $object = $this->database->get($this->dataModelPath, $this->uuid);
-        } catch (DatabaseException $e) {
-            return false;
-        }
+        $this->backend = $backend;
 
         $this->label = $object->get('name');
         $this->type = $object->get('type');
+        $this->uuid = $object->get('uuid');
 
-        $this->dataCached = true;
-
-        return true;
-    }
-
-    /**
-     * Refresh the cached information.
-     *
-     * @return bool
-     */
-    public function refresh()
-    {
-        $this->dataCached = false;
-
-        return $this->getData();
+        $this->mountPoint = Filesystem::buildMountPath($this->uuid);
     }
 
     /**
@@ -120,118 +90,85 @@ class Union extends Filesystem
      */
     public function exists()
     {
-        return $this->getData();
+        return true;
     }
 
     /**
-     * Check if the filesystem has an UUID.
+     * Get the backend of this filesystem.
      *
-     * @return bool
+     * @return BackendAbstract
      */
-    public function hasUuid()
+    public function getBackend()
     {
-        return $this->getUuid() !== false;
+        return $this->backend;
     }
 
     /**
-     * Get the UUID of the filesystem.
+     * Get the canonical path of a device file.
      *
-     * @return string|bool The UUID or false.
+     * @return string
      */
-    public function getUuid()
+    public function getCanonicalDeviceFile()
     {
-        if (!$this->getData()) {
-            return false;
-        }
-
-        return !empty($this->uuid) ? $this->uuid : false;
+        return $this->getDeviceFile();
     }
 
     /**
-     * Check if the filesystem has a label.
+     * Get the description of the file system.
      *
-     * @return bool
+     * @return string
      */
-    public function hasLabel()
+    public function getDescription()
     {
-        return $this->getLabel() !== false;
-    }
+        $statistics = $this->getStatistics();
 
-    /**
-     * Get the filesystem label.
-     *
-     * @return string|bool The label or false.
-     */
-    public function getLabel()
-    {
-        if (!$this->getData()) {
-            return false;
-        }
-
-        return !empty($this->label) ? $this->label : false;
-    }
-
-    /**
-     * Get the filesystem type, e.g. aufs, btrfs, mhddfs.
-     *
-     * @return string|bool The fileystem type or false.
-     */
-    public function getType()
-    {
-        if (!$this->getData()) {
-            return false;
-        }
-
-        return !empty($this->type) ? $this->type : false;
-    }
-
-    /**
-     * Get the partition scheme, e.g. gpt, mbr.
-     *
-     * @return string|bool The filesystem scheme or false.
-     */
-    public function getPartitionScheme()
-    {
-        return false;
-    }
-
-    /**
-     * Get the usage, e.g. other or filesystem.
-     *
-     * @return string|bool The usage or false.
-     */
-    public function getUsage()
-    {
-        if (!$this->getData()) {
-            return false;
-        }
-
-        return !empty($this->usage) ? $this->usage : false;
-    }
-
-    /**
-     * Get the partition entry information.
-     *
-     * @return array|bool An array with the fields scheme, uuid, type, flags,
-     *                    number, offset, size and disk, otherwise false.
-     */
-    public function getPartitionEntry()
-    {
-        return false;
+        return sprintf(
+            '%s [%s (%d%%) used, %s available]',
+            $this->getLabel(),
+            binary_format($statistics['used']),
+            $statistics['percentage'],
+            binary_format($statistics['available'])
+        );
     }
 
     /**
      * Get the device path of the filesystem, e.g. /dev/sdb1.
      *
-     * @return string|bool The device path, otherwise false.
+     * @return string
      */
     public function getDeviceFile()
     {
-        if (!$this->getData()) {
-            return false;
-        }
+        return $this->mountPoint;
+    }
 
-        return $this->getMountPoint();
+    /**
+     * Get the device path by UUID (/dev/disk/by-id/xxx).
+     *
+     * @return string|null
+     */
+    public function getDeviceFileById()
+    {
+        return null;
+    }
+
+    /**
+     * Get the device path by label (/dev/disk/by-labed/xxx).
+     *
+     * @return string|null
+     */
+    public function getDeviceFileByLabel()
+    {
+        return null;
+    }
+
+    /**
+     * Get the device path by UUID (/dev/disk/by-uuid/xxx).
+     *
+     * @return string|null
+     */
+    public function getDeviceFileByUuid()
+    {
+        return null;
     }
 
     /**
@@ -241,103 +178,53 @@ class Union extends Filesystem
      */
     public function getDeviceFiles()
     {
-        if (!$this->getData()) {
-            return false;
-        }
-
         return [$this->getDeviceFile()];
     }
 
     /**
-     * Get the canonical path of a device file. E.g. the real path to the device
-     * file.
+     * Get all device file symlinks via udev.
      *
-     * @return string|bool The canonical path to a device file, otherwise false.
+     * @return array
      */
-    public function getCanonicalDeviceFile()
+    public function getDeviceFileSymlinks()
     {
-        return false;
+        return [];
     }
 
     /**
-     * Get the device file by UUID.
+     * Get the filesystem label.
      *
-     * @return string|bool The device path (/dev/disk/by-uuid/xxx) if available,
-     *                     otherwise /dev/xxx will be returned. In case of an
-     *                     error false will be returned.
+     * @return string
      */
-    public function getDeviceFileByUuid()
+    public function getLabel()
     {
-        return false;
+        return !empty($this->label) ? $this->label : '';
     }
 
     /**
-     * Get the device file of the storage device containing this file system.
-     * Example: /dev/sdb1 => /dev/sdb.
+     * Get the device of the storage device which contains this file system.
      *
-     * @return string|bool The device file of the underlying storage device,
-     *                     otherwise false.
+     * @return string
      */
-    public function getStorageDeviceFile()
+    public function getParentDeviceFile()
     {
-        return false;
+        return null;
     }
 
     /**
-     * Get the filesystem block size.
+     * Get the size of the device in bytes.
      *
-     * @return int|bool The block size, otherwise false.
+     * @return int
      */
-    public function getBlockSize()
+    public function getSize()
     {
-        return false;
+        return 0;
     }
 
     /**
-     * Grow the filesystem.
+     * NOTE: Not part of IFilesystem but needed to display statistics in the
+     *       filesystem grid.
      *
-     * @return bool True if successful, otherwise false.
-     */
-    public function grow()
-    {
-        return false;
-    }
-
-    /**
-     * Shrink the filesystem.
-     *
-     * @return bool True if successful, otherwise false.
-     */
-    public function shrink()
-    {
-        return false;
-    }
-
-    /**
-     * Remove the filesystem.
-     *
-     * @return bool True if successful, otherwise false.
-     */
-    public function remove()
-    {
-        return false;
-    }
-
-    /**
-     * Get the mount point of the given filesystem.
-     *
-     * @return string|bool The mount point or false.
-     */
-    public function getMountPoint()
-    {
-        if ($this->hasUuid()) {
-            return self::buildMountPath($this->getUuid());
-        }
-
-        return false;
-    }
-
-    /**
      * Get statistics from a mounted filesystem.
      *
      * @return array|bool The filesystem statistics if successful, otherwise
@@ -350,17 +237,7 @@ class Union extends Filesystem
      */
     public function getStatistics()
     {
-        if (!$this->getData()) {
-            return false;
-        }
-
-        $mountPoint = $this->getMountPoint();
-
-        if (!$mountPoint) {
-            return false;
-        }
-
-        $cmd = new Process('df', '-PT', escapeshellarg($this->getMountPoint()));
+        $cmd = new Process('df', '-PT', escapeshellarg($this->mountPoint));
         $cmd->setRedirect2to1();
         $cmd->execute($output);
 
@@ -369,7 +246,7 @@ class Union extends Filesystem
         foreach ($output as $line) {
             $matches = preg_split('/[\s,]+/', $line);
 
-            if (0 !== strcasecmp($mountPoint, $matches[6])) {
+            if (0 !== strcasecmp($this->mountPoint, $matches[6])) {
                 continue;
             }
 
@@ -389,6 +266,82 @@ class Union extends Filesystem
     }
 
     /**
+     * Get the filesystem type, e.g. aufs, btrfs, mhddfs.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Get the UUID of the filesystem.
+     *
+     * @return string
+     */
+    public function getUuid()
+    {
+        return !empty($this->uuid) ? $this->uuid : '';
+    }
+
+    /**
+     * Grow the filesystem.
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    public function grow()
+    {
+        throw new Exception('Unsupported operation.');
+    }
+
+    /**
+     * Check if the filesystem has a label.
+     *
+     * @return bool
+     */
+    public function hasLabel()
+    {
+        return !empty($this->getLabel());
+    }
+
+    /**
+     * NOTE: Not part of IFilesystem but needed anyway.
+     *
+     * Check if the filesystem is a multi-device filsystem.
+     *
+     * @return bool
+     */
+    public function hasMultipleDevices()
+    {
+        return count($this->getDeviceFiles()) > 1;
+    }
+
+    /**
+     * Check if the filesystem has an UUID.
+     *
+     * @return bool
+     */
+    public function hasUuid()
+    {
+        return !empty($this->getUuid());
+    }
+
+    /**
+     * Remove the filesystem.
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    public function remove()
+    {
+        throw new Exception('Unsupported operation.');
+    }
+
+    /**
      * Check if the filesystem is mounted.
      *
      * @return bool
@@ -397,17 +350,7 @@ class Union extends Filesystem
      */
     public function isMounted()
     {
-        if (!$this->getData()) {
-            return false;
-        }
-
-        $mountPoint = $this->getMountPoint();
-
-        if (!$mountPoint) {
-            return false;
-        }
-
-        $cmd = new Process('findmnt', escapeshellarg($this->getMountPoint()));
+        $cmd = new Process('findmnt', escapeshellarg($this->mountPoint));
 
         try {
             $cmd->execute();
@@ -419,7 +362,7 @@ class Union extends Filesystem
     }
 
     /**
-     * Mount the filesystem by its device file or UUID.
+     * Mount the filesystem by its mount point.
      *
      * @param string $options Additional mount options. Empty string by default.
      *
@@ -429,9 +372,19 @@ class Union extends Filesystem
      */
     public function mount($options = '')
     {
-        $cmd = new Process('mount', escapeshellarg($this->getMountPoint()));
-        $cmd->setRedirect2to1();
-        $cmd->execute();
+        throw new Exception('Unsupported operation.');
+    }
+
+    /**
+     * Shrink the filesystem.
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    public function shrink()
+    {
+        throw new Exception('Unsupported operation.');
     }
 
     /**
@@ -446,8 +399,6 @@ class Union extends Filesystem
      */
     public function umount($force = false, $lazy = false)
     {
-        $cmd = new Process('umount', escapeshellarg($this->getMountPoint()));
-        $cmd->setRedirect2to1();
-        $cmd->execute();
+        throw new Exception('Unsupported operation.');
     }
 }

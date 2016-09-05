@@ -19,10 +19,14 @@
 
 namespace OMV\System\Filesystem\Backend;
 
+use OMV\Config\Database;
+
 class Mhddfs extends UnionAbstract
 {
-    public function __construct()
+    public function __construct(Database $database)
     {
+        parent::__construct($database);
+
         $this->type = 'mhddfs';
         $this->properties = self::PROP_POSIX_ACL;
     }

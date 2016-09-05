@@ -25,8 +25,20 @@ use OMV\System\Filesystem\Union as UnionFilesystem;
 
 abstract class UnionAbstract extends BackendAbstract
 {
-    /** @var string */
+    /**
+     * @var Database
+     */
+    private $database;
+
+    /**
+     * @var string
+     */
     private $dataModelPath = 'conf.service.unionfilesystems.pool';
+
+    public function __construct(Database $database)
+    {
+        $this->database = $database;
+    }
 
     /**
      * Get a list of filesystems of the given filesystem backend.
@@ -39,9 +51,7 @@ abstract class UnionAbstract extends BackendAbstract
         $objects = [];
 
         try {
-            $database = Database::getInstance();
-
-            foreach ($database->get($this->dataModelPath) as $object) {
+            foreach ($this->database->get($this->dataModelPath) as $object) {
                 if ($object->get('type') === $this->type) {
                     $objects[] = $object;
                 }
@@ -82,7 +92,7 @@ abstract class UnionAbstract extends BackendAbstract
      *
      * @param string $id The filesystem identifier (e.g. UUID or device path).
      *
-     * @return bool True if represented, otherwise false.
+     * @return bool
      */
     public function isTypeOf($id)
     {
@@ -114,13 +124,25 @@ abstract class UnionAbstract extends BackendAbstract
      *
      * @param array $args The arguments to the class constructor.
      *
-     * @return \OMV\System\Filesystem\FilesystemAbstract|null
+     * @return \OMV\System\Filesystem\IFilesystem
      */
     public function getImpl($args)
     {
-        $filesystem = new UnionFilesystem($args);
-        $filesystem->setBackend($this);
+        $uuid = $args;
 
-        return $filesystem;
+        if (!is_uuid($args)) {
+            // Assume we got the mount directory.
+            $pathUuid = end(explode(DIRECTORY_SEPARATOR, $args));
+
+            if (!is_uuid($pathUuid)) {
+                throw new Exception('Couldn\'t extract an UUID from the provided path.');
+            }
+
+            $uuid = $pathUuid;
+        }
+
+        $object = $this->database->get($this->dataModelPath, $uuid);
+
+        return new UnionFilesystem($object, $this);
     }
 }
