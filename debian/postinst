@@ -16,18 +16,9 @@ migrate_to_3_1_1()
     while [ "$pool_index" -lt "$pool_count" ] || [ "$pool_index" -eq "$pool_count" ]; do
         xpath="$pool_xpath[$pool_index]"
 
+        # Rename/move some elements.
         omv_config_rename "$xpath/mntentref" "self-mntentref"
-
-        branch_count=0
-        branch_index=1
-
-        branch_count=$(omv_config_get_count "$xpath/branches/mntentref")
-
-        while [ "$branch_index" -lt "$branch_count" ] || [ "$branch_index" -eq "$branch_count" ]; do
-            branch=$(omv_config_get "$xpath/branches/mntentref[$branch_index]")
-            omv_config_add_element "$xpath" "mntentref" "$branch"
-            branch_index=$((branch_index + 1))
-        done
+        omv_config_move "$xpath/branches/mntentref" "$xpath"
 
         # Remove unneeded elements.
         omv_config_delete "$xpath/branches"
