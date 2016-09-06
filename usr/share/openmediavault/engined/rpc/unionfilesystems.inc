@@ -16,7 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 namespace OMV\Engined\Rpc;
 
 use Exception;
@@ -34,7 +33,7 @@ class UnionFilesystems extends ServiceAbstract
     private $database;
 
     /** @var string */
-    private $dataModelPath = 'conf.service.unionfilesystems.pool';
+    private $dataModelPath = 'conf.service.unionfilesystems.filesystem';
 
     /** @var string */
     private $mountPointDataModelPath = 'conf.system.filesystem.mountpoint';
@@ -61,41 +60,11 @@ class UnionFilesystems extends ServiceAbstract
      */
     public function initialize()
     {
-        $this->registerMethod('enumerateAvailableBackends');
         $this->registerMethod('enumerateCandidates');
         $this->registerMethod('getList');
         $this->registerMethod('get');
         $this->registerMethod('set');
         $this->registerMethod('delete');
-    }
-
-    /**
-     * Enumerate the available backends on the system.
-     *
-     * @param $params  The method parameters.
-     * @param $context The context of the caller.
-     *
-     * @return array
-     */
-    public function enumerateAvailableBackends($params, $context)
-    {
-        $this->validateMethodContext($context, ['role' => OMV_ROLE_ADMINISTRATOR]);
-
-        $backendCommands = [
-            'aufs' => 'mount.aufs',
-            'mergerfs' => 'mergerfs',
-            'mhddfs' => 'mhddfs',
-        ];
-
-        $backends = [];
-
-        foreach ($backendCommands as $backend => $command) {
-            if (shell_exec('which ' . $command)) {
-                $backends[] = ['type' => $backend];
-            }
-        }
-
-        return $backends;
     }
 
     /**
@@ -112,31 +81,26 @@ class UnionFilesystems extends ServiceAbstract
         $this->validateMethodContext($context, ['role' => OMV_ROLE_ADMINISTRATOR]);
         $this->validateMethodParams($params, 'rpc.common.objectuuid');
 
+        $candidates = [];
         $entries = Rpc::call('FsTab', 'enumerateEntries', [], $context);
 
-        $candidates = [];
-
         foreach ($entries as $entry) {
-            // Create filter to exclude all filesystems already used.
+            // Create filter to exclude all filesystems already used.  If we're
+            // editing a filesystem we don't want to exclude the filesystems
+            // already in it.
             $filter = [
-                'operator' => 'stringEquals',
-                'arg0' => 'mntentref',
-                'arg1' => $entry['uuid'],
+                'operator' => 'and',
+                'arg0' => [
+                    'operator' => 'stringEquals',
+                    'arg0' => 'mntentref',
+                    'arg1' => $entry['uuid'],
+                ],
+                'arg1' => [
+                    'operator' => 'stringNotEquals',
+                    'arg0' => 'uuid',
+                    'arg1' => $params['uuid'],
+                ],
             ];
-
-            if ($params['uuid'] !== $GLOBALS['OMV_UUID_UNDEFINED']) {
-                // If we're editing a pool we don't want to exclude the filesystems
-                // already in the pool.
-                $filter = [
-                    'operator' => 'and',
-                    'arg0' => [
-                        'operator' => 'stringNotEquals',
-                        'arg0' => 'uuid',
-                        'arg1' => $params['uuid'],
-                    ],
-                    'arg1' => $filter,
-                ];
-            }
 
             // Filter out used filesystems.
             if ($this->database->exists($this->dataModelPath, $filter)) {
@@ -144,11 +108,7 @@ class UnionFilesystems extends ServiceAbstract
             }
 
             // Exclude these types.
-            if ($entry['type'] == 'aufs' ||
-                $entry['type'] == 'mergerfs' ||
-                $entry['type'] == 'mhddfs' ||
-                $entry['type'] == 'none'
-            ) {
+            if ($entry['type'] == 'fuse.mergerfs' || $entry['type'] == 'none') {
                 continue;
             }
 
@@ -182,32 +142,26 @@ class UnionFilesystems extends ServiceAbstract
         $this->validateMethodContext($context, ['role' => OMV_ROLE_ADMINISTRATOR]);
         $this->validateMethodParams($params, 'rpc.common.getlist');
 
-        $pools = [];
-
-        foreach ($this->database->get($this->dataModelPath) as $object) {
-            // Add additional information.
-            $branchesInfo = [];
-
-            foreach ($object->get('mntentref') as $mntentref) {
-                $branchInfo = 'n/a';
+        $filesystems = array_map(function ($object) use ($context) {
+            $branchesInfo = array_map(function ($mntentref) use ($context) {
                 $mntent = Rpc::call('FsTab', 'get', ['uuid' => $mntentref], $context);
                 $filesystem = Filesystem::getImpl($mntent['fsname']);
 
                 if ($filesystem && $filesystem->exists()) {
-                    $branchInfo = $filesystem->getDeviceFile() . ' (' . $filesystem->getLabel() . ')';
+                    return $filesystem->getDeviceFile() . ' (' . $filesystem->getLabel() . ')';
                 }
 
-                $branchesInfo[] = $branchInfo;
-            }
+                return 'n/a';
+            }, $object->get('mntentref'));
 
             $object->add('source_mounts_info', 'any');
             $object->set('source_mounts_info', $branchesInfo);
 
-            $pools[] = $object->getAssoc();
-        }
+            return $object->getAssoc();
+        }, $this->database->get($this->dataModelPath));
 
         return $this->applyFilter(
-            $pools,
+            $filesystems,
             $params['start'],
             $params['limit'],
             $params['sortfield'],
@@ -305,7 +259,7 @@ class UnionFilesystems extends ServiceAbstract
         $this->validateMethodContext($context, ['role' => OMV_ROLE_ADMINISTRATOR]);
         $this->validateMethodParams($params, 'rpc.common.objectuuid');
 
-        // FIXME: Check that pool is not used before deleting it.
+        // FIXME: Check that the filesystem is not used before deleting it.
         $object = $this->database->get($this->dataModelPath, $params['uuid']);
         $this->database->delete($object);
 
@@ -313,9 +267,9 @@ class UnionFilesystems extends ServiceAbstract
     }
 
     /**
-     * Create or update a mntent configuration object from a pool.
+     * Create or update a mntent configuration object from a configuration object.
      *
-     * @param $pool The pool to create a mntent entry for.
+     * @param ConfigObject $object The object to create a mntent entry for.
      *
      * @return string Returns the mntentref for the mntent entry.
      */
@@ -327,7 +281,7 @@ class UnionFilesystems extends ServiceAbstract
             'uuid' => $object->get('self-mntentref'),
             'fsname' => $object->get('uuid'),
             'dir' => $mountPoint,
-            'type' => $object->get('type'),
+            'type' => 'fuse.mergerfs',
             'opts' => '',
             'freq' => 0,
             'passno' => 0,

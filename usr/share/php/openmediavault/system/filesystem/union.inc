@@ -18,13 +18,13 @@
  */
 namespace OMV\System\Filesystem;
 
-use Exception;
 use OMV\Config\ConfigObject;
+use OMV\Exception;
 use OMV\ExecException;
 use OMV\System\Filesystem\Backend\BackendAbstract;
 use OMV\System\Process;
 
-class Union implements IFilesystem
+class Union implements IFilesystem, ISharedFolderCandidate
 {
     /**
      * @var BackendAbstract
@@ -34,7 +34,7 @@ class Union implements IFilesystem
     /**
      * @var string
      */
-    private $dataModelPath = 'conf.service.unionfilesystems.pool';
+    private $dataModelPath = 'conf.service.unionfilesystems.filesystem';
 
     /**
      * @var string
@@ -77,7 +77,7 @@ class Union implements IFilesystem
         $this->backend = $backend;
 
         $this->label = $object->get('name');
-        $this->type = $object->get('type');
+        $this->type = $this->backend->getType();
         $this->uuid = $object->get('uuid');
 
         $this->mountPoint = Filesystem::buildMountPath($this->uuid);

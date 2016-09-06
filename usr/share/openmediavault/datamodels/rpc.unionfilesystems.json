@@ -13,11 +13,6 @@
                 "type": "string",
                 "required": true
             },
-            "type": {
-                "type": "string",
-                "enum": ["aufs", "mergerfs", "mhddfs"],
-                "required": true
-            },
             "self-mntentref": {
                 "type": "string",
                 "format": "uuidv4",
@@ -35,29 +30,12 @@
             },
             "create-policy": {
                 "type": "string",
-                "oneOf": [{
-                    "description": "aufs: create",
-                    "type": "string",
-                    "enum": ["mfs", "pmfs", "rr", "tdp"]
-                }, {
-                    "description": "mergerfs: category.create",
-                    "type": "string",
-                    "enum": ["all", "eplfs", "epmfs", "erofs", "ff", "fwfs", "lfs", "mfs", "newest", "rand"]
-                }]
+                "enum": ["all", "eplfs", "epmfs", "erofs", "ff", "fwfs", "lfs", "mfs", "newest", "rand"]
             },
             "min-free-space": {
                 "type": "string",
-                "oneOf": [{
-                    "description": "mergerfs: minfreespace",
-                    "type": "string",
-                    "format": "regex",
-                    "pattern": "/^[0-9]+[KMG]$/"
-                }, {
-                    "description": "mhddfs: mlimit",
-                    "type": "string",
-                    "format": "regex",
-                    "pattern": "/^((100|[1-9][0-9]?)%|[1-9][0-9]*[KMG])$/"
-                }]
+                "format": "regex",
+                "pattern": "/^[0-9]+[KMG]$/"
             },
             "options": {
                 "type": "string"

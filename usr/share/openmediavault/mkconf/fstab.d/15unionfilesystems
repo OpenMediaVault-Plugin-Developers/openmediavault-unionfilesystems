@@ -22,50 +22,25 @@ require_once '/usr/share/php/openmediavault/globals.inc';
 use OMV\Rpc\Rpc;
 use OMV\System\Filesystem\Filesystem;
 
-// Introduce some main anonymous functions to generate the specific entry lines.
-$aufs = function ($mountPoint, array $sourceMounts, array $options, $createPolicy, $minFreeSpace) {
-    for ($i = 0; $i < count($sourceMounts); ++$i) {
-        $sourceMounts[$i] .= '=rw';
-    }
-
-    $options[] = 'br:' . implode(':', $sourceMounts);
-    $options[] = 'create=' . $createPolicy;
-
-    return sprintf('none %s aufs %s 0 0', $mountPoint, implode(',', $options));
-};
-
-$mergerfs = function ($mountPoint, array $sourceMounts, array $options, $createPolicy, $minFreeSpace) {
-    $options[] = 'category.create=' . $createPolicy;
-    $options[] = 'minfreespace=' . $minFreeSpace;
-
-    return sprintf('%s %s fuse.mergerfs %s 0 0', implode(':', $sourceMounts), $mountPoint, implode(',', $options));
-};
-
-$mhddfs = function ($mountPoint, array $sourceMounts, array $options, $createPolicy, $minFreeSpace) {
-    $options[] = 'mlimit=' . $minFreeSpace;
-
-    return sprintf('mhddfs#%s %s fuse %s 0 0', implode(',', $sourceMounts), $mountPoint, implode(',', $options));
-};
-
-// Start processing entries.
 $context = ['username' => 'admin', 'role' => OMV_ROLE_ADMINISTRATOR];
 $objects = Rpc::call('UnionFilesystems', 'getList', ['start' => 0, 'limit' => null], $context, Rpc::MODE_REMOTE);
 
 foreach ($objects['data'] as $object) {
     $mountPoint = Filesystem::buildMountPath($object['uuid']);
+
     $options = !empty($object['options']) ? explode(',', $object['options']) : [];
-    $sourceMounts = [];
-    $type = $object['type'];
+    $options[] = 'category.create=' . $object['create-policy'];
+    $options[] = 'minfreespace=' . $object['min-free-space'];
 
-    $createPolicy = $object['create-policy'];
-    $minFreeSpace = $object['min-free-space'];
-
-    foreach ($object['mntentref'] as $mntentref) {
+    $sourceMounts = array_map(function ($mntentref) use ($context) {
         $mntent = Rpc::call('FsTab', 'get', ['uuid' => $mntentref], $context, Rpc::MODE_REMOTE);
-        $sourceMounts[] = $mntent['dir'];
-    }
+        return $mntent['dir'];
+    }, $object['mntentref']);
 
-    $entry = ${$type}($mountPoint, $sourceMounts, $options, $createPolicy, $minFreeSpace);
-
-    echo $entry . PHP_EOL;
+    echo sprintf(
+        '%s %s fuse.mergerfs %s 0 0\n',
+        implode(':', $sourceMounts),
+        $mountPoint,
+        implode(',', $options)
+    );
 }

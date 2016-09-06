@@ -37,21 +37,41 @@ migrate_to_3_1_1()
     done
 }
 
+migrate_to_3_1_6()
+{
+    xpath="/config/services/unionfilesystems"
+
+    # Rename and relocate each filesystem.
+    omv_config_move "$xpath/pools/pool" "$xpath"
+    omv_config_rename "$xpath/pool" "filesystem"
+
+    # Convert everything to fuse.mergerfs.
+    omv_config_delete "$xpath/filesystem/type"
+    omv_config_update "/config/system/fstab/mntent/type[. = 'aufs' or . = 'mergerfs' or . = 'mhddfs']" "fuse.mergerfs"
+
+    # Set default values on the filesystem to prevent future fstab breakage.
+    omv_config_update "$xpath/filesystem/create-policy" "epmfs"
+    omv_config_update "$xpath/filesystem/min-free-space" "4G"
+    omv_config_update "$xpath/filesystem/options" "defaults,allow_other"
+}
+
 case "$1" in
     configure)
-        SERVICE_XPATH_NAME="unionfilesystems"
-        SERVICE_XPATH="/config/services/$SERVICE_XPATH_NAME"
-
         # Add the default configuration
-        if ! omv_config_exists "$SERVICE_XPATH"; then
-            omv_config_add_element "/config/services" "$SERVICE_XPATH_NAME"
-            omv_config_add_element "$SERVICE_XPATH" "pools"
+        if ! omv_config_exists "/config/services/unionfilesystems"; then
+            omv_config_add_element "/config/services" "unionfilesystems"
         fi
 
         # Migrate to 3.1.1.
         # TODO: Remove migration with the next major OMV release.
         if dpkg --compare-versions "$2" lt-nl "3.1.1"; then
             migrate_to_3_1_1
+        fi
+
+        # Migrate to 3.1.6
+        # TODO: Remove migration with the next major OMV release.
+        if dpkg --compare-versions "$2" lt-nl "3.1.6"; then
+            migrate_to_3_1_6
         fi
 
         # Activate package triggers. These triggers are only set during the

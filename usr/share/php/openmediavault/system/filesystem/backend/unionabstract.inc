@@ -21,19 +21,21 @@ namespace OMV\System\Filesystem\Backend;
 
 use OMV\Config\Database;
 use OMV\Config\DatabaseException;
+use OMV\Exception;
 use OMV\System\Filesystem\Union as UnionFilesystem;
+use SplFileObject;
 
 abstract class UnionAbstract extends BackendAbstract
 {
     /**
      * @var Database
      */
-    private $database;
+    protected $database;
 
     /**
      * @var string
      */
-    private $dataModelPath = 'conf.service.unionfilesystems.pool';
+    protected $dataModelPath = 'conf.service.unionfilesystems.filesystem';
 
     public function __construct(Database $database)
     {
@@ -43,22 +45,12 @@ abstract class UnionAbstract extends BackendAbstract
     /**
      * Get a list of filesystems of the given filesystem backend.
      *
-     * @return array|bool A list of filesystems, otherwise false.
+     * @return array
      */
     public function enumerate()
     {
         $filesystems = [];
-        $objects = [];
-
-        try {
-            foreach ($this->database->get($this->dataModelPath) as $object) {
-                if ($object->get('type') === $this->type) {
-                    $objects[] = $object;
-                }
-            }
-        } catch (DatabaseException $e) {
-            return $filesystems;
-        }
+        $objects = $this->database->get($this->dataModelPath);
 
         foreach ($objects as $object) {
             $filesystem = $this->getImpl($object->get('uuid'));
@@ -96,9 +88,7 @@ abstract class UnionAbstract extends BackendAbstract
      */
     public function isTypeOf($id)
     {
-        $mounts = $this->enumerate();
-
-        foreach ($mounts as $mount) {
+        foreach ($this->enumerate() as $mount) {
             if ($mount['uuid'] == $id || $mount['devicefile'] == $id) {
                 return true;
             }
@@ -109,7 +99,7 @@ abstract class UnionAbstract extends BackendAbstract
 
     /**
      * Does the filesystem have a device file? E.g. union mount or overlay
-     * filesystems like overlayfs and mhddfs don't have a device file.
+     * filesystems like Mergerfs don't have a device file.
      *
      * @return bool
      */
@@ -122,27 +112,14 @@ abstract class UnionAbstract extends BackendAbstract
      * Get the object of the class that represents and implements a filesystem
      * of this filesystem backend.
      *
-     * @param array $args The arguments to the class constructor.
+     * @param array $args
      *
-     * @return \OMV\System\Filesystem\IFilesystem
+     * @return \OMV\System\Filesystem\UnionFilesystem
      */
     public function getImpl($args)
     {
-        $uuid = $args;
-
-        if (!is_uuid($args)) {
-            // Assume we got the mount directory.
-            $pathUuid = end(explode(DIRECTORY_SEPARATOR, $args));
-
-            if (!is_uuid($pathUuid)) {
-                throw new Exception('Couldn\'t extract an UUID from the provided path.');
-            }
-
-            $uuid = $pathUuid;
-        }
-
-        $object = $this->database->get($this->dataModelPath, $uuid);
-
-        return new UnionFilesystem($object, $this);
+        // BackendAbstract is already implementing this method so we can't mark
+        // it as abstract.
+        throw Exception('Unimplemented method. Implement this in the derived class.');
     }
 }

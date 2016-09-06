@@ -20,15 +20,15 @@
 // require("js/omv/data/Store.js")
 // require("js/omv/data/Model.js")
 // require("js/omv/data/proxy/Rpc.js")
-// require("js/omv/module/admin/storage/unionfilesystems/Pool.js")
+// require("js/omv/module/admin/storage/unionfilesystems/Filesystem.js")
 
-Ext.define('OMV.module.admin.storage.unionfilesystems.Pools', {
+Ext.define('OMV.module.admin.storage.unionfilesystems.Filesystems', {
     extend: 'OMV.workspace.grid.Panel',
     requires: [
         'OMV.data.Store',
         'OMV.data.Model',
         'OMV.data.proxy.Rpc',
-        'OMV.module.admin.storage.unionfilesystems.Pool'
+        'OMV.module.admin.storage.unionfilesystems.Filesystem'
     ],
 
     hidePagingToolbar: false,
@@ -53,11 +53,6 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Pools', {
 
             return template.apply(value);
         }
-    }, {
-        header: _('Type'),
-        flex: 1,
-        sortable: true,
-        dataIndex: 'type'
     }],
 
     store: Ext.create('OMV.data.Store', {
@@ -69,9 +64,6 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Pools', {
                 type: 'string'
             }, {
                 name: 'name',
-                type: 'string'
-            }, {
-                name: 'type',
                 type: 'string'
             }, {
                 name: 'source_mounts_info',
@@ -93,8 +85,8 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Pools', {
     }),
 
     onAddButton: function() {
-        Ext.create('OMV.module.admin.storage.unionfilesystems.Pool', {
-            title: _('Add pool'),
+        Ext.create('OMV.module.admin.storage.unionfilesystems.Filesystem', {
+            title: _('Add filesystem'),
             uuid: OMV.UUID_UNDEFINED,
             listeners: {
                 scope: this,
@@ -108,8 +100,8 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Pools', {
     onEditButton: function() {
         var record = this.getSelected();
 
-        Ext.create('OMV.module.admin.storage.unionfilesystems.Pool', {
-            title: _('Edit pool'),
+        Ext.create('OMV.module.admin.storage.unionfilesystems.Filesystem', {
+            title: _('Edit filesystem'),
             uuid: record.get('uuid'),
             listeners: {
                 scope: this,
@@ -137,9 +129,9 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Pools', {
 });
 
 OMV.WorkspaceManager.registerPanel({
-    id: 'pools',
+    id: 'filesystems',
     path: '/storage/unionfilesystems',
-    text: _('Pools'),
+    text: _('Filesystems'),
     position: 30,
-    className: 'OMV.module.admin.storage.unionfilesystems.Pools'
+    className: 'OMV.module.admin.storage.unionfilesystems.Filesystems'
 });

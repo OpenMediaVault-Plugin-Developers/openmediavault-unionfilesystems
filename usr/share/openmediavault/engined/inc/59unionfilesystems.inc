@@ -18,14 +18,9 @@
  */
 
 use OMV\Config\Database;
-use OMV\System\Filesystem\Backend\Aufs;
 use OMV\System\Filesystem\Backend\Manager;
 use OMV\System\Filesystem\Backend\Mergerfs;
-use OMV\System\Filesystem\Backend\Mhddfs;
 
 $database = Database::getInstance();
 $filesystemBackendManager = Manager::getInstance();
-
-$filesystemBackendManager->registerBackend(new Aufs($database));
 $filesystemBackendManager->registerBackend(new Mergerfs($database));
-$filesystemBackendManager->registerBackend(new Mhddfs($database));
