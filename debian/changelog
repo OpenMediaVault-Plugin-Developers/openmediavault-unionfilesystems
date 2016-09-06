@@ -1,3 +1,12 @@
+openmediavault-unionfilesystems (3.1.6) UNRELEASED; urgency=medium
+
+  * Drop support for Aufs and Mhddfs and restructure the configuration. It's
+    advised to inspect the filesystems, save their settings and then reboot to
+    make sure that the fstab configuration is correct.
+  * The virtual label is now correctly displayed everywhere again.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 06 Sep 2016 20:57:10 +0200
+
 openmediavault-unionfilesystems (3.1.5) stable; urgency=low
 
   * Fix for UUID issue
