@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (3.1.7) stable; urgency=medium
+
+  * OMV 3.0.40 compatibility.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 27 Sep 2016 18:27:57 +0200
+
 openmediavault-unionfilesystems (3.1.6) stable; urgency=medium
 
   * Drop support for Aufs and Mhddfs and restructure the configuration. It's
