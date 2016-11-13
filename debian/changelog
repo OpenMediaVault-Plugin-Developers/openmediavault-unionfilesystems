@@ -1,8 +1,8 @@
-openmediavault-unionfilesystems (3.1.8) UNRELEASED; urgency=medium
+openmediavault-unionfilesystems (3.1.8) stable; urgency=low
 
-  * Adapt for OMV 3.0.53
+  * Adapt for OMV 3.0.52
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 12 Nov 2016 20:25:40 -0600
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 12 Nov 2016 21:14:38 -0600
 
 openmediavault-unionfilesystems (3.1.7) stable; urgency=medium
 
