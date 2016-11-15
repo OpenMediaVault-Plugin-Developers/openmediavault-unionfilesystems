@@ -30,7 +30,7 @@
             },
             "create-policy": {
                 "type": "string",
-                "enum": ["all", "eplfs", "epmfs", "erofs", "ff", "fwfs", "lfs", "mfs", "newest", "rand"]
+                "enum": ["all", "epall", "epff", "eplfs", "eplus", "epmfs", "eprand", "erofs", "ff", "lfs", "lus", "mfs", "newest", "rand"]
             },
             "min-free-space": {
                 "type": "string",

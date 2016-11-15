@@ -28,12 +28,16 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.MergerfsCreatePolicyStore'
     ],
     data: [
         ['all', _('All.')],
+        ['epall', _('Existing path, all.')],
+        ['epff', _('Existing path, first found.')],
         ['eplfs', _('Existing path, least free space.')],
+        ['eplus', _('Existing path, least used space.')],
         ['epmfs', _('Existing path, most free space.')],
+        ['eprand', _('Existing path, random.')],
         ['erofs', _('Read-only.')],
         ['ff', _('First found.')],
-        ['fwfs', _('First with free space.')],
         ['lfs', _('Least free space.')],
+        ['lus', _('Least used space.')],
         ['mfs', _('Most free space.')],
         ['newest', _('Newest file.')],
         ['rand', _('Random.')]
