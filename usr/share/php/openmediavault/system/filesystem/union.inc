@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace OMV\System\Filesystem;
 
 use OMV\Config\ConfigObject;
@@ -62,7 +63,8 @@ class Union implements IFilesystem, ISharedFolderCandidate
     private $uuid;
 
     /**
-     * @param string          $uuid    The UUID or the mount point of the filesystem.
+     * @param string          $uuid    The UUID or the mount point of the
+     *                                 filesystem.
      * @param BackendAbstract $backend The backend that manages this filesystem.
      */
     public function __construct(ConfigObject $object, BackendAbstract $backend)
@@ -172,16 +174,6 @@ class Union implements IFilesystem, ISharedFolderCandidate
     }
 
     /**
-     * Get the special device file to present in the UI instead of the
-     * value of the getDeviceFile method.
-     * @return Returns the device file.
-     */
-    public function getPreferredDeviceFile()
-    {
-        return $this->getDeviceFile();
-    }
-
-    /**
      * Get all devices that make up the filesystem.
      *
      * @return array
@@ -219,6 +211,17 @@ class Union implements IFilesystem, ISharedFolderCandidate
     public function getParentDeviceFile()
     {
         return null;
+    }
+
+    /**
+     * Get the special device file to present in the UI instead of the value of
+     * the getDeviceFile method.
+     *
+     * @return string
+     */
+    public function getPreferredDeviceFile()
+    {
+        return $this->getDeviceFile();
     }
 
     /**
