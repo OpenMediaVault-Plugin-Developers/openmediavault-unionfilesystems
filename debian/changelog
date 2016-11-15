@@ -1,6 +1,12 @@
+openmediavault-unionfilesystems (3.1.9) stable; urgency=medium
+
+  * Update the list of available Mergerfs policies.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 15 Nov 2016 23:36:00 +0100
+
 openmediavault-unionfilesystems (3.1.8) stable; urgency=low
 
-  * Adapt for OMV 3.0.52
+  * Adapt for OMV 3.0.52.
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 12 Nov 2016 21:14:38 -0600
 
