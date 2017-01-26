@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Hyeonkyu Chu <hyeonkyu@gmail.com>, 2014-2015
+# Hyeonkyu Chu <hyeonkyu@gmail.com>, 2014-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-09 07:38-0600\n"
-"PO-Revision-Date: 2015-11-09 13:38+0000\n"
+"POT-Creation-Date: 2017-01-26 09:25-0600\n"
+"PO-Revision-Date: 2017-01-26 15:25+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Korean (Korea) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/ko_KR/)\n"
 "MIME-Version: 1.0\n"
@@ -18,40 +18,55 @@ msgstr ""
 "Language: ko_KR\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgid "Add pool"
-msgstr "Pool 추가"
+msgid "Add filesystem"
+msgstr ""
 
 msgid "All."
-msgstr ""
+msgstr "모든."
 
 msgid "Branches"
 msgstr "Branches"
 
 msgid "Create policy"
-msgstr ""
+msgstr "정책 생성"
 
 msgid "Device"
 msgstr "장치"
 
-msgid "Edit pool"
+msgid "Edit filesystem"
+msgstr ""
+
+msgid "Existing path, all."
+msgstr ""
+
+msgid "Existing path, first found."
+msgstr ""
+
+msgid "Existing path, least free space."
+msgstr ""
+
+msgid "Existing path, least used space."
 msgstr ""
 
 msgid "Existing path, most free space."
 msgstr ""
 
-msgid "First found with permissions."
+msgid "Existing path, random."
+msgstr ""
+
+msgid "Filesystems"
 msgstr ""
 
 msgid "First found."
-msgstr ""
-
-msgid "First with free space."
 msgstr ""
 
 msgid "Label"
 msgstr "레이블"
 
 msgid "Least free space."
+msgstr ""
+
+msgid "Least used space."
 msgstr ""
 
 msgid "Minimum free space"
@@ -74,26 +89,14 @@ msgstr "이름"
 msgid "Newest file."
 msgstr ""
 
-msgid "Pools"
-msgstr "Pools"
+msgid "Options"
+msgstr ""
 
 msgid "Random."
+msgstr "무작위."
+
+msgid "Read-only."
 msgstr ""
-
-msgid "Select a type ..."
-msgstr ""
-
-msgid "This field must have the format 4G, 100M or 1000K."
-msgstr ""
-
-msgid "This field must have the format 4G, 100M, or 100%"
-msgstr ""
-
-msgid "This name is already in use by another pool."
-msgstr "이 이름은 이미 다른 Pool에서 사용 중입니다."
-
-msgid "Threshold"
-msgstr "임계 값"
 
 msgid "Type"
 msgstr "유형"
@@ -102,23 +105,10 @@ msgid "UUID"
 msgstr "UUID"
 
 msgid "Union Filesystems"
-msgstr ""
+msgstr "Union Filesystems"
 
 msgid ""
-"Units can be G, M, or %. If a drive has the free space less than the "
-"threshold specifed then another drive will be chosen while creating a new "
-"file.  If all the drives have free space less than the threshold specified "
-"then a drive containing most free space will be choosen."
-msgstr ""
-
-msgid "mfs"
-msgstr ""
-
-msgid "pmfs"
-msgstr ""
-
-msgid "rr"
-msgstr ""
-
-msgid "tdp"
+"When the minimum free space is reached on a filesystem it will not be "
+"written to unless all the other filesystem also has reached the limit. "
+"Format: {amount}{unit}. Allows the units K, M and G."
 msgstr ""

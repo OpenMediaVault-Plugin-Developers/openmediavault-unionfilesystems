@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-09 07:38-0600\n"
-"PO-Revision-Date: 2015-11-09 17:16+0000\n"
-"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
+"POT-Creation-Date: 2017-01-26 09:25-0600\n"
+"PO-Revision-Date: 2017-01-26 15:25+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: German (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,8 +19,8 @@ msgstr ""
 "Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Add pool"
-msgstr "Datenbasis hinzufügen"
+msgid "Add filesystem"
+msgstr ""
 
 msgid "All."
 msgstr "Alle."
@@ -34,26 +34,41 @@ msgstr "Richtlinie erstellen"
 msgid "Device"
 msgstr "Gerät"
 
-msgid "Edit pool"
-msgstr "Datenbasis bearbeiten"
+msgid "Edit filesystem"
+msgstr ""
+
+msgid "Existing path, all."
+msgstr ""
+
+msgid "Existing path, first found."
+msgstr ""
+
+msgid "Existing path, least free space."
+msgstr ""
+
+msgid "Existing path, least used space."
+msgstr ""
 
 msgid "Existing path, most free space."
 msgstr "Vorhandener Pfad, meister freier Speicherplatz."
 
-msgid "First found with permissions."
-msgstr "Zuerst gefunden mit Berechtigungen."
+msgid "Existing path, random."
+msgstr ""
+
+msgid "Filesystems"
+msgstr ""
 
 msgid "First found."
 msgstr "Zuerst gefunden."
-
-msgid "First with free space."
-msgstr "Zuerst mit freiem Speicherplatz."
 
 msgid "Label"
 msgstr "Bezeichnung"
 
 msgid "Least free space."
 msgstr "Geringster freier Speicherplatz."
+
+msgid "Least used space."
+msgstr ""
 
 msgid "Minimum free space"
 msgstr "Minimaler freier Speicherplatz"
@@ -75,26 +90,14 @@ msgstr "Name"
 msgid "Newest file."
 msgstr "Neueste Datei."
 
-msgid "Pools"
-msgstr "Datenbasen"
+msgid "Options"
+msgstr ""
 
 msgid "Random."
 msgstr "Zufällig"
 
-msgid "Select a type ..."
-msgstr "Wählen Sie einen Typ aus ..."
-
-msgid "This field must have the format 4G, 100M or 1000K."
-msgstr "Dieses Feld muss das Format 4G, 100M oder 1000K haben."
-
-msgid "This field must have the format 4G, 100M, or 100%"
-msgstr "Dieses Feld muss das Format 4G, 100M oder 100% haben"
-
-msgid "This name is already in use by another pool."
-msgstr "Dieser Name wird bereits von einer anderen Datenbasis verwendet."
-
-msgid "Threshold"
-msgstr "Schwellenwert"
+msgid "Read-only."
+msgstr ""
 
 msgid "Type"
 msgstr "Typ"
@@ -106,20 +109,7 @@ msgid "Union Filesystems"
 msgstr "Union-Dateisysteme"
 
 msgid ""
-"Units can be G, M, or %. If a drive has the free space less than the "
-"threshold specifed then another drive will be chosen while creating a new "
-"file.  If all the drives have free space less than the threshold specified "
-"then a drive containing most free space will be choosen."
-msgstr "Einheiten können G, M oder % sein. Wenn ein Laufwerk weniger Speicherplatz frei hat als im Schwellenwert definiert, wird ein anderes Laufwerk ausgewählt während eine neue Datei erstellt wird. Sollten alle Laufwerk weniger freien Speicher haben als der Schwellenwert, dann wird das Laufwerk mit dem meisten freien Speicher ausgewählt."
-
-msgid "mfs"
-msgstr "mfs"
-
-msgid "pmfs"
-msgstr "pmfs"
-
-msgid "rr"
-msgstr "rr"
-
-msgid "tdp"
-msgstr "tdp"
+"When the minimum free space is reached on a filesystem it will not be "
+"written to unless all the other filesystem also has reached the limit. "
+"Format: {amount}{unit}. Allows the units K, M and G."
+msgstr ""

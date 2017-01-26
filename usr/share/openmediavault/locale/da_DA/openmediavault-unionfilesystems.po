@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-09 07:38-0600\n"
-"PO-Revision-Date: 2015-11-18 14:12+0000\n"
-"Last-Translator: Stefan Thrane Overby <stoverby@gmail.com>\n"
+"POT-Creation-Date: 2017-01-26 09:25-0600\n"
+"PO-Revision-Date: 2017-01-26 15:25+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Danish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,8 +18,8 @@ msgstr ""
 "Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Add pool"
-msgstr "Tilføj pool"
+msgid "Add filesystem"
+msgstr ""
 
 msgid "All."
 msgstr "Alle."
@@ -33,26 +33,41 @@ msgstr "Opret politik"
 msgid "Device"
 msgstr "Enhed"
 
-msgid "Edit pool"
-msgstr "Rediger pool"
+msgid "Edit filesystem"
+msgstr ""
+
+msgid "Existing path, all."
+msgstr ""
+
+msgid "Existing path, first found."
+msgstr ""
+
+msgid "Existing path, least free space."
+msgstr ""
+
+msgid "Existing path, least used space."
+msgstr ""
 
 msgid "Existing path, most free space."
 msgstr "Nuværende sti, mest plads fri."
 
-msgid "First found with permissions."
-msgstr "Første fundne med rettigheder."
+msgid "Existing path, random."
+msgstr ""
+
+msgid "Filesystems"
+msgstr ""
 
 msgid "First found."
 msgstr "Første fundne."
-
-msgid "First with free space."
-msgstr "Første med plads fri."
 
 msgid "Label"
 msgstr "Label"
 
 msgid "Least free space."
 msgstr "Mindst plads fri"
+
+msgid "Least used space."
+msgstr ""
 
 msgid "Minimum free space"
 msgstr "Minimum plads fri."
@@ -74,26 +89,14 @@ msgstr "Navn"
 msgid "Newest file."
 msgstr "Nyeste fil."
 
-msgid "Pools"
-msgstr "Pools"
+msgid "Options"
+msgstr ""
 
 msgid "Random."
 msgstr "Tilfældig."
 
-msgid "Select a type ..."
-msgstr "Vælg en type ..."
-
-msgid "This field must have the format 4G, 100M or 1000K."
-msgstr "Dette felt skal indeholde formatet 4G, 100M, eller 1000K"
-
-msgid "This field must have the format 4G, 100M, or 100%"
-msgstr "Dette felt skal indeholde formatet 4G, 100M, eller 100%"
-
-msgid "This name is already in use by another pool."
-msgstr "Dette navn bliver allerede brugt af en anden pool."
-
-msgid "Threshold"
-msgstr "Tærskel"
+msgid "Read-only."
+msgstr ""
 
 msgid "Type"
 msgstr "Type"
@@ -105,20 +108,7 @@ msgid "Union Filesystems"
 msgstr "Union Filsystemer"
 
 msgid ""
-"Units can be G, M, or %. If a drive has the free space less than the "
-"threshold specifed then another drive will be chosen while creating a new "
-"file.  If all the drives have free space less than the threshold specified "
-"then a drive containing most free space will be choosen."
-msgstr "Enheder kan være G, M, eller %. Hvis et drev har mindre fri plads end hvad grænseværdien angiver vil et andet drev blive valgt, når der oprettes en ny fil. Hvis alle drev har mindre fri plads end hvad grænseværdien angiver vil det drev med mest fri plads blive anvendt."
-
-msgid "mfs"
-msgstr "mfs"
-
-msgid "pmfs"
-msgstr "pmfs"
-
-msgid "rr"
-msgstr "rr"
-
-msgid "tdp"
-msgstr "tdp"
+"When the minimum free space is reached on a filesystem it will not be "
+"written to unless all the other filesystem also has reached the limit. "
+"Format: {amount}{unit}. Allows the units K, M and G."
+msgstr ""

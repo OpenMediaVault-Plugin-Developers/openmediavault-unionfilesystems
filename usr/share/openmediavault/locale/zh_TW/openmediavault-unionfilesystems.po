@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# kochin <kochinc@outlook.com>, 2014-2015
+# kochin <kochinc@outlook.com>, 2014-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-09 07:38-0600\n"
-"PO-Revision-Date: 2015-11-09 13:38+0000\n"
+"POT-Creation-Date: 2017-01-26 09:25-0600\n"
+"PO-Revision-Date: 2017-01-26 15:25+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -18,82 +18,85 @@ msgstr ""
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgid "Add pool"
-msgstr "新增集用場"
+msgid "Add filesystem"
+msgstr ""
 
 msgid "All."
-msgstr ""
+msgstr "全部。"
 
 msgid "Branches"
 msgstr "分支"
 
 msgid "Create policy"
-msgstr ""
+msgstr "新建政策"
 
 msgid "Device"
 msgstr "裝置"
 
-msgid "Edit pool"
+msgid "Edit filesystem"
+msgstr ""
+
+msgid "Existing path, all."
+msgstr ""
+
+msgid "Existing path, first found."
+msgstr ""
+
+msgid "Existing path, least free space."
+msgstr ""
+
+msgid "Existing path, least used space."
 msgstr ""
 
 msgid "Existing path, most free space."
+msgstr "現存路徑，未用空間最多。"
+
+msgid "Existing path, random."
 msgstr ""
 
-msgid "First found with permissions."
+msgid "Filesystems"
 msgstr ""
 
 msgid "First found."
-msgstr ""
-
-msgid "First with free space."
-msgstr ""
+msgstr "首先找到。"
 
 msgid "Label"
 msgstr "標籤"
 
 msgid "Least free space."
+msgstr "未用空間最少。"
+
+msgid "Least used space."
 msgstr ""
 
 msgid "Minimum free space"
-msgstr ""
+msgstr "最少未用空間"
 
 msgid "Most free space."
-msgstr ""
+msgstr "未用空間最多。"
 
 msgid "Mount options"
-msgstr ""
+msgstr "掛載選項"
 
 msgid ""
 "NOTE: The changes won't take effect until you've restarted the system or "
 "manually remounted the filesystem."
-msgstr ""
+msgstr "注意：所做的變更將不會生效，直到您重新開機或手動重新掛載該檔案系統。"
 
 msgid "Name"
 msgstr "名稱"
 
 msgid "Newest file."
-msgstr ""
+msgstr "最新檔案。"
 
-msgid "Pools"
-msgstr "集用場"
+msgid "Options"
+msgstr ""
 
 msgid "Random."
+msgstr "隨機。"
+
+msgid "Read-only."
 msgstr ""
-
-msgid "Select a type ..."
-msgstr ""
-
-msgid "This field must have the format 4G, 100M or 1000K."
-msgstr ""
-
-msgid "This field must have the format 4G, 100M, or 100%"
-msgstr ""
-
-msgid "This name is already in use by another pool."
-msgstr "此名稱已經被另一個集用場使用。"
-
-msgid "Threshold"
-msgstr "定限"
 
 msgid "Type"
 msgstr "型式"
@@ -102,23 +105,10 @@ msgid "UUID"
 msgstr "UUID"
 
 msgid "Union Filesystems"
-msgstr ""
+msgstr "Union 檔案系統"
 
 msgid ""
-"Units can be G, M, or %. If a drive has the free space less than the "
-"threshold specifed then another drive will be chosen while creating a new "
-"file.  If all the drives have free space less than the threshold specified "
-"then a drive containing most free space will be choosen."
-msgstr ""
-
-msgid "mfs"
-msgstr ""
-
-msgid "pmfs"
-msgstr ""
-
-msgid "rr"
-msgstr ""
-
-msgid "tdp"
+"When the minimum free space is reached on a filesystem it will not be "
+"written to unless all the other filesystem also has reached the limit. "
+"Format: {amount}{unit}. Allows the units K, M and G."
 msgstr ""

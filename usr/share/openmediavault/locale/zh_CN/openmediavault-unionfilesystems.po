@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-09 07:38-0600\n"
-"PO-Revision-Date: 2015-12-11 14:17+0000\n"
-"Last-Translator: songming <by@songming.me>\n"
+"POT-Creation-Date: 2017-01-26 09:25-0600\n"
+"PO-Revision-Date: 2017-01-26 15:25+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Chinese (China) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,8 +18,8 @@ msgstr ""
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-msgid "Add pool"
-msgstr "添加池"
+msgid "Add filesystem"
+msgstr ""
 
 msgid "All."
 msgstr "所有."
@@ -33,25 +33,40 @@ msgstr "创建策略"
 msgid "Device"
 msgstr "设备"
 
-msgid "Edit pool"
-msgstr "编辑池"
+msgid "Edit filesystem"
+msgstr ""
+
+msgid "Existing path, all."
+msgstr ""
+
+msgid "Existing path, first found."
+msgstr ""
+
+msgid "Existing path, least free space."
+msgstr ""
+
+msgid "Existing path, least used space."
+msgstr ""
 
 msgid "Existing path, most free space."
 msgstr ""
 
-msgid "First found with permissions."
+msgid "Existing path, random."
+msgstr ""
+
+msgid "Filesystems"
 msgstr ""
 
 msgid "First found."
-msgstr ""
-
-msgid "First with free space."
 msgstr ""
 
 msgid "Label"
 msgstr "标签"
 
 msgid "Least free space."
+msgstr ""
+
+msgid "Least used space."
 msgstr ""
 
 msgid "Minimum free space"
@@ -74,26 +89,14 @@ msgstr "名称"
 msgid "Newest file."
 msgstr ""
 
-msgid "Pools"
-msgstr "池"
+msgid "Options"
+msgstr ""
 
 msgid "Random."
 msgstr "随机."
 
-msgid "Select a type ..."
-msgstr "选择类型 ..."
-
-msgid "This field must have the format 4G, 100M or 1000K."
-msgstr "此字段格式必须如4G、100M或1000K。"
-
-msgid "This field must have the format 4G, 100M, or 100%"
-msgstr "此字段格式必须如4G、100M或100%"
-
-msgid "This name is already in use by another pool."
-msgstr "该名称已经被其它池占用。"
-
-msgid "Threshold"
-msgstr "阈值"
+msgid "Read-only."
+msgstr ""
 
 msgid "Type"
 msgstr "类型"
@@ -105,20 +108,7 @@ msgid "Union Filesystems"
 msgstr "联合文件系统"
 
 msgid ""
-"Units can be G, M, or %. If a drive has the free space less than the "
-"threshold specifed then another drive will be chosen while creating a new "
-"file.  If all the drives have free space less than the threshold specified "
-"then a drive containing most free space will be choosen."
+"When the minimum free space is reached on a filesystem it will not be "
+"written to unless all the other filesystem also has reached the limit. "
+"Format: {amount}{unit}. Allows the units K, M and G."
 msgstr ""
-
-msgid "mfs"
-msgstr "mfs"
-
-msgid "pmfs"
-msgstr "pmfs"
-
-msgid "rr"
-msgstr "rr"
-
-msgid "tdp"
-msgstr "tdp"

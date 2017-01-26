@@ -3,12 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# zubr139, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-09 07:38-0600\n"
-"PO-Revision-Date: 2015-11-09 13:38+0000\n"
+"POT-Creation-Date: 2017-01-26 09:25-0600\n"
+"PO-Revision-Date: 2017-01-26 15:25+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
 "Language-Team: Ukrainian (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -17,11 +18,11 @@ msgstr ""
 "Language: uk\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-msgid "Add pool"
+msgid "Add filesystem"
 msgstr ""
 
 msgid "All."
-msgstr ""
+msgstr "Всі."
 
 msgid "Branches"
 msgstr ""
@@ -30,27 +31,42 @@ msgid "Create policy"
 msgstr ""
 
 msgid "Device"
+msgstr "Пристрій"
+
+msgid "Edit filesystem"
 msgstr ""
 
-msgid "Edit pool"
+msgid "Existing path, all."
+msgstr ""
+
+msgid "Existing path, first found."
+msgstr ""
+
+msgid "Existing path, least free space."
+msgstr ""
+
+msgid "Existing path, least used space."
 msgstr ""
 
 msgid "Existing path, most free space."
 msgstr ""
 
-msgid "First found with permissions."
+msgid "Existing path, random."
+msgstr ""
+
+msgid "Filesystems"
 msgstr ""
 
 msgid "First found."
 msgstr ""
 
-msgid "First with free space."
-msgstr ""
-
 msgid "Label"
-msgstr ""
+msgstr "Лейба"
 
 msgid "Least free space."
+msgstr ""
+
+msgid "Least used space."
 msgstr ""
 
 msgid "Minimum free space"
@@ -73,29 +89,17 @@ msgstr ""
 msgid "Newest file."
 msgstr ""
 
-msgid "Pools"
+msgid "Options"
 msgstr ""
 
 msgid "Random."
 msgstr ""
 
-msgid "Select a type ..."
-msgstr ""
-
-msgid "This field must have the format 4G, 100M or 1000K."
-msgstr ""
-
-msgid "This field must have the format 4G, 100M, or 100%"
-msgstr ""
-
-msgid "This name is already in use by another pool."
-msgstr ""
-
-msgid "Threshold"
+msgid "Read-only."
 msgstr ""
 
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 msgid "UUID"
 msgstr ""
@@ -104,20 +108,7 @@ msgid "Union Filesystems"
 msgstr ""
 
 msgid ""
-"Units can be G, M, or %. If a drive has the free space less than the "
-"threshold specifed then another drive will be chosen while creating a new "
-"file.  If all the drives have free space less than the threshold specified "
-"then a drive containing most free space will be choosen."
-msgstr ""
-
-msgid "mfs"
-msgstr ""
-
-msgid "pmfs"
-msgstr ""
-
-msgid "rr"
-msgstr ""
-
-msgid "tdp"
+"When the minimum free space is reached on a filesystem it will not be "
+"written to unless all the other filesystem also has reached the limit. "
+"Format: {amount}{unit}. Allows the units K, M and G."
 msgstr ""
