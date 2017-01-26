@@ -1,3 +1,10 @@
+openmediavault-unionfilesystems (3.1.10) stable; urgency=low
+
+  * Change default option to recommended mergerfs options
+  * Update locales
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Jan 2017 09:26:58 -0600
+
 openmediavault-unionfilesystems (3.1.9) stable; urgency=medium
 
   * Update the list of available Mergerfs policies.
