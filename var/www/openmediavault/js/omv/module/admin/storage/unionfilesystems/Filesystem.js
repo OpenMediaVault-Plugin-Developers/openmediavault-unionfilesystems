@@ -149,7 +149,7 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Filesystem', {
                 xtype: 'textfield',
                 name: 'options',
                 fieldLabel: _('Options'),
-                value: 'defaults,allow_other'
+                value: 'defaults,allow_other,direct_io,use_ino'
             }]
         }];
     }
