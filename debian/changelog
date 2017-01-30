@@ -1,7 +1,13 @@
+openmediavault-unionfilesystems (3.1.11) stable; urgency=medium
+
+  * Adapt filesystem class to OMV 3.0.60.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 30 Jan 2017 16:41:15 +0100
+
 openmediavault-unionfilesystems (3.1.10) stable; urgency=low
 
-  * Change default option to recommended mergerfs options
-  * Update locales
+  * Change default option to the recommended mergerfs options.
+  * Update locales.
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 26 Jan 2017 09:26:58 -0600
 
