@@ -23,6 +23,7 @@ use OMV\Config\ConfigObject;
 use OMV\Exception;
 use OMV\ExecException;
 use OMV\System\Filesystem\Backend\BackendAbstract;
+use OMV\System\MountPoint;
 use OMV\System\Process;
 
 class Union implements IFilesystem, ISharedFolderCandidate
@@ -63,9 +64,9 @@ class Union implements IFilesystem, ISharedFolderCandidate
     private $uuid;
 
     /**
-     * @param string          $uuid    The UUID or the mount point of the
-     *                                 filesystem.
-     * @param BackendAbstract $backend The backend that manages this filesystem.
+     * @param ConfigObject    $object     The configuration object for the
+     *                                    filesystem.
+     * @param BackendAbstract $backend    The backend that manages this filesystem.
      */
     public function __construct(ConfigObject $object, BackendAbstract $backend)
     {
@@ -82,7 +83,7 @@ class Union implements IFilesystem, ISharedFolderCandidate
         $this->type = $this->backend->getType();
         $this->uuid = $object->get('uuid');
 
-        $this->mountPoint = Filesystem::buildMountPath($this->uuid);
+        $this->mountPoint = MountPoint::buildPath($this->uuid);
     }
 
     /**
@@ -375,7 +376,9 @@ class Union implements IFilesystem, ISharedFolderCandidate
     }
 
     /**
-     * Mount the filesystem by its mount point.
+     * Mount the filesystem by its mount point. Note that this version of the
+     * method assumes that there's a corresponding line in fstab for the
+     * mount point.
      *
      * @param string $options Additional mount options. Empty string by default.
      *
@@ -385,7 +388,9 @@ class Union implements IFilesystem, ISharedFolderCandidate
      */
     public function mount($options = '')
     {
-        throw new Exception('Unsupported operation.');
+        $cmd = new Process('mount', '-v', escapeshellarg($this->mountPoint));
+        $cmd->setRedirect2to1();
+        $cmd->execute();
     }
 
     /**
@@ -412,6 +417,16 @@ class Union implements IFilesystem, ISharedFolderCandidate
      */
     public function umount($force = false, $lazy = false)
     {
-        throw new Exception('Unsupported operation.');
+        $args = ['fusermount', '-u'];
+
+        if ($lazy) {
+            $args[] = '-z';
+        }
+
+        $args[] = escapeshellarg($this->mountPoint);
+
+        $cmd = new Process(...$args);
+        $cmd->setRedirect2to1();
+        $cmd->execute();
     }
 }

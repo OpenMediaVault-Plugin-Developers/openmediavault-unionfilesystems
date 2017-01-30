@@ -25,6 +25,7 @@ use OMV\Engine\Module\Manager as ModuleManager;
 use OMV\Rpc\Rpc;
 use OMV\Rpc\ServiceAbstract;
 use OMV\System\Filesystem\Filesystem;
+use OMV\System\MountPoint;
 use OMV\Uuid;
 
 class UnionFilesystems extends ServiceAbstract
@@ -275,7 +276,7 @@ class UnionFilesystems extends ServiceAbstract
      */
     private function setMntentEntry(ConfigObject $object)
     {
-        $mountPoint = Filesystem::buildMountPath($object->get('uuid'));
+        $mountPoint = MountPoint::buildPath($object->get('uuid'));
 
         $mntentEntry = [
             'uuid' => $object->get('self-mntentref'),
