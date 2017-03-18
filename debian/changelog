@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (3.1.12) stable; urgency=low
+
+  * Improve foreign content handling
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 18 Mar 2017 12:22:40 -0500
+
 openmediavault-unionfilesystems (3.1.11) stable; urgency=medium
 
   * Adapt filesystem class to OMV 3.0.60.

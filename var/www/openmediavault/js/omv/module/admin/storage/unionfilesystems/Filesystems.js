@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014-2015 OpenMediaVault Plugin Developers
+ * Copyright (C) 2014-2017 OpenMediaVault Plugin Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,15 +35,18 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Filesystems', {
     reloadOnActivate: true,
 
     columns: [{
+        xtype: "textcolumn",
         header: _('UUID'),
         hidden: true,
         dataIndex: 'uuid'
     }, {
+        xtype: "textcolumn",
         header: _('Name'),
         flex: 1,
         sortable: true,
         dataIndex: 'name'
     }, {
+        xtype: "textcolumn",
         header: _('Branches'),
         flex: 1,
         sortable: true,
