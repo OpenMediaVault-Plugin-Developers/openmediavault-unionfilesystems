@@ -103,11 +103,6 @@ class UnionFilesystems extends ServiceAbstract
                 ],
             ];
 
-            // Filter out used filesystems.
-            if ($this->database->exists($this->dataModelPath, $filter)) {
-                continue;
-            }
-
             // Exclude these types.
             if ($entry['type'] == 'fuse.mergerfs' || $entry['type'] == 'none') {
                 continue;

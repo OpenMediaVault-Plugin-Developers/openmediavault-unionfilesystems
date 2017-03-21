@@ -38,7 +38,7 @@ foreach ($objects['data'] as $object) {
     }, $object['mntentref']);
 
     echo sprintf(
-        '%s %s fuse.mergerfs %s 0 0\n',
+        "%s %s fuse.mergerfs %s 0 0\n",
         implode(':', $sourceMounts),
         $mountPoint,
         implode(',', $options)
