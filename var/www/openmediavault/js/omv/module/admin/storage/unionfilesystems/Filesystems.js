@@ -35,18 +35,18 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Filesystems', {
     reloadOnActivate: true,
 
     columns: [{
-        xtype: "textcolumn",
+        xtype: 'textcolumn',
         header: _('UUID'),
         hidden: true,
         dataIndex: 'uuid'
     }, {
-        xtype: "textcolumn",
+        xtype: 'textcolumn',
         header: _('Name'),
         flex: 1,
         sortable: true,
         dataIndex: 'name'
     }, {
-        xtype: "textcolumn",
+        xtype: 'textcolumn',
         header: _('Branches'),
         flex: 1,
         sortable: true,

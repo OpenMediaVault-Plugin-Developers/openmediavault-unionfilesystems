@@ -37,10 +37,12 @@ foreach ($objects['data'] as $object) {
         return $mntent['dir'];
     }, $object['mntentref']);
 
-    echo sprintf(
-        "%s %s fuse.mergerfs %s 0 0\n",
+    $rowData = sprintf(
+        '%s %s fuse.mergerfs %s 0 0',
         implode(':', $sourceMounts),
         $mountPoint,
         implode(',', $options)
     );
+
+    echo $rowData . PHP_EOL;
 }
