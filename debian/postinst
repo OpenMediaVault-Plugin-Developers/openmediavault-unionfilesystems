@@ -2,82 +2,23 @@
 
 set -e
 
-. /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
-
-migrate_to_3_1_1()
-{
-    pool_index=1
-    pool_count=0
-    pool_xpath="/config/services/unionfilesystems/pools/pool"
-
-    pool_count=$(omv_config_get_count "$pool_xpath")
-
-    while [ "$pool_index" -lt "$pool_count" ] || [ "$pool_index" -eq "$pool_count" ]; do
-        xpath="$pool_xpath[$pool_index]"
-
-        # Rename/move some elements.
-        omv_config_rename "$xpath/mntentref" "self-mntentref"
-        omv_config_move "$xpath/branches/mntentref" "$xpath"
-
-        # Remove unneeded elements.
-        omv_config_delete "$xpath/branches"
-
-        # Add/set default values.
-        omv_config_add_key "$xpath" "create-policy" "epmfs"
-        omv_config_add_key "$xpath" "min-free-space" "4G"
-        omv_config_update "$xpath/options" "defaults,allow_other"
-
-        if [ "$(omv_config_get "$xpath/type")" = "aufs" ]; then
-            omv_config_update "$xpath/create-policy" "tdp"
-            omv_config_update "$xpath/options" "sum"
-        fi
-
-        pool_index=$((pool_index + 1))
-    done
-}
-
-migrate_to_3_1_6()
-{
-    xpath="/config/services/unionfilesystems"
-
-    # Rename and relocate each filesystem.
-    omv_config_move "$xpath/pools/pool" "$xpath"
-    omv_config_rename "$xpath/pool" "filesystem"
-
-    # Convert everything to fuse.mergerfs.
-    omv_config_delete "$xpath/filesystem/type"
-    omv_config_update "/config/system/fstab/mntent/type[. = 'aufs' or . = 'mergerfs' or . = 'mhddfs']" "fuse.mergerfs"
-
-    # Set default values on the filesystem to prevent future fstab breakage.
-    omv_config_update "$xpath/filesystem/create-policy" "epmfs"
-    omv_config_update "$xpath/filesystem/min-free-space" "4G"
-    omv_config_update "$xpath/filesystem/options" "defaults,allow_other"
-}
 
 case "$1" in
     configure)
-        # Add the default configuration
-        if ! omv_config_exists "/config/services/unionfilesystems"; then
-            omv_config_add_node "/config/services" "unionfilesystems"
-        fi
-
-        # Migrate to 3.1.1.
-        # TODO: Remove migration with the next major OMV release.
-        if dpkg --compare-versions "$2" lt-nl "3.1.1"; then
-            migrate_to_3_1_1
-        fi
-
-        # Migrate to 3.1.6
-        # TODO: Remove migration with the next major OMV release.
-        if dpkg --compare-versions "$2" lt-nl "3.1.6"; then
-            migrate_to_3_1_6
-        fi
-
         # Activate package triggers. These triggers are only set during the
         # package installation.
         dpkg-trigger update-fixperms
         dpkg-trigger update-locale
+
+        # Create the default configuration.
+        echo "Updating configuration database ..."
+        omv-confdbadm create "conf.service.unionfilesystems"
+
+        if [ -n "$2" ]
+        then
+            omv-confdbadm migrate "conf.service.unionfilesystems" "$2"
+        fi
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
