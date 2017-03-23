@@ -13,5 +13,5 @@ Depends: mergerfs,
          php5-cli,
          ${misc:Depends}
 Description: Union filesystems plugin for OpenMediaVault.
- Makes it possible to mount drives under a single mountpoint with an union
- filesystem such as aufs, mhddfs and mergerfs.
+ Makes it possible to mount drives under a single mountpoint with the union
+ filesystem mergerfs.
