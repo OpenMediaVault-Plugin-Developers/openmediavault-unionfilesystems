@@ -1,12 +1,18 @@
+openmediavault-unionfilesystems (3.1.14) stable; urgency=medium
+
+  * Switch the database generation to use omv-confdbadm.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 23 Mar 2017 19:20:36 +0100
+
 openmediavault-unionfilesystems (3.1.13) stable; urgency=low
 
-  * Fix linefeed issue in fstab
+  * Fix linefeed issue in fstab.
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 21 Mar 2017 10:57:54 -0500
 
 openmediavault-unionfilesystems (3.1.12) stable; urgency=low
 
-  * Improve foreign content handling
+  * Improve foreign content handling.
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 18 Mar 2017 12:22:40 -0500
 
