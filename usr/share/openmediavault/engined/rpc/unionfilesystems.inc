@@ -30,10 +30,14 @@ use OMV\Uuid;
 
 class UnionFilesystems extends ServiceAbstract
 {
-    /** @var Database */
+    /**
+     * @var Database
+     */
     private $database;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $dataModelPath = 'conf.service.unionfilesystems.filesystem';
 
     public function __construct(Database $database = null)
