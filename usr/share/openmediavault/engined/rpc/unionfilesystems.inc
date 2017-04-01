@@ -86,23 +86,6 @@ class UnionFilesystems extends ServiceAbstract
         $entries = Rpc::call('FsTab', 'enumerateEntries', [], $context);
 
         foreach ($entries as $entry) {
-            // Create filter to exclude all filesystems already used.  If we're
-            // editing a filesystem we don't want to exclude the filesystems
-            // already in it.
-            $filter = [
-                'operator' => 'and',
-                'arg0' => [
-                    'operator' => 'stringEquals',
-                    'arg0' => 'mntentref',
-                    'arg1' => $entry['uuid'],
-                ],
-                'arg1' => [
-                    'operator' => 'stringNotEquals',
-                    'arg0' => 'uuid',
-                    'arg1' => $params['uuid'],
-                ],
-            ];
-
             // Exclude these types.
             if ($entry['type'] == 'fuse.mergerfs' || $entry['type'] == 'none') {
                 continue;
