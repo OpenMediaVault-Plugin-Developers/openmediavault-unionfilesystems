@@ -1,3 +1,11 @@
+openmediavault-unionfilesystems (3.1.15) stable; urgency=medium
+
+  * OMV 3.0.68 changed the default mount point directory which broke existing
+    mergerfs setups. This is now fixed by not calculating the mount point on the
+    fly in various places.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 02 Apr 2017 16:56:03 +0200
+
 openmediavault-unionfilesystems (3.1.14) stable; urgency=medium
 
   * Switch the database generation to use omv-confdbadm.
