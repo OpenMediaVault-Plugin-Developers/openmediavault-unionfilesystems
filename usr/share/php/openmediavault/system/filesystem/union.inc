@@ -207,11 +207,21 @@ class Union implements IFilesystem, ISharedFolderCandidate
     /**
      * Get the device of the storage device which contains this file system.
      *
-     * @return string
+     * @return string|false
      */
     public function getParentDeviceFile()
     {
-        return null;
+        return false;
+    }
+
+    /**
+     * Get a predictable device file.
+     *
+     * @return string
+     */
+    public function getPredictableDeviceFile()
+    {
+        return $this->getDeviceFile();
     }
 
     /**
