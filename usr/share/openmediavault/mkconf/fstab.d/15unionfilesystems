@@ -20,13 +20,13 @@ require_once '/usr/share/php/openmediavault/autoloader.inc';
 require_once '/usr/share/php/openmediavault/globals.inc';
 
 use OMV\Rpc\Rpc;
-use OMV\System\MountPoint;
 
 $context = ['username' => 'admin', 'role' => OMV_ROLE_ADMINISTRATOR];
 $objects = Rpc::call('UnionFilesystems', 'getList', ['start' => 0, 'limit' => null], $context, Rpc::MODE_REMOTE);
 
 foreach ($objects['data'] as $object) {
-    $mountPoint = MountPoint::buildPath($object['uuid']);
+    $mntent = Rpc::call('FsTab', 'get', ['uuid' => $object['self-mntentref']], $context, Rpc::MODE_REMOTE);
+    $mountPoint = $mntent['dir'];
 
     $options = !empty($object['options']) ? explode(',', $object['options']) : [];
     $options[] = 'category.create=' . $object['create-policy'];
@@ -34,6 +34,7 @@ foreach ($objects['data'] as $object) {
 
     $sourceMounts = array_map(function ($mntentref) use ($context) {
         $mntent = Rpc::call('FsTab', 'get', ['uuid' => $mntentref], $context, Rpc::MODE_REMOTE);
+
         return $mntent['dir'];
     }, $object['mntentref']);
 

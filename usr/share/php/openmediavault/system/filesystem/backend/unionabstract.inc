@@ -20,10 +20,7 @@
 namespace OMV\System\Filesystem\Backend;
 
 use OMV\Config\Database;
-use OMV\Config\DatabaseException;
 use OMV\Exception;
-use OMV\System\Filesystem\Union as UnionFilesystem;
-use SplFileObject;
 
 abstract class UnionAbstract extends BackendAbstract
 {
@@ -82,7 +79,7 @@ abstract class UnionAbstract extends BackendAbstract
      * Check whether the given filesystem identifier is represented by this
      * filesystem backend.
      *
-     * @param string $id The filesystem identifier (e.g. UUID or device path).
+     * @param string $id The filesystem identifier (e.g. UUID or device path)
      *
      * @return bool
      */
@@ -114,7 +111,7 @@ abstract class UnionAbstract extends BackendAbstract
      *
      * @param array $args
      *
-     * @return \OMV\System\Filesystem\UnionFilesystem
+     * @return \OMV\System\Filesystem\Union
      */
     public function getImpl($args)
     {

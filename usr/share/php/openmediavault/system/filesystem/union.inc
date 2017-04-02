@@ -19,7 +19,6 @@
 
 namespace OMV\System\Filesystem;
 
-use OMV\Config\ConfigObject;
 use OMV\Exception;
 use OMV\ExecException;
 use OMV\System\Filesystem\Backend\BackendAbstract;
@@ -64,26 +63,19 @@ class Union implements IFilesystem, ISharedFolderCandidate
     private $uuid;
 
     /**
-     * @param ConfigObject    $object     The configuration object for the
-     *                                    filesystem.
-     * @param BackendAbstract $backend    The backend that manages this filesystem.
+     * @param string          $uuid       The UUID of the file system
+     * @param string          $mountPoint The mount point of the file system
+     * @param string          $label      The label of the file system
+     * @param BackendAbstract $backend    The backend that manages this filesystem
      */
-    public function __construct(ConfigObject $object, BackendAbstract $backend)
+    public function __construct($uuid, $mountPoint, $label, BackendAbstract $backend)
     {
-        if ($object->getModelId() !== $this->dataModelPath) {
-            throw new Exception(sprintf(
-                'Expected the param \'$object\' the be a ConfigObject with the model ID: \'%s\'',
-                $this->dataModelPath
-            ));
-        }
-
         $this->backend = $backend;
 
-        $this->label = $object->get('name');
+        $this->label = $label;
+        $this->mountPoint = $mountPoint;
         $this->type = $this->backend->getType();
-        $this->uuid = $object->get('uuid');
-
-        $this->mountPoint = MountPoint::buildPath($this->uuid);
+        $this->uuid = $uuid;
     }
 
     /**
@@ -255,7 +247,7 @@ class Union implements IFilesystem, ISharedFolderCandidate
      *                    false. The following fields are included: devicefile,
      *                    type, blocks, size, used, available, percentage and
      *                    mountpoint. Please note, the fields size, used and
-     *                    available are strings and their unit is B (bytes).
+     *                    available are strings and their unit is B (bytes)
      *
      * @throws ExecException
      */
@@ -290,7 +282,7 @@ class Union implements IFilesystem, ISharedFolderCandidate
     }
 
     /**
-     * Get the filesystem type, e.g. aufs, btrfs, mhddfs.
+     * Get the filesystem type, e.g. btrfs, mergerfs.
      *
      * @return string
      */
@@ -390,7 +382,7 @@ class Union implements IFilesystem, ISharedFolderCandidate
      * method assumes that there's a corresponding line in fstab for the
      * mount point.
      *
-     * @param string $options Additional mount options. Empty string by default.
+     * @param string $options Additional mount options. Empty string by default
      *
      * @return void
      *
@@ -418,8 +410,8 @@ class Union implements IFilesystem, ISharedFolderCandidate
     /**
      * Unmount the filesystem.
      *
-     * @param bool $force Force the unmount.
-     * @param bool $lazy  Do a lazy unmount.
+     * @param bool $force Force the unmount
+     * @param bool $lazy  Do a lazy unmount
      *
      * @return void
      *

@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace OMV\System\Filesystem\Backend;
 
 use OMV\Config\Database;
@@ -25,6 +26,11 @@ use SplFileObject;
 
 class Mergerfs extends UnionAbstract
 {
+    /**
+     * @var string
+     */
+    private $mountPointDataModelPath = 'conf.system.filesystem.mountpoint';
+
     public function __construct(Database $database)
     {
         parent::__construct($database);
@@ -35,7 +41,7 @@ class Mergerfs extends UnionAbstract
 
     /**
      * @param string $args A string with either the UUID, mount point or the
-     *                     fsname.
+     *                     fsname
      *
      * @return Union
      *
@@ -59,8 +65,9 @@ class Mergerfs extends UnionAbstract
         }
 
         $object = $this->database->get($this->dataModelPath, $uuid);
+        $mountPointObject = $this->database->get($this->mountPointDataModelPath, $object->get('self-mntentref'));
 
-        return new Union($object, $this);
+        return new Union($object->get('uuid'), $mountPointObject->get('dir'), $object->get('name'), $this);
     }
 
     /**
@@ -87,7 +94,7 @@ class Mergerfs extends UnionAbstract
     }
 
     /**
-     * Fetch the mount point frin either '/etc/fstab' or /proc/mounts'.
+     * Fetch the mount point from either '/etc/fstab' or '/proc/mounts'.
      *
      * @param string $fsname
      * @param string $type

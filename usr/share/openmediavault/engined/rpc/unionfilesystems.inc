@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace OMV\Engined\Rpc;
 
 use Exception;
@@ -73,8 +74,8 @@ class UnionFilesystems extends ServiceAbstract
      * Enumerate the available filesystem candidates that can be added to a
      * union filesystem.
      *
-     * @param $params  The method parameters.
-     * @param $context The context of the caller.
+     * @param $params  The method parameters
+     * @param $context The context of the caller
      *
      * @return array
      */
@@ -112,8 +113,8 @@ class UnionFilesystems extends ServiceAbstract
     /**
      * Get a list of the existing union filesystems.
      *
-     * @param $params  The method parameters.
-     * @param $context The context of the caller.
+     * @param $params  The method parameters
+     * @param $context The context of the caller
      *
      * @return array
      */
@@ -152,8 +153,8 @@ class UnionFilesystems extends ServiceAbstract
     /**
      * Get the configuration for a single existing union filesystem.
      *
-     * @param $params  The method parameters.
-     * @param $context The context of the caller.
+     * @param $params  The method parameters
+     * @param $context The context of the caller
      *
      * @return array
      */
@@ -170,8 +171,8 @@ class UnionFilesystems extends ServiceAbstract
     /**
      * Set the configuration for a single new or existing union filesystem.
      *
-     * @param $params  The method parameters.
-     * @param $context The context of the caller.
+     * @param $params  The method parameters
+     * @param $context The context of the caller
      *
      * @return array
      */
@@ -200,17 +201,10 @@ class UnionFilesystems extends ServiceAbstract
         // UUID.
         $this->database->set($object);
 
-        // Create or update the mntent entry.
-        $selfMntent = $this->setMntentEntry($object);
-
-        // The fstab module does not mark itself as dirty when a mntent
-        // configuration is modified, only when created or deleted.
-        if (!$isNewObject) {
-            $moduleManager = ModuleManager::getInstance();
-            $moduleManager->setModuleDirty('fstab');
-        }
-
+        // If it's a new entry we'll create a new mntent.
         if ($isNewObject) {
+            $selfMntent = $this->createMntentEntry($object);
+
             try {
                 $object->set('self-mntentref', $selfMntent['uuid']);
 
@@ -223,14 +217,21 @@ class UnionFilesystems extends ServiceAbstract
             }
         }
 
+        // The fstab module does not mark itself as dirty when a mntent
+        // configuration is modified, only when created or deleted.
+        if (!$isNewObject) {
+            $moduleManager = ModuleManager::getInstance();
+            $moduleManager->setModuleDirty('fstab');
+        }
+
         return $object->getAssoc();
     }
 
     /**
      * Delete the configuration of a single existing union filesystem.
      *
-     * @param $params  The method parameters.
-     * @param $context The context of the caller.
+     * @param $params  The method parameters
+     * @param $context The context of the caller
      *
      * @return void
      */
@@ -247,13 +248,17 @@ class UnionFilesystems extends ServiceAbstract
     }
 
     /**
-     * Create or update a mntent configuration object from a configuration object.
+     * Create a mntent configuration object from a configuration object.
      *
-     * @param ConfigObject $object The object to create a mntent entry for.
+     * NOTE: Currently this should only be used when creating a new file system
+     * as it will calculate the mount point every time. This can in turn break
+     * existing setups if the default mount point directory has changed.
      *
-     * @return string Returns the mntentref for the mntent entry.
+     * @param ConfigObject $object The object to create a mntent entry for
+     *
+     * @return string Returns the mntentref for the mntent entry
      */
-    private function setMntentEntry(ConfigObject $object)
+    private function createMntentEntry(ConfigObject $object)
     {
         $mountPoint = MountPoint::buildPath($object->get('uuid'));
 
