@@ -1,3 +1,10 @@
+openmediavault-unionfilesystems (3.1.16) stable; urgency=medium
+
+  * Make sure plugin works correctly when a file system is mounted with a path
+    instead of UUID=.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 13 Apr 2017 23:12:43 +0200
+
 openmediavault-unionfilesystems (3.1.15) stable; urgency=medium
 
   * OMV 3.0.68 changed the default mount point directory which broke existing
