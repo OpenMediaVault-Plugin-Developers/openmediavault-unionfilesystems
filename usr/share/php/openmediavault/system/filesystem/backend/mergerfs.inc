@@ -105,7 +105,7 @@ class Mergerfs extends UnionAbstract
      */
     private static function fetchMountPointFromFstabByFsnameAndType($fsname, $type)
     {
-        $mountsFile = strpos($fsname, DIRECTORY_SEPARATOR) !== false ? '/etc/fstab' : '/proc/mounts';
+        $mountsFile = strpos($fsname, DIRECTORY_SEPARATOR) === 0 ? '/etc/fstab' : '/proc/mounts';
 
         foreach (new SplFileObject($mountsFile) as $content) {
             $splitContent = preg_split('/\s+/', $content);
