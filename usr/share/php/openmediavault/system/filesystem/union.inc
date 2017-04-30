@@ -314,6 +314,36 @@ class Union implements IFilesystem, ISharedFolderCandidate
     }
 
     /**
+     * Check whether the device has a /dev/disk/by-id/xxx device path.
+     *
+     * @return bool
+     */
+    public function hasDeviceFileById()
+    {
+        return false;
+    }
+
+    /**
+     * Check whether the filesystem has a /dev/disk/by-label/xxx device path.
+     *
+     * @return bool
+     */
+    public function hasDeviceFileByLabel()
+    {
+        return false;
+    }
+
+    /**
+     * Check whether the filesystem has a /dev/disk/by-uuid/xxx device path.
+     *
+     * @return bool
+     */
+    public function hasDeviceFileByUuid()
+    {
+        return false;
+    }
+
+    /**
      * Check if the filesystem has a label.
      *
      * @return bool
@@ -343,36 +373,6 @@ class Union implements IFilesystem, ISharedFolderCandidate
     public function hasUuid()
     {
         return !empty($this->getUuid());
-    }
-
-    /**
-     * Check whether the device has a /dev/disk/by-id/xxx device path.
-     * @return Returns TRUE if a disk/by-id device path exists,
-     *   otherwise FALSE.
-     */
-    public function hasDeviceFileById()
-    {
-        return FALSE;
-    }
-
-    /**
-     * Check whether the filesystem has a /dev/disk/by-uuid/xxx device path.
-     * @return Returns TRUE if a disk/by-uuid device path exists,
-     *   otherwise FALSE.
-     */
-    public function hasDeviceFileByUuid()
-    {
-        return FALSE;
-    }
-
-    /**
-     * Check whether the filesystem has a /dev/disk/by-label/xxx device path.
-     * @return Returns TRUE if a disk/by-label device path exists,
-     *   otherwise FALSE.
-     */
-    public function hasDeviceFileByLabel()
-    {
-        return FALSE;
     }
 
     /**
