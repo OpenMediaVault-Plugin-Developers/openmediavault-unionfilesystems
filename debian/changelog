@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (3.1.17) stable; urgency=low
+
+  * Update for OMV 3.0.74
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 30 Apr 2017 12:10:00 -0500
+
 openmediavault-unionfilesystems (3.1.16) stable; urgency=medium
 
   * Make sure plugin works correctly when a file system is mounted with a path

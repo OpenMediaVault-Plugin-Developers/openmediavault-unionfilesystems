@@ -106,6 +106,36 @@ abstract class UnionAbstract extends BackendAbstract
     }
 
     /**
+     * Check whether the device has a /dev/disk/by-id/xxx device path.
+     * @return Returns TRUE if a disk/by-id device path exists,
+     *   otherwise FALSE.
+     */
+    public function hasDeviceFileById()
+    {
+        return FALSE;
+    }
+
+    /**
+     * Check whether the filesystem has a /dev/disk/by-uuid/xxx device path.
+     * @return Returns TRUE if a disk/by-uuid device path exists,
+     *   otherwise FALSE.
+     */
+    public function hasDeviceFileByUuid()
+    {
+        return FALSE;
+    }
+
+    /**
+     * Check whether the filesystem has a /dev/disk/by-label/xxx device path.
+     * @return Returns TRUE if a disk/by-label device path exists,
+     *   otherwise FALSE.
+     */
+    public function hasDeviceFileByLabel()
+    {
+        return FALSE;
+    }
+
+    /**
      * Get the object of the class that represents and implements a filesystem
      * of this filesystem backend.
      *
