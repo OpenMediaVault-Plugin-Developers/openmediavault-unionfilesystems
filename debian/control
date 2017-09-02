@@ -9,8 +9,8 @@ XB-Plugin-Section: filesystems
 Package: openmediavault-unionfilesystems
 Architecture: all
 Depends: mergerfs,
-         openmediavault (>= 3.0.74),
-         php5-cli,
+         openmediavault (>= 4.0.4),
+         php-cli,
          ${misc:Depends}
 Description: Union filesystems plugin for OpenMediaVault.
  Makes it possible to mount drives under a single mountpoint with the union
