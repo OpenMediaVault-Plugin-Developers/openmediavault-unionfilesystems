@@ -55,9 +55,10 @@ class Mergerfs extends UnionAbstract
             // Assume we got the mount directory.
             $mountPoint = $args;
 
-            // Check if it's the real fsname and handle it (the real fsname
-            // contains ':' to separate the branches).
-            if (strpos($args, ':') !== false) {
+            // Check if it's the real fsname or if a fsname has been given and handle it (the real fsname
+            // contains ':' to separate the branches, there's likely no DIRECTORY_SEPARATOR in a given name,
+            // maybe this should be enforced).
+            if (strpos($args, ':') !== false || strpos($args, DIRECTORY_SEPARATOR) === false) {
                 $mountPoint = self::fetchMountPointFromFstabByFsnameAndType($args, $this->type);
             }
 
