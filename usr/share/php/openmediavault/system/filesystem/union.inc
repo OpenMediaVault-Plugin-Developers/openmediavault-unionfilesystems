@@ -25,7 +25,7 @@ use OMV\System\Filesystem\Backend\BackendAbstract;
 use OMV\System\MountPoint;
 use OMV\System\Process;
 
-class Union implements IFilesystem, ISharedFolderCandidate
+class Union implements FilesystemInterface, SharedFolderCandidateInterface
 {
     /**
      * @var BackendAbstract
