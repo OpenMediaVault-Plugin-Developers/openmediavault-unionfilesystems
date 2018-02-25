@@ -9,7 +9,7 @@ XB-Plugin-Section: filesystems
 Package: openmediavault-unionfilesystems
 Architecture: all
 Depends: mergerfs,
-         openmediavault (>= 4.0.4),
+         openmediavault (>= 4.1.0),
          php-cli,
          ${misc:Depends}
 Description: Union filesystems plugin for OpenMediaVault.
