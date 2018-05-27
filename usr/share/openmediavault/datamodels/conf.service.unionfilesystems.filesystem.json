@@ -1,52 +1,52 @@
 {
-    "type": "config",
-    "title": "Union Filesystem",
-    "id": "conf.service.unionfilesystems.filesystem",
-    "queryinfo": {
-        "xpath": "/config/services/unionfilesystems/filesystem",
-        "iterable": true,
-        "idproperty": "uuid"
-    },
-    "properties": {
-        "uuid": {
-            "description": "The unique identifier for a union mount",
-            "type": "string",
-            "format": "uuidv4"
-        },
-        "name": {
-            "description": "A virtual label for a union mount",
-            "type": "string",
-            "minLength": 1
-        },
-        "self-mntentref": {
-            "description": "Reference to a mount entity",
-            "type": "string",
-            "format": "uuidv4"
-        },
-        "mntentref": {
-            "description": "Filesystems used in a union mount",
-            "type": "array",
-            "items": {
-                "type": "string",
-                "format": "uuidv4"
-            },
-            "minItems": 2,
-            "uniqueItems": true
-        },
-        "create-policy": {
-            "description": "The policy used when creating files",
-            "type": "string",
-            "enum": ["all", "epall", "epff", "eplfs", "eplus", "epmfs", "eprand", "erofs", "ff", "lfs", "lus", "mfs", "newest", "rand"]
-        },
-        "min-free-space": {
-            "description": "The minimum free space left on a filesystem for it to be written to",
-            "type": "string",
-            "format": "regex",
-            "pattern": "/^[0-9]+[KMG]$/"
-        },
-        "options": {
-            "description": "Additional mount options",
-            "type": "string"
-        }
-    }
+	"type": "config",
+	"title": "Union Filesystem",
+	"id": "conf.service.unionfilesystems.filesystem",
+	"queryinfo": {
+		"xpath": "/config/services/unionfilesystems/filesystem",
+		"iterable": true,
+		"idproperty": "uuid"
+	},
+	"properties": {
+		"uuid": {
+			"description": "The unique identifier for a union mount",
+			"type": "string",
+			"format": "uuidv4"
+		},
+		"name": {
+			"description": "A virtual label for a union mount",
+			"type": "string",
+			"minLength": 1
+		},
+		"self-mntentref": {
+			"description": "Reference to a mount entity",
+			"type": "string",
+			"format": "uuidv4"
+		},
+		"mntentref": {
+			"description": "Filesystems used in a union mount",
+			"type": "array",
+			"items": {
+				"type": "string",
+				"format": "uuidv4"
+			},
+			"minItems": 2,
+			"uniqueItems": true
+		},
+		"create-policy": {
+			"description": "The policy used when creating files",
+			"type": "string",
+			"enum": ["all", "epall", "epff", "eplfs", "eplus", "epmfs", "eprand", "erofs", "ff", "lfs", "lus", "mfs", "newest", "rand"]
+		},
+		"min-free-space": {
+			"description": "The minimum free space left on a filesystem for it to be written to",
+			"type": "string",
+			"format": "regex",
+			"pattern": "^[0-9]+[KMG]$"
+		},
+		"options": {
+			"description": "Additional mount options",
+			"type": "string"
+		}
+	}
 }

@@ -1,3 +1,10 @@
+openmediavault-unionfilesystems (4.0.2) stable; urgency=low
+
+  * Fix the pattern attribute in the JSON schemas according to the ECMA 262
+    regular expression dialect.
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 27 May 2018 13:24:15 -0500
+
 openmediavault-unionfilesystems (4.0.1-1) stable; urgency=low
 
   * Adapt to new API.

@@ -1,45 +1,45 @@
 [{
-    "type": "rpc",
-    "id": "rpc.unionfilesystems.set",
-    "params": {
-        "type": "object",
-        "properties": {
-            "uuid": {
-                "type": "string",
-                "format": "uuidv4",
-                "required": true
-            },
-            "name": {
-                "type": "string",
-                "required": true
-            },
-            "self-mntentref": {
-                "type": "string",
-                "format": "uuidv4",
-                "required": true
-            },
-            "mntentref": {
-                "type": "array",
-                "items": {
-                    "type": "string",
-                    "format": "uuidv4"
-                },
-                "minItems": 2,
-                "uniqueItems": true,
-                "required": true
-            },
-            "create-policy": {
-                "type": "string",
-                "enum": ["all", "epall", "epff", "eplfs", "eplus", "epmfs", "eprand", "erofs", "ff", "lfs", "lus", "mfs", "newest", "rand"]
-            },
-            "min-free-space": {
-                "type": "string",
-                "format": "regex",
-                "pattern": "/^[0-9]+[KMG]$/"
-            },
-            "options": {
-                "type": "string"
-            }
-        }
-    }
+	"type": "rpc",
+	"id": "rpc.unionfilesystems.set",
+	"params": {
+		"type": "object",
+		"properties": {
+			"uuid": {
+				"type": "string",
+				"format": "uuidv4",
+				"required": true
+			},
+			"name": {
+				"type": "string",
+				"required": true
+			},
+			"self-mntentref": {
+				"type": "string",
+				"format": "uuidv4",
+				"required": true
+			},
+			"mntentref": {
+				"type": "array",
+				"items": {
+					"type": "string",
+					"format": "uuidv4"
+				},
+				"minItems": 2,
+				"uniqueItems": true,
+				"required": true
+			},
+			"create-policy": {
+				"type": "string",
+				"enum": ["all", "epall", "epff", "eplfs", "eplus", "epmfs", "eprand", "erofs", "ff", "lfs", "lus", "mfs", "newest", "rand"]
+			},
+			"min-free-space": {
+				"type": "string",
+				"format": "regex",
+				"pattern": "^[0-9]+[KMG]$"
+			},
+			"options": {
+				"type": "string"
+			}
+		}
+	}
 }]
