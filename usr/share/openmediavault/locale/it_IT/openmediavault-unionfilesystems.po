@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Marco, 2015
-# Paolo Velati <paolo.velati@gmail.com>, 2015-2016
+# Paolo Velati <paolo.velati@gmail.com>, 2015-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-26 09:25-0600\n"
-"PO-Revision-Date: 2017-01-26 15:25+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"PO-Revision-Date: 2017-09-21 18:01+0000\n"
+"Last-Translator: Paolo Velati <paolo.velati@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Add filesystem"
-msgstr ""
+msgstr "Aggiungi filesystem"
 
 msgid "All."
 msgstr "Tutti"
@@ -35,28 +35,28 @@ msgid "Device"
 msgstr "Dispositivo"
 
 msgid "Edit filesystem"
-msgstr ""
+msgstr "Modifica filesystem"
 
 msgid "Existing path, all."
-msgstr ""
+msgstr "Percorso esistente, tutti."
 
 msgid "Existing path, first found."
-msgstr ""
+msgstr "Percorso esistente, primo trovato."
 
 msgid "Existing path, least free space."
-msgstr ""
+msgstr "Percorso esistente, con il minimo spazio libero."
 
 msgid "Existing path, least used space."
-msgstr ""
+msgstr "Percorso esistente, con il minimo spazio utilizzato."
 
 msgid "Existing path, most free space."
 msgstr "Percorso esistente, con il maggior spazio libero."
 
 msgid "Existing path, random."
-msgstr ""
+msgstr "Percorso esistente, casuale."
 
 msgid "Filesystems"
-msgstr ""
+msgstr "Filesystem"
 
 msgid "First found."
 msgstr "Primo trovato."
@@ -68,7 +68,7 @@ msgid "Least free space."
 msgstr "Minimo spazio libero"
 
 msgid "Least used space."
-msgstr ""
+msgstr "Minimo spazio utilizzato."
 
 msgid "Minimum free space"
 msgstr "Minimo spazio libero"
@@ -91,13 +91,13 @@ msgid "Newest file."
 msgstr "File più recente."
 
 msgid "Options"
-msgstr ""
+msgstr "Opzioni"
 
 msgid "Random."
 msgstr "Random."
 
 msgid "Read-only."
-msgstr ""
+msgstr "Sola-lettura."
 
 msgid "Type"
 msgstr "Tipo"
@@ -112,4 +112,4 @@ msgid ""
 "When the minimum free space is reached on a filesystem it will not be "
 "written to unless all the other filesystem also has reached the limit. "
 "Format: {amount}{unit}. Allows the units K, M and G."
-msgstr ""
+msgstr "Quando lo spazio minimo libero viene raggiunto su un filesystem, non ci saranno più scritture su questo a meno che tutti gli altri filesystem non abbiano raggiunto il limite. Formato: {quantità} {unità}. Consente alle unità K, M e G."

@@ -4,14 +4,14 @@
 # 
 # Translators:
 # David Hönel <davidh1990@gmx.de>, 2015
-# Ettore Atalan <atalanttore@googlemail.com>, 2014-2015
+# Ettore Atalan <atalanttore@googlemail.com>, 2014-2015,2017
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-26 09:25-0600\n"
-"PO-Revision-Date: 2017-01-26 15:25+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"PO-Revision-Date: 2017-09-21 18:01+0000\n"
+"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Add filesystem"
-msgstr ""
+msgstr "Dateisystem hinzufügen"
 
 msgid "All."
 msgstr "Alle."
@@ -35,28 +35,28 @@ msgid "Device"
 msgstr "Gerät"
 
 msgid "Edit filesystem"
-msgstr ""
+msgstr "Dateisystem bearbeiten"
 
 msgid "Existing path, all."
-msgstr ""
+msgstr "Vorhandener Pfad, alle."
 
 msgid "Existing path, first found."
-msgstr ""
+msgstr "Vorhandener Pfad, zuerst gefunden."
 
 msgid "Existing path, least free space."
-msgstr ""
+msgstr "Vorhandener Pfad, geringster freier Speicherplatz."
 
 msgid "Existing path, least used space."
-msgstr ""
+msgstr "Vorhandener Pfad, geringster belegter Speicherplatz."
 
 msgid "Existing path, most free space."
 msgstr "Vorhandener Pfad, meister freier Speicherplatz."
 
 msgid "Existing path, random."
-msgstr ""
+msgstr "Vorhandener Pfad, zufällig."
 
 msgid "Filesystems"
-msgstr ""
+msgstr "Dateisysteme"
 
 msgid "First found."
 msgstr "Zuerst gefunden."
@@ -68,7 +68,7 @@ msgid "Least free space."
 msgstr "Geringster freier Speicherplatz."
 
 msgid "Least used space."
-msgstr ""
+msgstr "Geringster belegter Speicherplatz."
 
 msgid "Minimum free space"
 msgstr "Minimaler freier Speicherplatz"
@@ -91,13 +91,13 @@ msgid "Newest file."
 msgstr "Neueste Datei."
 
 msgid "Options"
-msgstr ""
+msgstr "Optionen"
 
 msgid "Random."
 msgstr "Zufällig"
 
 msgid "Read-only."
-msgstr ""
+msgstr "Nur lesen."
 
 msgid "Type"
 msgstr "Typ"

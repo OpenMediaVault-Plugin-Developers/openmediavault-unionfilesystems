@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
+# Axel Cantenys, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-26 09:25-0600\n"
-"PO-Revision-Date: 2017-01-26 15:25+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"PO-Revision-Date: 2017-11-04 11:14+0000\n"
+"Last-Translator: Axel Cantenys\n"
 "Language-Team: French (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,96 +19,96 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "Add filesystem"
-msgstr ""
+msgstr "Ajouter un système de fichier"
 
 msgid "All."
-msgstr ""
+msgstr "Tout."
 
 msgid "Branches"
-msgstr ""
+msgstr "Branches"
 
 msgid "Create policy"
-msgstr ""
+msgstr "Politique de création"
 
 msgid "Device"
-msgstr ""
+msgstr "Dispositif"
 
 msgid "Edit filesystem"
-msgstr ""
+msgstr "Modifier le système de fichier"
 
 msgid "Existing path, all."
-msgstr ""
+msgstr "Chemin existant, tout."
 
 msgid "Existing path, first found."
-msgstr ""
+msgstr "Chemin existant, premier trouvé."
 
 msgid "Existing path, least free space."
-msgstr ""
+msgstr "Chemin existant, le moins d'espace libre."
 
 msgid "Existing path, least used space."
-msgstr ""
+msgstr "Chemin existant, le moins d'espace utilisé."
 
 msgid "Existing path, most free space."
-msgstr ""
+msgstr "Chemin existant, le plus d'espace libre."
 
 msgid "Existing path, random."
-msgstr ""
+msgstr "Chemin existant, aléatoire."
 
 msgid "Filesystems"
-msgstr ""
+msgstr "Systèmes de fichiers"
 
 msgid "First found."
-msgstr ""
+msgstr "Premier trouvé."
 
 msgid "Label"
-msgstr ""
+msgstr "Label"
 
 msgid "Least free space."
-msgstr ""
+msgstr "Le moins d'espace libre."
 
 msgid "Least used space."
-msgstr ""
+msgstr "Le moins d'espace utilisé."
 
 msgid "Minimum free space"
-msgstr ""
+msgstr "Espace libre minimum"
 
 msgid "Most free space."
-msgstr ""
+msgstr "Le plus d'espace libre."
 
 msgid "Mount options"
-msgstr ""
+msgstr "Options de montage"
 
 msgid ""
 "NOTE: The changes won't take effect until you've restarted the system or "
 "manually remounted the filesystem."
-msgstr ""
+msgstr "Note : Les changements ne prendrons pas effet tant que vous ne redémarrez pas le système ou que vous ne remontiez le système de fichier."
 
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 msgid "Newest file."
-msgstr ""
+msgstr "Le plus récent fichier."
 
 msgid "Options"
-msgstr ""
+msgstr "Options"
 
 msgid "Random."
-msgstr ""
+msgstr "Aléatoire."
 
 msgid "Read-only."
-msgstr ""
+msgstr "Lecture uniquement."
 
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 msgid "UUID"
-msgstr ""
+msgstr "UUID"
 
 msgid "Union Filesystems"
-msgstr ""
+msgstr "Union de systèmes de fichiers"
 
 msgid ""
 "When the minimum free space is reached on a filesystem it will not be "
 "written to unless all the other filesystem also has reached the limit. "
 "Format: {amount}{unit}. Allows the units K, M and G."
-msgstr ""
+msgstr "Quand le minimum d'espace libre est atteint sur un système de fichier il ne sera plus écrit dessus sauf si tous les autres système de fichiers ont atteint leurs limites. Format : {quantité}{unité}. Autorise les unités K, M, et G."

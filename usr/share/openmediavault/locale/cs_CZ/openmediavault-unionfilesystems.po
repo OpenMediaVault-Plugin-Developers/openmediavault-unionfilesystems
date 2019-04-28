@@ -3,23 +3,23 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Pavel Borecki <pavel.borecki@gmail.com>, 2015
+# Pavel Borecki <pavel.borecki@gmail.com>, 2015,2017
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-unionfilesystems\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-26 09:25-0600\n"
-"PO-Revision-Date: 2017-01-26 15:25+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"PO-Revision-Date: 2017-09-23 20:34+0000\n"
+"Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-unionfilesystems/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: cs_CZ\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 msgid "Add filesystem"
-msgstr ""
+msgstr "Přidat souborový systém"
 
 msgid "All."
 msgstr "Vše."
@@ -28,34 +28,34 @@ msgid "Branches"
 msgstr "Větve"
 
 msgid "Create policy"
-msgstr "Vytvořit pravidlo"
+msgstr "Pravidla vytváření"
 
 msgid "Device"
 msgstr "Zařízení"
 
 msgid "Edit filesystem"
-msgstr ""
+msgstr "Upravit souborový systém"
 
 msgid "Existing path, all."
-msgstr ""
+msgstr "Existující umístění – vše."
 
 msgid "Existing path, first found."
-msgstr ""
+msgstr "Existující umístění – první nalezené."
 
 msgid "Existing path, least free space."
-msgstr ""
+msgstr "Existující umístění – nejméně volného prostoru."
 
 msgid "Existing path, least used space."
-msgstr ""
+msgstr "Existující umístění – nejvíce volného prostoru."
 
 msgid "Existing path, most free space."
-msgstr "Existující umístění, nejvíce volného místa."
+msgstr "Existující umístění – s nejvíce volného místa."
 
 msgid "Existing path, random."
-msgstr ""
+msgstr "Existující umístění – náhodné."
 
 msgid "Filesystems"
-msgstr ""
+msgstr "Souborové systémy"
 
 msgid "First found."
 msgstr "První nalezené."
@@ -67,7 +67,7 @@ msgid "Least free space."
 msgstr "S nejméně volného místa."
 
 msgid "Least used space."
-msgstr ""
+msgstr "S nejméně využitého prostoru."
 
 msgid "Minimum free space"
 msgstr "Přinejmenším volného místa"
@@ -81,7 +81,7 @@ msgstr "Předvolby připojení (mount)"
 msgid ""
 "NOTE: The changes won't take effect until you've restarted the system or "
 "manually remounted the filesystem."
-msgstr "UPOZORNĚNÍ: Změny se promítnou až po restartu serveru nebo ručním odpojení a připojení souborového systému. "
+msgstr "UPOZORNĚNÍ: Změny se projeví až po restartu serveru nebo ručním odpojení a připojení souborového systému. "
 
 msgid "Name"
 msgstr "Název"
@@ -90,13 +90,13 @@ msgid "Newest file."
 msgstr "Nejnovější soubor."
 
 msgid "Options"
-msgstr ""
+msgstr "Předvolby"
 
 msgid "Random."
 msgstr "Náhodné."
 
 msgid "Read-only."
-msgstr ""
+msgstr "Pouze pro čtení."
 
 msgid "Type"
 msgstr "Typ"
@@ -111,4 +111,4 @@ msgid ""
 "When the minimum free space is reached on a filesystem it will not be "
 "written to unless all the other filesystem also has reached the limit. "
 "Format: {amount}{unit}. Allows the units K, M and G."
-msgstr ""
+msgstr "Při dosažení spodní hranice volného prostoru nebude na tento souborový systém zapisováno až do okamžiku, než bude této hranice dosaženo i na ostatních souborových systémech. Forma zápisu:  {množství}{jednotka}. Je možné použít jednotky K (kilobajty), M (megabajty) a G (gigabajty)."
