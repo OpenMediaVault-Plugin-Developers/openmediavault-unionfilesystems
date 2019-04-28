@@ -14,9 +14,7 @@ case "$1" in
         # Create the default configuration.
         echo "Updating configuration database ..."
         omv-confdbadm create "conf.service.unionfilesystems"
-
-        if [ -n "$2" ]
-        then
+        if [ -n "$2" ]; then
             omv-confdbadm migrate "conf.service.unionfilesystems" "$2"
         fi
     ;;

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014-2017 OpenMediaVault Plugin Developers
+ * Copyright (C) 2014-2019 OpenMediaVault Plugin Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Filesystem', {
             readOnly: this.uuid !== OMV.UUID_UNDEFINED
         }, {
             xtype: 'hiddenfield',
-            name: 'self-mntentref',
+            name: 'self_mntentref',
             value: OMV.UUID_UNDEFINED
         }, {
             xtype: 'checkboxgridfield',
@@ -123,7 +123,7 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Filesystem', {
             },
             items: [{
                 xtype: 'combo',
-                name: 'create-policy',
+                name: 'create_policy',
                 fieldLabel: _('Create policy'),
                 queryMode: 'local',
                 store: Ext.create('OMV.module.admin.storage.unionfilesystems.MergerfsCreatePolicyStore'),
@@ -135,7 +135,7 @@ Ext.define('OMV.module.admin.storage.unionfilesystems.Filesystem', {
                 value: 'epmfs'
             }, {
                 xtype: 'textfield',
-                name: 'min-free-space',
+                name: 'min_free_space',
                 fieldLabel: _('Minimum free space'),
                 allowBlank: false,
                 maskRe: /[0-9KMG]/,

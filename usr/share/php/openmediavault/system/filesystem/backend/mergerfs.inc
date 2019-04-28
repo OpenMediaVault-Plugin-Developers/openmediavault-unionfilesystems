@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2014-2017 OpenMediaVault Plugin Developers.
+ * Copyright (C) 2014-2019 OpenMediaVault Plugin Developers.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ class Mergerfs extends UnionAbstract
         }
 
         $object = $this->database->get($this->dataModelPath, $uuid);
-        $mountPointObject = $this->database->get($this->mountPointDataModelPath, $object->get('self-mntentref'));
+        $mountPointObject = $this->database->get($this->mountPointDataModelPath, $object->get('self_mntentref'));
 
         return new Union($object->get('uuid'), $mountPointObject->get('dir'), $object->get('name'), $this);
     }

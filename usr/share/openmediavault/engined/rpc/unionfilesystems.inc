@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2017 OpenMediaVault Plugin Developers.
+ * Copyright (C) 2013-2019 OpenMediaVault Plugin Developers.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -206,7 +206,7 @@ class UnionFilesystems extends ServiceAbstract
             $selfMntent = $this->createMntentEntry($object);
 
             try {
-                $object->set('self-mntentref', $selfMntent['uuid']);
+                $object->set('self_mntentref', $selfMntent['uuid']);
 
                 $this->database->set($object);
             } catch (Exception $e) {
@@ -244,7 +244,7 @@ class UnionFilesystems extends ServiceAbstract
         $object = $this->database->get($this->dataModelPath, $params['uuid']);
         $this->database->delete($object);
 
-        Rpc::call('FsTab', 'delete', ['uuid' => $object->get('self-mntentref')], $context);
+        Rpc::call('FsTab', 'delete', ['uuid' => $object->get('self_mntentref')], $context);
     }
 
     /**
@@ -263,7 +263,7 @@ class UnionFilesystems extends ServiceAbstract
         $mountPoint = MountPoint::buildPath($object->get('uuid'));
 
         $mntentEntry = [
-            'uuid' => $object->get('self-mntentref'),
+            'uuid' => $object->get('self_mntentref'),
             'fsname' => $object->get('uuid'),
             'dir' => $mountPoint,
             'type' => 'fuse.mergerfs',

@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (5.0) stable; urgency=low
+
+  * Update for OMV 5.x
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 28 Apr 2019 07:48:30 -0500
+
 openmediavault-unionfilesystems (4.0.2) stable; urgency=low
 
   * Fix the pattern attribute in the JSON schemas according to the ECMA 262
