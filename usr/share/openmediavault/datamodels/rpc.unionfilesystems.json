@@ -13,7 +13,7 @@
 				"type": "string",
 				"required": true
 			},
-			"self-mntentref": {
+			"self_mntentref": {
 				"type": "string",
 				"format": "uuidv4",
 				"required": true
