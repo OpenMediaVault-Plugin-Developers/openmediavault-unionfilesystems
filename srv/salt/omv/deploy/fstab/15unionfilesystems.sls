@@ -19,10 +19,21 @@
 {% set _ = options.append('category.create=' + pool.create_policy) %}
 {% set _ = options.append('minfreespace=' + pool.min_free_space) %}
 
-create_filesystem_mountpoint_{{ pool.self_mntentref }}:
+create_unionfilesystem_mountpoint_{{ pool.self_mntentref }}:
   file.accumulated:
     - filename: "/etc/fstab"
     - text: "{{ branchDirs | join(':') }}\t\t{{ mntDir }}\tfuse.mergerfs\t{{ options | join(',') }}\t0 0"
     - require_in:
       - file: append_fstab_entries
+
+is_unionfilesystem_mountpoint_{{ pool.self_mntentref }}_mounted:
+  module.run:
+    - mount.is_mounted:
+      - name: {{ mntDir }}
+
+mount_unionfilesystem_mountpoint_{{ pool.self_mntentref }}:
+  cmd.run:
+    - name: "mount {{ mntDir }}"
+    - onfail:
+      - is_unionfilesystem_mountpoint_{{ pool.self_mntentref }}_mounted
 {% endfor %}
