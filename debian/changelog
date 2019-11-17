@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (5.0.1) stable; urgency=low
+
+  * Fix mounting issue on pool creation
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 17 Nov 2019 08:29:21 -0600
+
 openmediavault-unionfilesystems (5.0) stable; urgency=low
 
   * Update for OMV 5.x

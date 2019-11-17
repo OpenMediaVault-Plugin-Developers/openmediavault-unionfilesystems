@@ -26,14 +26,13 @@ create_unionfilesystem_mountpoint_{{ pool.self_mntentref }}:
     - require_in:
       - file: append_fstab_entries
 
-is_unionfilesystem_mountpoint_{{ pool.self_mntentref }}_mounted:
-  module.run:
-    - mount.is_mounted:
-      - name: {{ mntDir }}
-
-mount_unionfilesystem_mountpoint_{{ pool.self_mntentref }}:
-  cmd.run:
-    - name: "mount {{ mntDir }}"
-    - onfail:
-      - is_unionfilesystem_mountpoint_{{ pool.self_mntentref }}_mounted
+mount_filesystem_mountpoint_{{ pool.self_mntentref }}:
+  mount.mounted:
+    - name: {{ mntDir }}
+    - device: {{ branchDirs | join(':') }}
+    - fstype: "fuse.mergerfs"
+    - opts: {{ options }}
+    - mkmnt: True
+    - persist: False
+    - mount: True
 {% endfor %}
