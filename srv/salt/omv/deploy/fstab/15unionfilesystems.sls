@@ -6,18 +6,19 @@
   {'operator':'stringEquals', 'arg0':'uuid', 'arg1':pool.self_mntentref}) %}
 {% set mntDir = poolmount[0].dir %}
 
+{% set options = [] %}
+{% set options = pool.options.split(',') %}
+{% set _ = options.append('category.create=' + pool.create_policy) %}
+{% set _ = options.append('minfreespace=' + pool.min_free_space) %}
+
 {% set branchDirs = [] %}
 {% for mntent in pool.mntentref %}
 {% set branchDir = salt['omv_conf.get_by_filter'](
   'conf.system.filesystem.mountpoint',
   {'operator':'stringEquals', 'arg0':'uuid', 'arg1':mntent}) %}
 {% set _ = branchDirs.append(branchDir[0].dir) %}
+{% set _ = options.append('x-systemd.requires=' + branchDir[0].dir) %}
 {% endfor %}
-
-{% set options = [] %}
-{% set options = pool.options.split(',') %}
-{% set _ = options.append('category.create=' + pool.create_policy) %}
-{% set _ = options.append('minfreespace=' + pool.min_free_space) %}
 
 create_unionfilesystem_mountpoint_{{ pool.self_mntentref }}:
   file.accumulated:

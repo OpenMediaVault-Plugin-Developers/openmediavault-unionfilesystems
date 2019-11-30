@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (5.0.2) stable; urgency=low
+
+  * Add x-systemd.requires to fstab
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 30 Nov 2019 11:47:48 -0600
+
 openmediavault-unionfilesystems (5.0.1) stable; urgency=low
 
   * Fix mounting issue on pool creation
