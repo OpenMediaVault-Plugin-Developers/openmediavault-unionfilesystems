@@ -10,6 +10,7 @@
 {% set options = pool.options.split(',') %}
 {% set _ = options.append('category.create=' + pool.create_policy) %}
 {% set _ = options.append('minfreespace=' + pool.min_free_space) %}
+{% set _ = options.append('fsname=' + pool.name + ':' + pool.uuid) %}
 
 {% set branchDirs = [] %}
 {% for mntent in pool.mntentref %}
