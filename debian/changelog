@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (5.1.1) stable; urgency=low
+
+  * Add migration script
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 06 Mar 2020 07:56:22 -0600
+
 openmediavault-unionfilesystems (5.1) stable; urgency=low
 
   * Split out filesytem backend
