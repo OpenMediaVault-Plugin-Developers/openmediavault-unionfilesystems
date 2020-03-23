@@ -39,5 +39,5 @@ mount_filesystem_mountpoint_{{ pool.self_mntentref }}:
     - opts: {{ options }}
     - mkmnt: True
     - persist: False
-    - mount: True
+    - mount: {{ mount }}
 {% endfor %}
