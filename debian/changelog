@@ -1,3 +1,9 @@
+openmediavault-unionfilesystems (5.1.2) stable; urgency=low
+
+  * Mount only when fuse point is not mounted
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 23 Mar 2020 06:44:25 -0500
+
 openmediavault-unionfilesystems (5.1.1) stable; urgency=low
 
   * Add migration script
