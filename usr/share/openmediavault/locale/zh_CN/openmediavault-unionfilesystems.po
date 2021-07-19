@@ -37,43 +37,43 @@ msgid "Edit filesystem"
 msgstr "编辑文件系统"
 
 msgid "Existing path, all."
-msgstr "全部路径。"
+msgstr "已存在路径，全部"
 
 msgid "Existing path, first found."
-msgstr "第一个找到的路径。"
+msgstr "已存在路径，第一个找到的"
 
 msgid "Existing path, least free space."
-msgstr "最小剩余空间路径。"
+msgstr "已存在路径，最少剩余空间"
 
 msgid "Existing path, least used space."
-msgstr "最少使用空间路径。"
+msgstr "已存在路径，最少使用空间"
 
 msgid "Existing path, most free space."
-msgstr "最多剩余空间路径。"
+msgstr "已存在路径，最多剩余空间"
 
 msgid "Existing path, random."
-msgstr "随机路径。"
+msgstr "已存在路径，随机"
 
 msgid "Filesystems"
 msgstr "文件系统"
 
 msgid "First found."
-msgstr "第一个找到的。"
+msgstr "第一个找到的"
 
 msgid "Label"
 msgstr "标签"
 
 msgid "Least free space."
-msgstr "最少剩余空间。"
+msgstr "最少剩余空间"
 
 msgid "Least used space."
-msgstr "最少使用空间。"
+msgstr "最少使用空间"
 
 msgid "Minimum free space"
 msgstr "最少剩余空间"
 
 msgid "Most free space."
-msgstr "最多剩余空间。"
+msgstr "最多剩余空间"
 
 msgid "Mount options"
 msgstr "挂载选项"
@@ -111,4 +111,4 @@ msgid ""
 "When the minimum free space is reached on a filesystem it will not be "
 "written to unless all the other filesystem also has reached the limit. "
 "Format: {amount}{unit}. Allows the units K, M and G."
-msgstr "当某个文件系统达到设置的最小剩余空间时，这个文件系统便不会再写入数据，直到全部文件系统都达到设置的最小剩余空间。参数格式： {数字}{单位}。允许的单位有 K、M、G。"
+msgstr "当某个文件系统达到设置的最小剩余空间时，这个文件系统便不会再写入数据，除非所有文件系统都达到设置的最小剩余空间。参数格式： {数字}{单位}。允许的单位有 K、M、G。"
