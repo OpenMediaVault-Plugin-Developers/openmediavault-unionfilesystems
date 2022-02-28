@@ -36,7 +36,12 @@
 		"create_policy": {
 			"description": "The policy used when creating files",
 			"type": "string",
-			"enum": ["all", "epall", "epff", "eplfs", "eplus", "epmfs", "eprand", "erofs", "ff", "lfs", "lus", "mfs", "newest", "rand"]
+			"enum": [
+				"all", "epall", "epff", "eplfs", "eplus",
+				"epmfs", "eppfrd", "eprand", "erofs", "ff",
+				"lfs", "lus", "mfs", "msplfs", "msplus",
+				"mspmfs", "msppfrd", "newest", "pfrd", "rand"
+			]
 		},
 		"min_free_space": {
 			"description": "The minimum free space left on a filesystem for it to be written to",
